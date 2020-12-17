@@ -7,6 +7,7 @@ use App\Models\Main;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 
 class MainController extends Controller
 {
@@ -17,17 +18,33 @@ class MainController extends Controller
      */
     public function index()
     {
-        return view('main.index', ['langs' => lang::orderBy('show_name')->get()]);
+        return view('main.index');
     }
+
 
     /**
-     * Parse user query and execute it
+     * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|\Illuminate\Http\Response
      */
-
-    public function buildQuery(Request $request)
+    public function store(Request $request)
     {
-        //
+        $results = DB::select( DB::raw("
+            SELECT
+                id_lang,
+                COUNT(*) AS games
+            FROM
+                game
+            GROUP BY
+                id_lang
+            ORDER BY games DESC
+        "));
+
+
+
+
+        return view('main.graph', [ 'results' => $results]);
     }
+
 }

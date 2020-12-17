@@ -1,9 +1,22 @@
 @extends('base')
 
-@section('title', 'Seznam článků')
-@section('description', 'Výpis všech článků v administraci.')
+@section('title', 'Query Builder')
 
 @section('content')
+    <div class="administration-form">
+        <br>
+        <h1>Bulid Query</h1>
+        <br>
 
+        <form action="{{ route('main.store') }}" method="POST">
+            @csrf
 
+            <div class="form-group">
+                <label for="name">Most played languages</label>
+                <input type="checkbox" name="checkbox" class="check">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </form>
+    </div>
 @endsection

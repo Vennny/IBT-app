@@ -32,7 +32,10 @@ Route::get('/', function () {
 });
 */
 
+//Route::get('buildQuery', 'MainController@buildQuery')->name('main.buildQuery');
 Route::resource('main', MainController::class);
+
+
 
 Auth::routes();
 

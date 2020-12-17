@@ -81,6 +81,7 @@
         </div>
     @endif
 
+    <br>
     @yield('content')
 
 </div>
