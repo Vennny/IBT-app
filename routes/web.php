@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,26 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-Route::get('/', function () {
-    Route::resource('category', CategoryController::class);
+/*
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('main', MainController::class);
 });
+*/
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+});
+
+/*
+Route::get('/', function () {
+    return view('main');
+});
+*/
+
+Route::resource('main', MainController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
