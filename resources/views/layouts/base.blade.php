@@ -49,7 +49,7 @@
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->name }}
+                            {{ Auth::user()->username }}
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -71,6 +71,9 @@
 </nav>
 
 <div class="container">
+    <br>
+    @yield('content')
+    <br>
     @if ($errors->any())
         <div class="alert alert-danger mb-4">
             <ul class="mb-0">
@@ -80,10 +83,6 @@
             </ul>
         </div>
     @endif
-
-    <br>
-    @yield('content')
-
 </div>
 
 @stack('scripts')
