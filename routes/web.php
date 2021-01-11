@@ -22,20 +22,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
-        return view('welcome');
+        return Redirect::to( '/main');
     });
+
+    Route::resource('main', MainController::class);
 });
-
-/*
-Route::get('/', function () {
-    return view('main');
-});
-*/
-
-//Route::get('buildQuery', 'MainController@buildQuery')->name('main.buildQuery');
-Route::resource('main', MainController::class);
-
-
 
 Auth::routes();
 

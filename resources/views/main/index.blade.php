@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 
 @section('title', 'Query Builder')
 
@@ -12,7 +12,7 @@
             @csrf
 
             <div class="form-group">
-                <label for="name">Most played languages</label>
+                <label for="name">Top 10 languages sorted by games played</label>
                 <input type="checkbox" name="checkbox" class="check">
             </div>
 

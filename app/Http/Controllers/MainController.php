@@ -30,6 +30,10 @@ class MainController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'checkbox' => 'required'
+        ]);
+
         $results = DB::select( DB::raw("
             SELECT
                 id_lang,
@@ -39,6 +43,7 @@ class MainController extends Controller
             GROUP BY
                 id_lang
             ORDER BY games DESC
+            LIMIT 10
         "));
 
 

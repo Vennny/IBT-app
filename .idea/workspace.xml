@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/notest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/vendor/Chart.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/vendor/jquery.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/base.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/register.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/register.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/base.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/main/graph.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/main/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -162,6 +173,7 @@
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\category" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\layouts" />
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\lang" />
     </key>
   </component>
@@ -183,7 +195,10 @@
       <workItem from="1608116189756" duration="2618000" />
       <workItem from="1608119677884" duration="145000" />
       <workItem from="1608119838207" duration="12181000" />
-      <workItem from="1608149057834" duration="15619000" />
+      <workItem from="1608149057834" duration="15733000" />
+      <workItem from="1609957997544" duration="3748000" />
+      <workItem from="1610017940819" duration="5428000" />
+      <workItem from="1610370099313" duration="4742000" />
     </task>
     <task id="LOCAL-00001" summary="Init and changed readme">
       <created>1607995169187</created>
@@ -220,7 +235,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608211694382</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Working query execution in a controller, results passed to a view and shown">
+      <created>1608215373278</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1608215373278</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,6 +266,8 @@
     <MESSAGE value="UI packages added" />
     <MESSAGE value="Final inits and two models" />
     <MESSAGE value="Models, basic views and authentication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Models, basic views and authentication" />
+    <MESSAGE value="Working query execution in controller, results passed to a view and shown" />
+    <MESSAGE value="Working query execution in a controller, results passed to a view and shown" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working query execution in a controller, results passed to a view and shown" />
   </component>
 </project>
