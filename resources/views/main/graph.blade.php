@@ -2,8 +2,9 @@
 
 
 @section('content')
+    <h1 style="text-align:center;">10 most popular language versions</h1>
     <div><p id="demo"></p></div>
-    <canvas id="myChart" width="200" height="600"></canvas>
+    <canvas id="myChart" width="200" height="500"></canvas>
 @endsection
 
 @push('scripts')
@@ -51,11 +52,24 @@
                 }]
             },
             options: {
+                legend: {
+                    display: false,
+                },
                 scales: {
                     yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "language"
+                        },
                         ticks: {
                             beginAtZero: true
                         }
+                    }],
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "# of games"
+                        },
                     }]
                 }
             }

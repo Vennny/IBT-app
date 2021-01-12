@@ -14,20 +14,9 @@ use App\Http\Controllers\MainController;
 |
 */
 
-/*
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('main', MainController::class);
-});
-*/
-
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', function () {
-        return Redirect::to( '/main');
-    });
-
+    Route::get('/', [MainController::class, 'index']);
     Route::resource('main', MainController::class);
 });
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -12,7 +12,7 @@
             @csrf
 
             <div class="form-group">
-                <label for="name">Top 10 languages sorted by games played</label>
+                <label for="name">10 most popular language versions sorted by games played </label>
                 <input type="checkbox" name="checkbox" class="check">
             </div>
 

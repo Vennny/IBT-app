@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/notest.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/vendor/Chart.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/vendor/jquery.min.js" afterDir="false" />
+    <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="squash! char.js installation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/register.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/register.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/base.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/graph.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
@@ -38,6 +25,16 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="char.js installation" />
+        <option name="rewordedMessage" value="chart.js installation" />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="3c2e4fb18c350e02eb2e9492832f06932a73b09a" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -161,7 +158,6 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/category" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -198,7 +194,9 @@
       <workItem from="1608149057834" duration="15733000" />
       <workItem from="1609957997544" duration="3748000" />
       <workItem from="1610017940819" duration="5428000" />
-      <workItem from="1610370099313" duration="4742000" />
+      <workItem from="1610370099313" duration="5276000" />
+      <workItem from="1610378014551" duration="247000" />
+      <workItem from="1610464427035" duration="1653000" />
     </task>
     <task id="LOCAL-00001" summary="Init and changed readme">
       <created>1607995169187</created>
@@ -242,7 +240,42 @@
       <option name="project" value="LOCAL" />
       <updated>1608215373278</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="char.js installation">
+      <created>1610375063501</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1610375063501</updated>
+    </task>
+    <task id="LOCAL-00008" summary="char.js installation">
+      <created>1610375174782</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1610375174782</updated>
+    </task>
+    <task id="LOCAL-00009" summary="chart.js installation">
+      <created>1610375302018</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1610375302018</updated>
+    </task>
+    <task id="LOCAL-00010" summary="user now logs in with username instead of email">
+      <created>1610375380321</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1610375380321</updated>
+    </task>
+    <task id="LOCAL-00011" summary="basic chart presentation">
+      <created>1610375393965</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1610375393965</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,6 +301,10 @@
     <MESSAGE value="Models, basic views and authentication" />
     <MESSAGE value="Working query execution in controller, results passed to a view and shown" />
     <MESSAGE value="Working query execution in a controller, results passed to a view and shown" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working query execution in a controller, results passed to a view and shown" />
+    <MESSAGE value="char.js installation" />
+    <MESSAGE value="chart.js installation" />
+    <MESSAGE value="user now logs in with username instead of email" />
+    <MESSAGE value="basic chart presentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic chart presentation" />
   </component>
 </project>
