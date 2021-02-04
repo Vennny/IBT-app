@@ -2,21 +2,83 @@
 
 
 @section('content')
-    <h1 style="text-align:center;">10 most popular language versions</h1>
-    <div><p id="demo"></p></div>
-    <canvas id="myChart" width="200" height="500"></canvas>
+    <canvas id="myChart" width="100%" height="50%"></canvas>
+
+
+    <button class="btn btn-primary" style="margin-top: 20px" onclick="showDataset()">See the dataset</button>
+    <div id="data" style="margin-top: 10px; display: none;"  ></div>
 @endsection
 
 @push('scripts')
     <script src="{{url( 'vendor/Chart.min.js' )}}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script>
-        let data = {!! json_encode($results, JSON_HEX_TAG) !!};
-        //data = data.slice(0,10);
 
-        let labels = data.map(a => a.id_lang);
-        let values = data.map(a => a.games);
+        function showDataset(){
+
+            var x = document.getElementById("data");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+        let data = {!! json_encode($results, JSON_HEX_TAG) !!};
+
+        console.log(data);
+
+        let keys = Object.keys(data[0]);
+
+        let labels = data.map(a => a[keys[0]]);
+        let values = data.map(a => a[keys[1]]);
 
         let ctx = document.getElementById('myChart').getContext('2d');
+        /*
+        let myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['safafw', 'fwafwa', 'fwafawfwa'],
+                datasets: [{
+                    label: 'A',
+                    yAxesGroup: 'A',
+                    data: [10,5,2]
+                },{
+                    label: 'B',
+                    yAxesGroup: 'B',
+                    data: [8,1,3]
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "language"
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            callback: function (value) {
+                                return numeral(value).format('0,0')
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "# of games"
+                        },
+                    }]
+                }
+            }
+        });
+*/
+
         let myChart = new Chart(ctx, {
             type: 'horizontalBar',
             data: {
@@ -52,6 +114,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: true,
                 legend: {
                     display: false,
                 },
@@ -59,20 +122,58 @@
                     yAxes: [{
                         scaleLabel: {
                             display: true,
-                            labelString: "language"
+                            labelString: keys[0]
                         },
                         ticks: {
                             beginAtZero: true
                         }
                     }],
                     xAxes: [{
+                        ticks: {
+                            callback: function (value) {
+                                return numeral(value).format('0,0')
+                            }
+                        },
                         scaleLabel: {
                             display: true,
-                            labelString: "# of games"
+                            labelString: keys[1]
                         },
                     }]
                 }
             }
         });
+
+
+               let tablearea = document.getElementById('data');
+               let table = document.createElement('table');
+               table.classList.add('table', 'table-striped', 'table-bordered', 'table-responsive-md');
+               let thead = document.createElement('thead');
+               let thead_tr = document.createElement('tr');
+
+               keys.forEach(function (key, i) {
+
+                   thead_tr.appendChild( document.createElement('th') );
+                   console.log(key);
+                   thead_tr.cells[i].appendChild( document.createTextNode(key) )
+
+               });
+
+               thead.appendChild(thead_tr);
+               table.appendChild(thead);
+
+               labels.forEach(function (label, i){
+                   let tr = document.createElement('tr');
+
+                   tr.appendChild( document.createElement('td') );
+                   tr.appendChild( document.createElement('td') );
+
+                   tr.cells[0].appendChild( document.createTextNode(label) )
+                   tr.cells[1].appendChild( document.createTextNode(values[i]) );
+
+                   table.appendChild(tr);
+               });
+
+               tablearea.appendChild(table);
+
     </script>
 @endpush

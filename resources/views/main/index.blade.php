@@ -12,11 +12,114 @@
             @csrf
 
             <div class="form-group">
-                <label for="name">10 most popular language versions sorted by games played </label>
-                <input type="checkbox" name="checkbox" class="check">
+                <label for="chart_type">Chart type: </label>
+                <select id="chart_type" name="chart_type">
+                    <option value="popular">Most popular chart</option>
+                {{-- <option value="1">Time chart</option> --}}
+                </select><br>
+
+                <div class="count">
+                    <label for="count">Count most selected: </label>
+                    <select id="count" name="count">
+                        <option value="category,name">category</option>
+                        <option value="word_detailed,value">words</option>
+                    </select><br>
+                </div>
+
+                <div style="display: none" class="countries_datalist">
+                    <label for="country">From player from country: </label>
+                    <input list="country" name="country" class="datalist-input" />
+                    <datalist id="country">
+                        <option value="all">
+                        @foreach($countries as $country)
+                            <option value="{{$country['name']}}">
+                        @endforeach
+                    </datalist>
+                </div>
+
+                <div class="language">
+                    <label for="language">In language:</label>
+                    <select id="language" name="language">
+                        <option value="all">all</option>
+                        <option value="en">english</option>
+                        <option value="es">spanish</option>
+                        <option value="de">german</option>
+                    </select><br>
+                </div>
+
+                <div class="limit">
+                    <label for="limit">Select number of entries</label>
+                    <input type="text" id="limit" name="limit" value="5"><br>
+                </div>
+
+
+                <div style="display: none" class="category">
+                    <label for="category">Category name</label><br>
+                    <input type="text" id="category" name="category" value=""><br>
+                </div>
+
+                <div hidden class="word">
+                    <label for="word">Word</label><br>
+                    <input type="text" id="word" name="word" value=""><br>
+                </div>
             </div>
+
 
             <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
     </div>
 @endsection
+@push('scripts')
+    <script src="{{url( 'vendor/jquery.min.js' )}}"></script>
+    <script>
+        $(document).ready(function(){
+            /*
+            let countries = {!! json_encode($countries, JSON_HEX_TAG) !!};
+
+            $("#count").change(function (){
+                const div = document.createElement('div');
+                div.className = 'country';
+                div.innerHTML = `
+                    <label for="country">Playing in country: </label>
+                    <input list="country" name="country" class="datalist-input" />
+                    <datalist id="country">
+                        <option value="All">
+                  `;
+
+                console.log(countries);
+
+                countries.forEach(function (country){
+                    div.innerHTML =  div.innerHTML.concat(`<option value="`, country.name, `">`);
+                })
+
+                div.innerHTML =  div.innerHTML.concat(`</datalist>`);
+
+                document.getElementById('countries_datalist').appendChild(div);
+            });
+            */
+
+            $("#count").change(function (){
+                $('#countries_datalist').show();
+                if (document.getElementsByClassName('countries_datalist'))
+
+                if(this.value === 'word_detailed,value'){
+                  document.getElementsByClassName('countries_datalist')[0].style.display = 'block';
+                  document.getElementsByClassName('category')[0].style.display = 'block';
+                }
+                else {
+                  document.getElementsByClassName('countries_datalist')[0].style.display = 'none';
+                  document.getElementsByClassName('category')[0].style.display = 'none';}
+            });
+
+            $('#country').change(function() {
+                if ( this.value !== 'all')
+                {
+                    //let textnode = document.createTextNode("<label for='country2'>Playing in country: </label><select id='country2' name='country2'><option value='en'>english</option><option value='es'>spanish</option><option value='de'>german</option> </select><br>");
+                    let textnode = document.createTextNode("<h2>FAWGFAf</h2>")
+                    let div = document.getElementsByClassName('countries_datalist');
+                    div.appendChild(textnode);
+                }
+            });
+        });
+    </script>
+@endpush

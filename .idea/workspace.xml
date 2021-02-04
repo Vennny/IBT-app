@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="squash! char.js installation">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Rules/CountryExists.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/IBT-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IBT-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/graph.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
@@ -145,6 +155,7 @@
       <path value="$PROJECT_DIR$/vendor/psr/container" />
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/vendor/league/iso3166" />
     </include_path>
   </component>
   <component name="ProjectId" id="1lfewEZT5mONf1q8c24lusAHYzY" />
@@ -196,7 +207,18 @@
       <workItem from="1610017940819" duration="5428000" />
       <workItem from="1610370099313" duration="5276000" />
       <workItem from="1610378014551" duration="247000" />
-      <workItem from="1610464427035" duration="1653000" />
+      <workItem from="1610464427035" duration="4763000" />
+      <workItem from="1610560087467" duration="886000" />
+      <workItem from="1610630552110" duration="670000" />
+      <workItem from="1610708705005" duration="216000" />
+      <workItem from="1611051344070" duration="1075000" />
+      <workItem from="1611321277155" duration="8859000" />
+      <workItem from="1611581940519" duration="12399000" />
+      <workItem from="1611668877265" duration="17503000" />
+      <workItem from="1611832380590" duration="7822000" />
+      <workItem from="1611937596070" duration="1538000" />
+      <workItem from="1612359120953" duration="4788000" />
+      <workItem from="1612437794812" duration="3497000" />
     </task>
     <task id="LOCAL-00001" summary="Init and changed readme">
       <created>1607995169187</created>
@@ -275,7 +297,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610375393965</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="minor changes in graph labeling and routing">
+      <created>1610466147746</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1610466147746</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,6 +334,7 @@
     <MESSAGE value="chart.js installation" />
     <MESSAGE value="user now logs in with username instead of email" />
     <MESSAGE value="basic chart presentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic chart presentation" />
+    <MESSAGE value="minor changes in graph labeling and routing" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes in graph labeling and routing" />
   </component>
 </project>
