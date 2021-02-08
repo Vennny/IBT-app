@@ -8,7 +8,7 @@
         <h1>Bulid Query</h1>
         <br>
 
-        <form action="{{ route('main.store') }}" method="POST">
+        <form action="/" method="POST">
             @csrf
 
             <div class="form-group">
@@ -21,8 +21,8 @@
                 <div class="count">
                     <label for="count">Count most selected: </label>
                     <select id="count" name="count">
-                        <option value="category,name">category</option>
-                        <option value="word_detailed,value">words</option>
+                        <option value="category">category</option>
+                        <option value="word">words</option>
                     </select><br>
                 </div>
 
@@ -30,7 +30,7 @@
                     <label for="country">From player from country: </label>
                     <input list="country" name="country" class="datalist-input" />
                     <datalist id="country">
-                        <option value="all">
+                        <option value="">
                         @foreach($countries as $country)
                             <option value="{{$country['name']}}">
                         @endforeach
@@ -40,16 +40,15 @@
                 <div class="language">
                     <label for="language">In language:</label>
                     <select id="language" name="language">
-                        <option value="all">all</option>
-                        <option value="en">english</option>
-                        <option value="es">spanish</option>
-                        <option value="de">german</option>
+                        @foreach($languages as $lang)
+                            <option value="{{$lang->id}}">{{$lang->show_name}}</option>
+                        @endforeach
                     </select><br>
                 </div>
 
                 <div class="limit">
                     <label for="limit">Select number of entries</label>
-                    <input type="text" id="limit" name="limit" value="5"><br>
+                    <input type="number" id="limit" name="limit" min="1" value="5"><br>
                 </div>
 
 
@@ -102,7 +101,7 @@
                 $('#countries_datalist').show();
                 if (document.getElementsByClassName('countries_datalist'))
 
-                if(this.value === 'word_detailed,value'){
+                if(this.value === 'word'){
                   document.getElementsByClassName('countries_datalist')[0].style.display = 'block';
                   document.getElementsByClassName('category')[0].style.display = 'block';
                 }
