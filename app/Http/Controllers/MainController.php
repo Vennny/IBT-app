@@ -93,9 +93,10 @@ class MainController extends Controller
     private function buildWordPopularityQuery($request): string
     {
         $language = $request->input('language');
-        $limit = intval($request->input('limit'));
+        $limit = $request->input('limit');
         $country = $request->input('country');
-        $category = $request->input('category');
+        $category = strtolower($request->input('category'));
+        $letter = strtolower($request->input('letter'));
 
         $table = $this->getWordTableName($language);
 
@@ -107,7 +108,7 @@ class MainController extends Controller
                 $table . " ";
 
 
-        if ($country || $category || $table === "word_rest") {
+        if ($country || $category || $letter || $table === "word_rest") {
             $where_query =
                 "WHERE ";
 
@@ -116,18 +117,25 @@ class MainController extends Controller
                     "country_code = '".$this->getCountryCode($country)."' ";
             }
 
-            if ($category) {
-                //categories can contain an apostrophe => needs to be escaped in query
-                $category = preg_replace("/'/", "''", $category);
-
+            if ($letter) {
                 $where_query = $where_query .
-                    "LOWER(category_name) = LOWER('".$category."') ";
+                    "LOWER(value) LIKE '".$letter."%' ";
+
             }
 
             if ($table === "word_rest") {
                 $where_query = $where_query .
                     "id_lang = '".$language."' ";
             }
+
+            if ($category) {
+                //categories can contain an apostrophe => needs to be escaped in query
+                $category = preg_replace("/'/", "''", $category);
+
+                $where_query = $where_query .
+                    "LOWER(category_name) = '".$category."' ";
+            }
+
 
             // replace each space between WHERE conditions to "AND"
             $where_query = preg_replace("/(?<=')[\s](?!$)/", " AND ", $where_query);

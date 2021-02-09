@@ -78,60 +78,14 @@
     </div>
 @endsection
 @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script src="{{ asset('js/loading.js') }}"></script>
+    <script src="{{ asset('js/form.js') }}"></script>
     <script>
-
-
-
         $(document).ready(function(){
-            /*
-            let countries = {!! json_encode($countries, JSON_HEX_TAG) !!};
 
             $("#count").change(function (){
-                const div = document.createElement('div');
-                div.className = 'country';
-                div.innerHTML = `
-                    <label for="country">Playing in country: </label>
-                    <input list="country" name="country" class="datalist-input" />
-                    <datalist id="country">
-                        <option value="All">
-                  `;
-
-                console.log(countries);
-
-                countries.forEach(function (country){
-                    div.innerHTML =  div.innerHTML.concat(`<option value="`, country.name, `">`);
-                })
-
-                div.innerHTML =  div.innerHTML.concat(`</datalist>`);
-
-                document.getElementById('countries_datalist').appendChild(div);
-            });
-            */
-
-            $("#count").change(function (){
-                $('#countries_datalist').show();
-                if (document.getElementsByClassName('countries_datalist'))
-
-                if(this.value === 'word'){
-                  document.getElementsByClassName('countries_datalist')[0].style.display = 'block';
-                  document.getElementsByClassName('category')[0].style.display = 'block';
-                    document.getElementsByClassName('letter')[0].style.display = 'block';
-                }
-                else {
-                  document.getElementsByClassName('countries_datalist')[0].style.display = 'none';
-                  document.getElementsByClassName('category')[0].style.display = 'none';
-                    document.getElementsByClassName('letter')[0].style.display = 'none';
-                }
-            });
-
-            $('#country').change(function() {
-                if ( this.value !== 'all')
-                {
-                    //let textnode = document.createTextNode("<label for='country2'>Playing in country: </label><select id='country2' name='country2'><option value='en'>english</option><option value='es'>spanish</option><option value='de'>german</option> </select><br>");
-                    let textnode = document.createTextNode("<h2>FAWGFAf</h2>")
-                    let div = document.getElementsByClassName('countries_datalist');
-                    div.appendChild(textnode);
-                }
+                changeForm(this);
             });
         });
     </script>
