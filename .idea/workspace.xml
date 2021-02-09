@@ -2,13 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="squash! char.js installation">
-      <change beforePath="$PROJECT_DIR$/.idea/IBT-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IBT-app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/css/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/img/loading.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/graph.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/js/loading.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/register.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/register.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/base.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/main/graph.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/main/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +178,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -180,6 +187,7 @@
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\category" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\toboq\Documents\Skola\Bakalarka\IBT-app\public\img" />
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\layouts" />
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\lang" />
     </key>
