@@ -1,6 +1,6 @@
 function showLoadingIcon() {
     $("#errors").hide();
-    $("#loader").css("display", "flex").hide().fadeIn("slow");
+    $("#loader").css("display", "flex").hide().fadeTo("slow", 0.9);
 }
 
 function showLoadingText(seconds){
