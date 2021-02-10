@@ -1,11 +1,11 @@
 function showLoadingIcon() {
     $("#errors").hide();
-    $(".icon").fadeIn("slow");
+    $("#loader").css("display", "flex").hide().fadeIn("slow");
 }
 
 function showLoadingText(seconds){
     setTimeout(function() {
-        $(".loader_text").fadeIn("slow");
+        $(".loader_text").css("opacity", "1");
     }, 1000 * seconds);
 }
 

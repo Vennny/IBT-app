@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="560ea7ae-04f1-458f-a66a-5c7b9dd732d8" name="Default Changelist" comment="squash! char.js installation">
+      <change afterPath="$PROJECT_DIR$/app/Services/QueryService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/LoginController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MainController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/form.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/graph.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/graph.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/loading.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/loading.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/main/graph.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/graph.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/main/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/main/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,6 +41,14 @@
     </option>
     <option name="currentCommit" value="1" />
     <option name="onto" value="3c2e4fb18c350e02eb2e9492832f06932a73b09a" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -161,7 +174,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Services" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -169,11 +182,12 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="watcher.settings" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\toboq\Documents\Skola\Bakalarka\IBT-app\app\Services" />
       <recent name="C:\Users\toboq\Documents\Skola\Bakalarka\IBT-app" />
       <recent name="D:\Škola\bakalářka\app\IBT-app\resources\views\category" />
     </key>
@@ -221,6 +235,8 @@
       <workItem from="1612615236497" duration="1196000" />
       <workItem from="1612628658495" duration="1035000" />
       <workItem from="1612802658939" duration="13745000" />
+      <workItem from="1612866181207" duration="24290000" />
+      <workItem from="1612961988609" duration="3095000" />
     </task>
     <task id="LOCAL-00001" summary="Init and changed readme">
       <created>1607995169187</created>
@@ -313,7 +329,21 @@
       <option name="project" value="LOCAL" />
       <updated>1612830657586</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Changed app name and deleted home view &amp; routes">
+      <created>1612833845056</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1612833845056</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Remember me removed from login">
+      <created>1612966183080</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1612966183080</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,6 +375,8 @@
     <MESSAGE value="basic chart presentation" />
     <MESSAGE value="minor changes in graph labeling and routing" />
     <MESSAGE value="Unified default layout" />
-    <option name="LAST_COMMIT_MESSAGE" value="Unified default layout" />
+    <MESSAGE value="Changed app name and deleted home view &amp; routes" />
+    <MESSAGE value="Remember me removed from login" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remember me removed from login" />
   </component>
 </project>

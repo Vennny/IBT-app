@@ -4,10 +4,11 @@
 
 @section('content')
     <div id="loader">
-        <div class="loader_text" style="display: none;">
-            <h1>This might take a few minutes...</h1>
+        <div class="icon"></div>
+        <div class="loader_text">
+            <h1>This might take a few minutes...</h1><br>
+            <h2>Do not close this page</h2>
         </div>
-        <div class="icon" style="display: none;"></div>
     </div>
     <div class="administration-form">
         <br>
@@ -20,15 +21,16 @@
             <div class="form-group">
                 <label for="chart_type">Chart type: </label>
                 <select id="chart_type" name="chart_type">
-                    <option value="popular">Most popular chart</option>
+                    <option value="popular">Answer/category popularity</option>
+                    <option value="total">Total amount of answers</option>
                 {{-- <option value="1">Time chart</option> --}}
                 </select><br>
 
                 <div class="count">
                     <label for="count">Count most selected: </label>
                     <select id="count" name="count">
-                        <option value="category">category</option>
-                        <option value="word">words</option>
+                        <option id="count_category" value="category">category</option>
+                        <option id="count_word" value="word">words</option>
                     </select><br>
                 </div>
 
@@ -39,31 +41,6 @@
                             <option value="{{$lang->id}}">{{$lang->show_name}}</option>
                         @endforeach
                     </select><br>
-                </div>
-
-                <div style="display: none" class="countries_datalist">
-                    <label for="country">From player from country: </label>
-                    <input list="country" name="country" class="datalist-input" />
-                    <datalist id="country">
-                        <option value="">
-                        @foreach($countries as $country)
-                            <option value="{{$country['name']}}">
-                        @endforeach
-                    </datalist>
-                </div>
-
-                <div style="display: none" class="category">
-                    <label for="category">Category name:</label>
-                    <input type="text" id="category" name="category" value=""><br>
-                </div>
-                <div style="display: none" class="letter">
-                    <label for="letter">Starting letter:</label>
-                    <input type="text" id="letter" name="letter" maxlength="1" value=""><br>
-                </div>
-
-                <div hidden class="word">
-                    <label for="word">Word</label><br>
-                    <input type="text" id="word" name="word" value=""><br>
                 </div>
 
                 <div class="limit">
@@ -83,9 +60,14 @@
     <script src="{{ asset('js/form.js') }}"></script>
     <script>
         $(document).ready(function(){
+            let countries = @json($countries->all());
+
+            $("#chart_type").change(function (){
+                changeFormType(countries);
+            });
 
             $("#count").change(function (){
-                changeForm(this);
+                changeCountForm(countries);
             });
         });
     </script>

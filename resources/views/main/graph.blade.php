@@ -5,9 +5,12 @@
 @section('content')
     <canvas id="chart" width="100%" height="50%"></canvas>
 
+    <button class="btn btn-primary show-dataset" onclick="showDataset()">See the dataset</button>
 
-    <button class="btn btn-primary" style="margin-top: 20px" onclick="showDataset()">See the dataset</button>
-    <div id="data" style="margin-top: 10px; display: none;"  ></div>
+    <table class="table table-striped table-bordered table-responsive-md">
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+    </table>
 @endsection
 
 @push('scripts')
@@ -16,7 +19,7 @@
     <script src="{{ asset('js/graph.js') }}"></script>
     <script>
         $(document).ready(function(){
-            let data = {!! json_encode($results, JSON_HEX_TAG) !!};
+            let data =  @json($results);
             console.log(data);
 
             createGraph(data);

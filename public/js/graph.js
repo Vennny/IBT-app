@@ -76,43 +76,24 @@ function createGraph(data) {
     });
 }
 
-function createDatasetTable(data) {
-    let tablearea = document.getElementById('data');
-    let table = document.createElement('table');
-    table.classList.add('table', 'table-striped', 'table-bordered', 'table-responsive-md');
-    let thead = document.createElement('thead');
-    let thead_tr = document.createElement('tr');
+function createDatasetTable(data){
 
     const [keys, labels, values] = getKeysLabelsValues(data);
 
-    keys.forEach(function (key, i) {
-        thead_tr.appendChild( document.createElement('th') );
-        thead_tr.cells[i].appendChild( document.createTextNode(key) )
+    keys.forEach(function (key) {
+        $('#thead').append( '<th>' + key + '</th>' );
     });
-
-    thead.appendChild(thead_tr);
-    table.appendChild(thead);
 
     labels.forEach(function (label, i){
-        let tr = document.createElement('tr');
-
-        tr.appendChild( document.createElement('td') );
-        tr.appendChild( document.createElement('td') );
-
-        tr.cells[0].appendChild( document.createTextNode(label) )
-        tr.cells[1].appendChild( document.createTextNode(values[i]) );
-
-        table.appendChild(tr);
+        $('#tbody').append('<tr><td>' + label + '</td><td>' + values[i] + '</td></tr>');
     });
-
-    tablearea.appendChild(table);
 }
 
 function showDataset() {
-    let x = document.getElementById("data");
-    if (x.style.display === "none") {
-        x.style.display = "block";
+    let x = $('.table');
+    if (x.is(':visible')) {
+        x.css("display", "none");
     } else {
-        x.style.display = "none";
+        x.css("display", "table");
     }
 }
