@@ -1,3 +1,7 @@
+html {
+    overflow-y: scroll;
+}
+
 /* loading gif */
 .icon {
     width: 200px;
