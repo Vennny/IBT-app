@@ -38,13 +38,14 @@ class MainController extends Controller
     {
         $query = (new queryService($request))->buildQuery();
 
-        print_r($query);
-
         $results = DB::select( DB::raw($query));
 
-        //$results = DB::table('game')->select(DB::raw('id_lang, count(*) as games'))->groupBy('id_lang')->orderBy('games', 'desc')->limit(10)->get();
-
-        return view('main.graph', [ 'results' => $results]);
+        $request_values = array_filter(array_slice($request->all(),1)); //remove first and all empty inputs
+        return view('main.graph', [
+            'results' => $results,
+            'request' => $request_values,
+            'query' => $query
+        ]);
     }
 
 }

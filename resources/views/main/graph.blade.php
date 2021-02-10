@@ -5,12 +5,27 @@
 @section('content')
     <canvas id="chart" width="100%" height="50%"></canvas>
 
-    <button class="btn btn-primary show-dataset" onclick="showDataset()">See the dataset</button>
+    <button class="btn btn-primary show-dataset" onclick="toggleDataset()">See the dataset</button>
+    <button class="btn btn-primary show-dataset" onclick="toggleRequest()">See the request</button>
 
-    <table class="table table-striped table-bordered table-responsive-md">
+    <table class="dataset table table-striped table-bordered table-responsive-md">
         <thead id="thead"></thead>
         <tbody id="tbody"></tbody>
     </table>
+
+    <table class="request table table-striped table-bordered table-responsive-md">
+        <tbody>
+            <tr>
+            @foreach($request AS $input)
+                <td>{{$input}}</td>
+            @endforeach
+            </tr>
+            <tr>
+                <td colspan="{{count($request)}}">{{$query}}</td>
+            </tr>
+        </tbody>
+    </table>
+
 @endsection
 
 @push('scripts')

@@ -81,19 +81,34 @@ function createDatasetTable(data){
     const [keys, labels, values] = getKeysLabelsValues(data);
 
     keys.forEach(function (key) {
-        $('#thead').append( '<th>' + key + '</th>' );
+        $('.dataset #thead').append( '<th>' + key + '</th>' );
     });
 
     labels.forEach(function (label, i){
-        $('#tbody').append('<tr><td>' + label + '</td><td>' + values[i] + '</td></tr>');
+        $('.dataset #tbody').append('<tr><td>' + label + '</td><td>' + values[i] + '</td></tr>');
     });
 }
 
-function showDataset() {
-    let x = $('.table');
-    if (x.is(':visible')) {
-        x.css("display", "none");
+function toggleRequest() {
+    let request = $('.request');
+    let dataset = $('.dataset');
+
+    if (request.is(':visible')) {
+        request.css("display", "none");
     } else {
-        x.css("display", "table");
+        dataset.css("display", "none");
+        request.css("display", "table");
+    }
+}
+
+function toggleDataset() {
+    let dataset = $('.dataset');
+    let request = $('.request');
+
+    if (dataset.is(':visible')) {
+        dataset.css("display", "none");
+    } else {
+        request.css("display", "none");
+        dataset.css("display", "table");
     }
 }
