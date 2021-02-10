@@ -13,6 +13,10 @@ class QueryService
 
     public $request;
 
+    /**
+     * QueryService constructor.
+     * @param $request
+     */
     public function __construct($request)
     {
         $this->request = $request;
@@ -20,7 +24,6 @@ class QueryService
 
     private function getCountryCode(string $name): string
     {
-
         $country = (new League\ISO3166\ISO3166)->name($name);
         return $country['alpha2'];
     }
@@ -64,6 +67,8 @@ class QueryService
             "category ";
 
         if ($language) {
+            //prevent SQL injection
+            $language = preg_replace("/'/", "''", $language);
             $query .=
                 "WHERE " .
                 "id_lang = '" . $language . "' ";
