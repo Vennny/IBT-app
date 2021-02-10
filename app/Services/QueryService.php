@@ -110,17 +110,23 @@ class QueryService
                 "WHERE ";
 
             if ($country) {
+                //prevent SQL injection
+                $country = preg_replace("/'/", "''", $country);
                 $where_query .=
                     "country_code = '".$this->getCountryCode($country)."' ";
             }
 
             if ($letter) {
+                //prevent SQL injection
+                $letter = preg_replace("/'/", "''", $letter);
                 $where_query = $where_query .
                     "LOWER(value) LIKE '".$letter."%' ";
 
             }
 
             if ($word_table === "word_rest") {
+                //prevent SQL injection
+                $language = preg_replace("/'/", "''", $language);
                 $where_query = $where_query .
                     "id_lang = '".$language."' ";
             }
