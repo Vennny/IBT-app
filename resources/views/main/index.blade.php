@@ -30,11 +30,11 @@
                     <label for="count">Count most selected: </label>
                     <select id="count" name="count">
                         <option id="count_category" value="category">category</option>
-                        <option id="count_word" value="word">words</option>
+                        <option id="count_answer" value="answer">answers</option>
                     </select><br>
                 </div>
 
-                <div class="form-word-switch"></div>
+                <div class="form-answer-switch"></div>
 
                 <div class="language">
                     <label for="language">In language:</label>

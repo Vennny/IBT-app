@@ -12,7 +12,7 @@ function changeFormType(countries)
     changeCountForm(countries);
 }
 
-function createWordFormInputs(countries)
+function createAnswerFormInputs(countries)
 {
     let datalist = $('<div class="countries_datalist">\n' +
         '                    <label for="country">From player from country: </label>\n' +
@@ -53,10 +53,10 @@ function changeCountForm(countries)
     let element = $("#count");
     let inputsExist = $(".countries_datalist").length;
 
-    if (element.val() === 'word'){
+    if (element.val() === 'answer'){
         if (!inputsExist) {
-            let div = $(".form-word-switch");
-            div.append(createWordFormInputs(countries));
+            let div = $(".form-answer-switch");
+            div.append(createAnswerFormInputs(countries));
             div.append(createCategoryInput());
             div.append(createLetterInput());
         }

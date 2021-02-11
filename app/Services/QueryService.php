@@ -83,7 +83,7 @@ class QueryService
         return $query;
     }
 
-    private function buildWordCountQuery(bool $type_popularity): string
+    private function buildAnswerCountQuery(bool $type_popularity): string
     {
         $this->request->validate([
             'country' => [new CountryExists]
@@ -174,9 +174,10 @@ class QueryService
 
         if ($table === "category") {
             return $this->buildCategoryCountQuery();
-        } elseif ($table === "word") {
-            return $this->buildWordCountQuery(true);
+        } elseif ($table === "answer") {
+            return $this->buildAnswerCountQuery(true);
         } else {
+            //TODO redirect in service does not work
             return redirect()->back()->withErrors(['Query build was not successful.']);
         }
     }
@@ -190,7 +191,7 @@ class QueryService
         if ($type === "popular") {
             return $this->buildPopularityQuery();
         } else if($type === "total") {
-            return $this->buildWordCountQuery(false);
+            return $this->buildAnswerCountQuery(false);
         }
 
         return "";
