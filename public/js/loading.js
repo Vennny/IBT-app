@@ -3,7 +3,9 @@ function showLoadingIcon() {
     $("#loader").css("display", "flex").hide().fadeTo("slow", 0.9);
 }
 
-function showLoadingText(seconds){
+function showLoadingText(){
+    const seconds = 10;
+
     setTimeout(function() {
         $(".loader_text").css("opacity", "1");
     }, 1000 * seconds);
@@ -12,6 +14,6 @@ function showLoadingText(seconds){
 function sendQuery() {
     showLoadingIcon();
     document.forms["query_builder"].submit();
-    showLoadingText(10);
+    showLoadingText();
 }
 
