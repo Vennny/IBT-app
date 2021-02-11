@@ -23,7 +23,7 @@
                 <select id="chart_type" name="chart_type">
                     <option value="popular">Answer/category popularity</option>
                     <option value="total">Total amount of answers</option>
-                {{-- <option value="1">Time chart</option> --}}
+                    <option value="time" disabled>Time chart</option>
                 </select><br>
 
                 <div class="count">
@@ -33,6 +33,8 @@
                         <option id="count_word" value="word">words</option>
                     </select><br>
                 </div>
+
+                <div class="form-word-switch"></div>
 
                 <div class="language">
                     <label for="language">In language:</label>
@@ -47,6 +49,12 @@
                     <label for="limit">Select number of entries</label>
                     <input type="number" id="limit" name="limit" min="1" value="5"><br>
                 </div>
+
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" disabled id="percentage">
+                    <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>
+                </div>
+
             </div>
 
 
