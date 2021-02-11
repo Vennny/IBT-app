@@ -1,5 +1,5 @@
 .footer-main {
-    height: 150px;
+    height: 200px;
     width: 100%;
 }
 
@@ -56,4 +56,8 @@
 .table {
     margin-top: 10px;
     display: none;
+}
+
+.custom-control {
+    z-index: 0;
 }
