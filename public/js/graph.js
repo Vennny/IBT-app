@@ -1,3 +1,4 @@
+
 function getKeysLabelsValues(data) {
     let keys = Object.keys(data[0]);
     let labels = data.map(a => a[keys[0]]);
@@ -6,7 +7,7 @@ function getKeysLabelsValues(data) {
     return [keys, labels, values];
 }
 
-function createGraph(data) {
+function createGraph(data, title = "") {
     const [keys, labels, values] = getKeysLabelsValues(data);
 
     let ctx = document.getElementById('chart').getContext('2d');
@@ -46,6 +47,11 @@ function createGraph(data) {
             }]
         },
         options: {
+            title: {
+                display: true,
+                text: title,
+                fontSize: 20
+            },
             maintainAspectRatio: true,
             legend: {
                 display: false,
@@ -80,9 +86,11 @@ function createDatasetTable(data){
 
     const [keys, labels, values] = getKeysLabelsValues(data);
 
+    let tr = $('<tr></tr>')
     keys.forEach(function (key) {
-        $('.dataset #thead').append( '<th>' + key + '</th>' );
+        tr.append( '<th>' + key + '</th>' );
     });
+    $('.dataset #thead').append(tr);
 
     labels.forEach(function (label, i){
         $('.dataset #tbody').append('<tr><td>' + label + '</td><td>' + values[i] + '</td></tr>');
