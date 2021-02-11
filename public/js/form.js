@@ -55,10 +55,10 @@ function changeCountForm(countries)
 
     if (element.val() === 'word'){
         if (!inputsExist) {
-            let form_group = $(".form-group")
-            form_group.append(createWordFormInputs(countries));
-            form_group.append(createCategoryInput());
-            form_group.append(createLetterInput());
+            let div = $(".form-word-switch");
+            div.append(createWordFormInputs(countries));
+            div.append(createCategoryInput());
+            div.append(createLetterInput());
         }
     } else if (element.val() === 'category') {
         if (inputsExist) {
