@@ -12,7 +12,7 @@
     </div>
     <div class="administration-form">
         <br>
-        <h1>Bulid Query</h1>
+        <h1>Build Query</h1>
         <br>
 
         <form id="query_builder" action="/" method="POST">
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" disabled id="percentage">
+                    <input type="checkbox" class="custom-control-input" id="percentage" disabled>
                     <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>
                 </div>
 
