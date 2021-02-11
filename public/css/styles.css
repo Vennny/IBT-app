@@ -1,6 +1,18 @@
-html {
-    overflow-y: scroll;
+.footer-main {
+    height: 150px;
+    width: 100%;
 }
+
+/*!* bootstrap table stripe row color *!*/
+/*.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {*/
+/*    background-color: #d7ecfb;*/
+/*}*/
+
+/*!* bootstrap table hover row color *!*/
+/*.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {*/
+/*    background-color: #edf7fd;*/
+/*}*/
+
 
 /* loading gif */
 .icon {
@@ -29,12 +41,19 @@ html {
 }
 
 /* chart blade */
-.show-dataset {
+.graph-data {
     margin-top: 20px
+}
+
+.graph-buttons {
+    display: inline-block;
+}
+
+.export-buttons {
+    float:right;
 }
 
 .table {
     margin-top: 10px;
-    width: 100%;
     display: none;
 }
