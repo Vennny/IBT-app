@@ -5,6 +5,7 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\Rules\CountryExists;
+use Illuminate\Support\Facades\DB;
 use League;
 
 
@@ -12,6 +13,8 @@ class QueryService
 {
 
     public $request;
+
+    public $query;
 
     /**
      * QueryService constructor.
@@ -183,7 +186,7 @@ class QueryService
     }
 
 
-    public function buildQuery(): string
+    private function buildQuery(): string
     {
         //TODO validation
         $type = $this->request->input('chart_type');
@@ -196,4 +199,16 @@ class QueryService
 
         return "";
     }
+
+    public function getQueryResults(): array
+    {
+        $this->query = $this->buildQuery();
+
+        if ($this->query){
+            $result = DB::select( DB::raw($this->query));
+        }
+
+        return $result;
+    }
+
 }
