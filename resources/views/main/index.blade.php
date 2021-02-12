@@ -50,11 +50,7 @@
                     <input type="number" id="limit" name="limit" min="1" value="5"><br>
                 </div>
 
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="percentage" disabled>
-                    <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>
-                </div>
-
+                <div class="percentage-switch"></div>
             </div>
 
 
@@ -77,6 +73,7 @@
             $("#count").change(function (){
                 changeCountForm(countries);
             });
+
         });
     </script>
 @endpush

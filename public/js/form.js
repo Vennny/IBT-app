@@ -47,6 +47,14 @@ function createLetterInput()
         '                </div>');
 }
 
+function createSwitchInput()
+{
+    return $('\n' +
+        '                <div class="custom-control custom-switch">\n' +
+        '                    <input type="checkbox" class="custom-control-input" id="percentage" disabled>\n' +
+        '                    <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>\n' +
+        '                </div>');
+}
 
 function changeCountForm(countries)
 {
@@ -66,5 +74,18 @@ function changeCountForm(countries)
             $(".category").remove();
             $(".letter").remove();
         }
+    }
+
+    if ($("#chart_type").val() === 'popular') {
+        if (element.val() === 'answer'){
+            if (!$('.custom-switch').length){
+                console.log("sfafw");
+                $('.percentage-switch').append(createSwitchInput());
+            }
+        } else {
+            $(".custom-switch").remove();
+        }
+    } else {
+        $(".custom-switch").remove();
     }
 }
