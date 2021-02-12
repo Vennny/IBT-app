@@ -1,4 +1,32 @@
 
+let graph;
+
+//label customizations
+$("#title").on('input', function (){
+    changeGraphTitle(this);
+});
+
+$("#x-axis-label").on('input', function (){
+    changeXAxisLabel(this);
+});
+
+$("#y-axis-label").on('input', function (){
+    changeYAxisLabel(this);
+});
+
+$("#title-font-slider").on('input', function (){
+    changeGraphTitleFontSize(this);
+});
+
+$("#x-font-slider").on('input', function (){
+    changeXAxisLabelFontSize(this);
+});
+
+$("#y-font-slider").on('input', function (){
+    changeYAxisLabelFontSize(this);
+});
+
+
 function getKeysLabelsValues(data) {
     let keys = Object.keys(data[0]);
     let labels = data.map(a => a[keys[0]]);
@@ -7,12 +35,18 @@ function getKeysLabelsValues(data) {
     return [keys, labels, values];
 }
 
-function createGraph(data, title = "") {
+function insertDefaultAxisLabels(keys){
+    console.log(keys);
+    $('#y-axis-label').val(keys[0]);
+    $('#x-axis-label').val(keys[1]);
+}
+
+function createGraph(data) {
     const [keys, labels, values] = getKeysLabelsValues(data);
 
     let ctx = document.getElementById('chart').getContext('2d');
 
-    new Chart(ctx, {
+    graph = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
             labels: labels,
@@ -48,9 +82,7 @@ function createGraph(data, title = "") {
         },
         options: {
             title: {
-                display: true,
-                text: title,
-                fontSize: 20
+                fontSize: 25
             },
             maintainAspectRatio: true,
             legend: {
@@ -80,8 +112,59 @@ function createGraph(data, title = "") {
             }
         }
     });
+
+    insertDefaultAxisLabels(keys);
 }
 
+function changeGraphTitle(element){
+    let value = $(element).val()
+    if (value) {
+        graph.options.title.text = value;
+        graph.options.title.display = true;
+    } else {
+        graph.options.title.display = false;
+    }
+    graph.update();
+}
+
+function changeXAxisLabel(element){
+    let value = $(element).val()
+    if (value) {
+        graph.options.scales.xAxes[0].scaleLabel.labelString = value;
+        graph.options.scales.xAxes[0].scaleLabel.display = true;
+    } else {
+        graph.options.scales.xAxes[0].scaleLabel.display = false;
+    }
+    graph.update();
+}
+
+function changeYAxisLabel(element){
+    let value = $(element).val()
+    if (value) {
+        graph.options.scales.yAxes[0].scaleLabel.labelString = value;
+        graph.options.scales.yAxes[0].scaleLabel.display = true;
+    } else {
+        graph.options.scales.yAxes[0].scaleLabel.display = false;
+    }
+    graph.update();
+}
+
+function changeGraphTitleFontSize(element){
+    graph.options.title.fontSize = $(element).val();
+    graph.update();
+}
+
+function changeXAxisLabelFontSize(element){
+    graph.options.scales.xAxes[0].scaleLabel.fontSize = $(element).val();
+    graph.update();
+}
+
+function changeYAxisLabelFontSize(element){
+    graph.options.scales.yAxes[0].scaleLabel.fontSize = $(element).val();
+    graph.update();
+}
+
+//table changes
 function createDatasetTable(data){
 
     const [keys, labels, values] = getKeysLabelsValues(data);
@@ -119,4 +202,13 @@ function toggleDataset() {
         request.css("display", "none");
         dataset.css("display", "table");
     }
+}
+
+function noDataContentSwitch(){
+    $("#error").append("<h1>No matching data found</h1>");
+
+    $('#chart').remove();
+    $('.form-row').remove();
+    $('.export-buttons').remove();
+    $('.show-dataset').remove();
 }

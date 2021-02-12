@@ -3,20 +3,25 @@
 @section('title', 'Graph')
 
 @section('content')
-    <canvas id="chart" width="100%" height="50%"></canvas>
+    <canvas id="chart" width="100%" height="60%"></canvas>
+
+    <div class="error"></div>
 
     <div class="form-row">
         <div class="col">
             <label for="title">Graph title:</label>
-            <input type="text" class="form-control" id="title" disabled>
+            <input type="text" class="form-control" id="title">
+            <input type="range" class="font-slider" id="title-font-slider" min="1" max="50">
         </div>
         <div class="col">
             <label for="title">X axis label:</label>
-            <input type="text" class="form-control" id="x-axis-label" disabled>
+            <input type="text" class="form-control" id="x-axis-label">
+            <input type="range" class="font-slider" id="x-font-slider" min="1" max="50">
         </div>
         <div class="col">
             <label for="title">Y axis label:</label>
-            <input type="text" class="form-control" id="y-axis-label" disabled>
+            <input type="text" class="form-control" id="y-axis-label">
+            <input type="range" class="font-slider" id="y-font-slider" min="1" max="50">
         </div>
     </div>
 
@@ -25,7 +30,7 @@
         <div class="graph-buttons-container">
             <div class="graph-buttons dataset-switch-buttons">
                 <button class="btn btn-secondary show-dataset" onclick="toggleDataset()">Show dataset</button>
-                <button class="btn btn-secondary show-dataset" onclick="toggleRequest()">Show request</button>
+                <button class="btn btn-secondary show-request" onclick="toggleRequest()">Show request</button>
             </div>
 
             <div class="graph-buttons export-buttons">
@@ -64,17 +69,17 @@
     <script>
         $(document).ready(function(){
             let data =  @json($results);
-            console.log(data);
 
-            createGraph(data);
+            if (Array.isArray(data) && data.length) {
+                console.log(data);
 
-            createDatasetTable(data);
+                createGraph(data);
 
-            $("#title").change(function (){
-                //
-                // chart.options.title.text = 'new title';
-                // chart.update();
-            });
+                createDatasetTable(data);
+
+            } else {
+                noDataContentSwitch();
+            }
 
         });
     </script>
