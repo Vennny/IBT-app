@@ -12,9 +12,9 @@ use League;
 class QueryService
 {
 
-    public $request;
+    private $request;
 
-    public $query;
+    private $query;
 
     /**
      * QueryService constructor.
@@ -23,6 +23,11 @@ class QueryService
     public function __construct($request)
     {
         $this->request = $request;
+    }
+
+    public function getQuery(): string
+    {
+        return $this->query;
     }
 
     private function getCountryCode(string $name): string
@@ -59,6 +64,8 @@ class QueryService
 
     private function buildCategoryCountQuery(): string
     {
+        $request = $this->getRequest();
+
         $language = $this->request->input('language');
         $limit = intval($this->request->input('limit'));
 
@@ -186,7 +193,7 @@ class QueryService
     }
 
 
-    private function buildQuery(): string
+    private function build(): string
     {
         //TODO validation
         $type = $this->request->input('chart_type');
@@ -200,13 +207,17 @@ class QueryService
         return "";
     }
 
-    public function getQueryResults(): array
+    public function getResults(): array
     {
-        $this->query = $this->buildQuery();
+        $query = $this->build();
 
-        if ($this->query){
-            $result = DB::select( DB::raw($this->query));
+        if ($query){
+            $result = DB::select( DB::raw($query));
+        } else {
+            $result = array();
         }
+
+        $this->query = $query;
 
         return $result;
     }

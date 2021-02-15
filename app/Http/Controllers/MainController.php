@@ -38,9 +38,9 @@ class MainController extends Controller
     {
         $query_service = new queryService($request);
 
-        $results = $query_service->getQueryResults();
+        $results = $query_service->getResults();
 
-        $query = $query_service->query;
+        $query = $query_service->getQuery();
 
         $request_values = array_filter(array_slice($request->all(),1)); //remove first input and all empty inputs
         return view('main.graph', [
