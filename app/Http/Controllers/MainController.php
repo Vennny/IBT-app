@@ -36,16 +36,18 @@ class MainController extends Controller
      */
     public function handleRequest(Request $request)
     {
-        $query_service = new queryService($request);
+        $queryService = new queryService($request);
 
-        $results = $query_service->getResults();
+        $results = $queryService->getResult();
 
-        $query = $query_service->getQuery();
+        $query = $queryService->getQuery();
 
-        $request_values = array_filter(array_slice($request->all(),1)); //remove first input and all empty inputs
+        //remove first input and all empty inputs
+        $requestValues = array_filter(array_slice($request->all(),1));
+
         return view('main.graph', [
             'results' => $results,
-            'request' => $request_values,
+            'request' => $requestValues,
             'query' => $query
         ]);
     }

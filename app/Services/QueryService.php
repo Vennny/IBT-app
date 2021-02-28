@@ -64,8 +64,6 @@ class QueryService
 
     private function buildCategoryCountQuery(): string
     {
-        $request = $this->getRequest();
-
         $language = $this->request->input('language');
         $limit = intval($this->request->input('limit'));
 
@@ -104,6 +102,7 @@ class QueryService
         $country = $this->request->input('country');
         $category = strtolower($this->request->input('category'));
         $letter = strtolower($this->request->input('letter'));
+        $percentage = $this->request->input('percentage');
 
         $word_table = $this->getWordTableName($language);
 
@@ -121,20 +120,20 @@ class QueryService
                 $word_table . " ";
 
         if ($country || $category || $letter || $word_table === "word_rest") {
-            $where_query =
+            $whereQuery =
                 "WHERE ";
 
             if ($country) {
                 //prevent SQL injection
                 $country = preg_replace("/'/", "''", $country);
-                $where_query .=
+                $whereQuery .=
                     "country_code = '".$this->getCountryCode($country)."' ";
             }
 
             if ($letter) {
                 //prevent SQL injection
                 $letter = preg_replace("/'/", "''", $letter);
-                $where_query = $where_query .
+                $whereQuery = $whereQuery .
                     "LOWER(value) LIKE '".$letter."%' ";
 
             }
@@ -142,7 +141,7 @@ class QueryService
             if ($word_table === "word_rest") {
                 //prevent SQL injection
                 $language = preg_replace("/'/", "''", $language);
-                $where_query = $where_query .
+                $whereQuery = $whereQuery .
                     "id_lang = '".$language."' ";
             }
 
@@ -150,14 +149,14 @@ class QueryService
                 //categories can contain an apostrophe => needs to be escaped in query, also prevents SQL injection
                 $category = preg_replace("/'/", "''", $category);
 
-                $where_query = $where_query .
+                $whereQuery = $whereQuery .
                     "LOWER(category_name) = '".$category."' ";
             }
 
             // replace each space between WHERE conditions to "AND"
-            $where_query = preg_replace("/(?<=')[\s](?!$)/", " AND ", $where_query);
+            $whereQuery = preg_replace("/(?<=')[\s](?!$)/", " AND ", $whereQuery);
 
-            $query .= $where_query;
+            $query .= $whereQuery;
         }
 
         if ($type_popularity) {
@@ -207,17 +206,42 @@ class QueryService
         return "";
     }
 
-    public function getResults(): array
+    private function execute($query): array
     {
-        $query = $this->build();
-
         if ($query){
             $result = DB::select( DB::raw($query));
+            return json_decode(json_encode($result), true);
         } else {
-            $result = array();
+            return array();
+        }
+    }
+
+    private function changeResultToPercentage($result): array
+    {
+        $total = $this->execute($this->buildAnswerCountQuery(false));
+        $totalAmount = $total[0]["amount"];
+
+        foreach ($result as $i => $item) {
+            $result[$i]["amount"] /= $totalAmount ;
         }
 
+        return $result;
+    }
+
+    public function getResult(): array
+    {
+        $query = $this->build();
         $this->query = $query;
+
+        $result = $this->execute($query);
+
+        if ($this->request->input('chart_type') === "popular"
+            && $this->request->input('count') === "answer"
+            && $this->request->input('percentage')
+            && $this->request->input('category')
+        ) {
+            $result = $this->changeResultToPercentage($result);
+        }
 
         return $result;
     }
