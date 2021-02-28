@@ -29,8 +29,8 @@
 
         <div class="graph-buttons-container">
             <div class="graph-buttons dataset-switch-buttons">
-                <button class="btn btn-secondary show-dataset" onclick="toggleDataset()">Show dataset</button>
-                <button class="btn btn-secondary show-request" onclick="toggleRequest()">Show request</button>
+                <button class="btn btn-secondary show-dataset">Show dataset</button>
+                <button class="btn btn-secondary show-request">Show request</button>
             </div>
 
             <div class="graph-buttons export-buttons">
@@ -70,13 +70,12 @@
         $(document).ready(function(){
             let data =  @json($results);
 
-            if (Array.isArray(data) && data.length) {
+            if (Array.isArray(data) && data.length > 0) {
                 console.log(data);
 
                 createGraph(data);
 
                 createDatasetTable(data);
-
             } else {
                 noDataContentSwitch();
             }

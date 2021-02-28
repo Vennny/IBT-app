@@ -26,6 +26,14 @@ $("#y-font-slider").on('input', function (){
     changeYAxisLabelFontSize(this);
 });
 
+//button clicks
+$(".show-dataset").click(function() {
+    toggleDataset();
+})
+
+$(".show-request").click(function() {
+    toggleRequest();
+})
 
 function getKeysLabelsValues(data) {
     let keys = Object.keys(data[0]);
@@ -205,7 +213,7 @@ function toggleDataset() {
 }
 
 function noDataContentSwitch(){
-    $("#error").append("<h1>No matching data found</h1>");
+    $(".error").append("<h1>No matching data found</h1>");
 
     $('#chart').remove();
     $('.form-row').remove();
