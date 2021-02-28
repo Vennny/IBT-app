@@ -1,3 +1,25 @@
+
+$(document).on('input', '#category', function()
+{
+    toggleSwitchInput();
+});
+
+function toggleSwitchInput()
+{
+    if (
+        $("#chart_type").val() === 'popular' &&
+        $("#count").val() === 'answer' &&
+        Boolean($("#category").val())
+    ) {
+        if (!$('.custom-switch').length) {
+            $('.percentage-switch').append(createSwitchInput());
+        }
+    } else {
+        $(".custom-switch").remove();
+    }
+
+}
+
 function changeFormType(countries)
 {
     let element = $("#chart_type");
@@ -51,24 +73,24 @@ function createSwitchInput()
 {
     return $('\n' +
         '                <div class="custom-control custom-switch">\n' +
-        '                    <input type="checkbox" class="custom-control-input" id="percentage" disabled>\n' +
+        '                    <input type="checkbox" class="custom-control-input" name="percentage" id="percentage" >\n' +
         '                    <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>\n' +
         '                </div>');
 }
 
 function changeCountForm(countries)
 {
-    let element = $("#count");
-    let inputsExist = $(".countries_datalist").length;
+    let count = $("#count");
+    let inputsExist = $(".countries_datalist").length || $(".category").length || $(".letter").length ;
 
-    if (element.val() === 'answer'){
+    if (count.val() === 'answer'){
         if (!inputsExist) {
             let div = $(".form-answer-switch");
             div.append(createAnswerFormInputs(countries));
             div.append(createCategoryInput());
             div.append(createLetterInput());
         }
-    } else if (element.val() === 'category') {
+    } else if (count.val() === 'category') {
         if (inputsExist) {
             $(".countries_datalist").remove();
             $(".category").remove();
@@ -76,16 +98,6 @@ function changeCountForm(countries)
         }
     }
 
-    if ($("#chart_type").val() === 'popular') {
-        if (element.val() === 'answer'){
-            if (!$('.custom-switch').length){
-                console.log("sfafw");
-                $('.percentage-switch').append(createSwitchInput());
-            }
-        } else {
-            $(".custom-switch").remove();
-        }
-    } else {
-        $(".custom-switch").remove();
-    }
+    toggleSwitchInput();
 }
+

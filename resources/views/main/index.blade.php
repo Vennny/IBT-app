@@ -73,7 +73,6 @@
             $("#count").change(function (){
                 changeCountForm(countries);
             });
-
         });
     </script>
 @endpush
