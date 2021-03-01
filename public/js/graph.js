@@ -1,4 +1,3 @@
-
 let graph;
 
 //label customizations
@@ -27,13 +26,59 @@ $("#y-font-slider").on('input', function (){
 });
 
 //button clicks
-$(".show-dataset").click(function() {
+$("#show-dataset").click(function() {
     toggleDataset();
 })
 
-$(".show-request").click(function() {
+$("#show-request").click(function() {
     toggleRequest();
 })
+
+$("#download-graph-pdf").click(function() {
+    saveAsPDF();
+})
+
+$("#download-graph-png").click(function() {
+    saveAsPNG();
+})
+
+// $("#download-csv").click(function() {
+//     console.log("here");
+//     let csv = $(this).table2CSV();
+//     window.location.href = 'data:text/csv;charset=UTF-8,'
+//         + encodeURIComponent(csv);
+// })
+//
+// function saveCsv(data) {
+//     const [keys, labels, values] = getKeysLabelsValues(data);
+//
+//
+// }
+
+function saveAsPNG() {
+    html2canvas($("#graph-container")).then(canvas => {
+        let link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = 'graph.png';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
+
+function saveAsPDF() {
+    console.log("save");
+    html2canvas($("#graph-container")).then(canvas => {
+        let img = canvas.toDataURL(); //image data of canvas
+        let pdf =  new jsPDF("p", "mm", "a4");
+        const width = pdf.internal.pageSize.width;
+        const height = (canvas.height * width) / canvas.width;
+
+        pdf.addImage(img, 'PNG', 0, 0, width, height);
+        pdf.save('graph.pdf');
+    });
+}
 
 function getKeysLabelsValues(data) {
     let keys = Object.keys(data[0]);
@@ -44,13 +89,19 @@ function getKeysLabelsValues(data) {
 }
 
 function insertDefaultAxisLabels(keys){
-    console.log(keys);
     $('#y-axis-label').val(keys[0]);
     $('#x-axis-label').val(keys[1]);
 }
 
 function createGraph(data) {
     const [keys, labels, values] = getKeysLabelsValues(data);
+
+    console.log(data);
+    //
+    // let csv;
+    // keys.forEach(function (key) {
+    //     csv += key + ''
+    // })
 
     let ctx = document.getElementById('chart').getContext('2d');
 

@@ -3,7 +3,9 @@
 @section('title', 'Graph')
 
 @section('content')
-    <canvas id="chart" width="100%" height="60%"></canvas>
+    <div id="graph-container">
+        <canvas id="chart" width="100%" height="60%"></canvas>
+    </div>
 
     <div class="error"></div>
 
@@ -26,18 +28,24 @@
     </div>
 
     <div class="graph-data">
-
         <div class="graph-buttons-container">
             <div class="graph-buttons dataset-switch-buttons">
-                <button class="btn btn-secondary show-dataset">Show dataset</button>
-                <button class="btn btn-secondary show-request">Show request</button>
+                <button id="show-dataset" class="btn btn-secondary">Show dataset</button>
+                <button id="show-request" class="btn btn-secondary">Show request</button>
             </div>
 
             <div class="graph-buttons export-buttons">
-                <button class="btn btn-primary" disabled>Export graph to pdf</button>
-                <button class="btn btn-primary" disabled>Export dataset to csv</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Save graph as
+                </button>
+                <div class="dropdown-menu">
+                    <button id="download-graph-pdf" class="dropdown-item">PDF</button>
+                    <button id="download-graph-png" class="dropdown-item">PNG</button>
+                </div>
+                <button id="download-csv" class="btn btn-primary">Export dataset to csv</button>
             </div>
         </div>
+
 
         <table class="dataset table table-striped table-bordered table-hover">
             <thead id="thead"></thead>
@@ -60,11 +68,16 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+@push('head-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <script type="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="{{ asset('js/graph.js') }}"></script>
     <script>
         $(document).ready(function(){
@@ -79,7 +92,6 @@
             } else {
                 noDataContentSwitch();
             }
-
         });
     </script>
 @endpush
