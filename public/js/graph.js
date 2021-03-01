@@ -97,6 +97,12 @@ function createGraph(data, percentage) {
 
     let ctx = document.getElementById('chart').getContext('2d');
 
+    if (percentage) {
+        values.forEach(function(value, index){
+            this[index] = (value * 100).toFixed(2);
+        }, values)
+    }
+
     graph = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
@@ -153,7 +159,7 @@ function createGraph(data, percentage) {
                     ticks: {
                         callback: function (value) {
                             if (percentage) {
-                                return (value * 100).toFixed(0) + " %"
+                                return value.toFixed(0) + " %"
                             } else {
                                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                             }
