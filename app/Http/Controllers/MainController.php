@@ -48,7 +48,8 @@ class MainController extends Controller
         return view('main.graph', [
             'results' => $results,
             'request' => $requestValues,
-            'query' => $query
+            'query' => $query,
+            'percentage' => array_key_exists('percentage', $requestValues)
         ]);
     }
 

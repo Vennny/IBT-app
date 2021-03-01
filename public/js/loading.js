@@ -16,4 +16,3 @@ function sendQuery() {
     document.forms["query_builder"].submit();
     showLoadingText();
 }
-

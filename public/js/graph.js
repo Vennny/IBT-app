@@ -42,18 +42,16 @@ $("#download-graph-png").click(function() {
     saveAsPNG();
 })
 
-// $("#download-csv").click(function() {
-//     console.log("here");
-//     let csv = $(this).table2CSV();
-//     window.location.href = 'data:text/csv;charset=UTF-8,'
-//         + encodeURIComponent(csv);
-// })
-//
-// function saveCsv(data) {
-//     const [keys, labels, values] = getKeysLabelsValues(data);
-//
-//
-// }
+$("#download-csv").click(function() {
+    saveCSV();
+})
+
+function saveCSV() {
+    let table = $('#dataset-table');
+    table.css("display", "table");
+    table.table2csv();
+    table.css("display", "none");
+}
 
 function saveAsPNG() {
     html2canvas($("#graph-container")).then(canvas => {
@@ -93,15 +91,8 @@ function insertDefaultAxisLabels(keys){
     $('#x-axis-label').val(keys[1]);
 }
 
-function createGraph(data) {
+function createGraph(data, percentage) {
     const [keys, labels, values] = getKeysLabelsValues(data);
-
-    console.log(data);
-    //
-    // let csv;
-    // keys.forEach(function (key) {
-    //     csv += key + ''
-    // })
 
     let ctx = document.getElementById('chart').getContext('2d');
 
@@ -160,7 +151,12 @@ function createGraph(data) {
                 xAxes: [{
                     ticks: {
                         callback: function (value) {
-                            return numeral(value).format('0,0')
+                            if (percentage) {
+                                return (value * 100).toFixed(0) + " %"
+                            } else {
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+                            }
                         }
                     },
                     scaleLabel: {
@@ -225,7 +221,6 @@ function changeYAxisLabelFontSize(element){
 
 //table changes
 function createDatasetTable(data){
-
     const [keys, labels, values] = getKeysLabelsValues(data);
 
     let tr = $('<tr></tr>')
