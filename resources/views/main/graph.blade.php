@@ -68,15 +68,9 @@
     </div>
 @endsection
 
-
-@push('head-scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+@push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
     <script type="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-@endpush
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="{{ asset('js/graph.js') }}"></script>
     <script>
         $(document).ready(function(){

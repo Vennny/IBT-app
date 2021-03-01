@@ -59,9 +59,6 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script src="{{ asset('js/loading.js') }}"></script>
     <script src="{{ asset('js/form.js') }}"></script>
     <script>
@@ -75,13 +72,6 @@
             $("#count").change(function (){
                 changeCountForm(countries);
             });
-
-            // $("#download-csv").click(function() {
-            //     console.log("here");
-            //     let csv = $(this).table2CSV();
-            //     window.location.href = 'data:text/csv;charset=UTF-8,'
-            //         + encodeURIComponent(csv);
-            // })
         });
     </script>
 @endpush

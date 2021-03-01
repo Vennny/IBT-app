@@ -46,6 +46,7 @@ $("#download-csv").click(function() {
     saveCSV();
 })
 
+//download functions
 function saveCSV() {
     let table = $('#dataset-table');
     table.css("display", "table");
@@ -66,7 +67,6 @@ function saveAsPNG() {
 }
 
 function saveAsPDF() {
-    console.log("save");
     html2canvas($("#graph-container")).then(canvas => {
         let img = canvas.toDataURL(); //image data of canvas
         let pdf =  new jsPDF("p", "mm", "a4");
@@ -78,6 +78,7 @@ function saveAsPDF() {
     });
 }
 
+//chart functions
 function getKeysLabelsValues(data) {
     let keys = Object.keys(data[0]);
     let labels = data.map(a => a[keys[0]]);
@@ -154,8 +155,7 @@ function createGraph(data, percentage) {
                             if (percentage) {
                                 return (value * 100).toFixed(0) + " %"
                             } else {
-                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                             }
                         }
                     },
