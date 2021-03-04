@@ -87,9 +87,15 @@ function getKeysLabelsValues(data) {
     return [keys, labels, values];
 }
 
-function insertDefaultAxisLabels(keys){
+function insertDefaultAxisLabels(keys) {
     $('#y-axis-label').val(keys[0]);
     $('#x-axis-label').val(keys[1]);
+}
+
+function getAmountOfDecimals(value) {
+    if ((value % 1) !== 0){
+        return value.toString().split(".")[1].length;
+    }
 }
 
 const colors = [
@@ -105,17 +111,7 @@ const colors = [
     'rgba(255, 159, 64,'
 ];
 
-function createGraph(data, percentage) {
-    const [keys, labels, values] = getKeysLabelsValues(data);
-
-    let ctx = document.getElementById('chart').getContext('2d');
-
-    if (percentage) {
-        values.forEach(function(value, index){
-            this[index] = (value * 100).toFixed(2);
-        }, values)
-    }
-
+function getColours(values) {
     let backgroundColors = [];
     let borderColors = [];
 
@@ -124,15 +120,58 @@ function createGraph(data, percentage) {
         borderColors.push(colors[index % colors.length]  + '1)');
     })
 
+    return {
+        'backgroundColors': backgroundColors,
+        'borderColors': borderColors
+    };
+}
+
+function getGraphType(request) {
+    let chartType;
+
+    if (request['chart_type'] === 'time'){
+        chartType = 'line';
+    } else {
+        chartType = 'horizontalBar';
+    }
+
+    return chartType;
+}
+
+function resolveGraphDataOptions(data, request) {
+    const [keys, labels, values] = getKeysLabelsValues(data);
+
+    let percentage = 'percentage' in request;
+
+    if (percentage) {
+        values.forEach(function(value, index){
+            this[index] = (value * 100).toFixed(2);
+        }, values)
+    }
+
+    return {
+        'type': getGraphType(request),
+        'keys': keys,
+        'labels': labels,
+        'values': values,
+        'percentage': percentage,
+        'colors': getColours(values)
+    };
+}
+
+function createGraph(data, request) {
+    let graphDataOptions = resolveGraphDataOptions(data, request)
+
+    let ctx = document.getElementById('chart').getContext('2d');
     graph = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: graphDataOptions.type,
         data: {
-            labels: labels,
+            labels: graphDataOptions.labels,
             datasets: [{
                 label: 'amount',
-                data: values,
-                backgroundColor: backgroundColors,
-                borderColor: borderColors,
+                data: graphDataOptions.values,
+                backgroundColor: graphDataOptions.colors.backgroundColors,
+                borderColor: graphDataOptions.colors.borderColors,
                 borderWidth: 1
             }]
         },
@@ -148,7 +187,7 @@ function createGraph(data, percentage) {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: keys[0]
+                        labelString: graphDataOptions.keys[0]
                     },
                     ticks: {
                         beginAtZero: true
@@ -157,8 +196,8 @@ function createGraph(data, percentage) {
                 xAxes: [{
                     ticks: {
                         callback: function (value) {
-                            if (percentage) {
-                                return value.toFixed(0) + " %"
+                            if (graphDataOptions.percentage) {
+                                return value.toFixed(getAmountOfDecimals(value)) + " %"
                             } else {
                                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                             }
@@ -166,14 +205,14 @@ function createGraph(data, percentage) {
                     },
                     scaleLabel: {
                         display: true,
-                        labelString: keys[1]
+                        labelString: graphDataOptions.keys[1]
                     },
                 }]
             }
         }
     });
 
-    insertDefaultAxisLabels(keys);
+    insertDefaultAxisLabels(graphDataOptions.keys);
 }
 
 function changeGraphTitle(element){
@@ -269,5 +308,5 @@ function noDataContentSwitch(){
     $('#chart').remove();
     $('.form-row').remove();
     $('.export-buttons').remove();
-    $('.show-dataset').remove();
+    $('#show-dataset').remove();
 }

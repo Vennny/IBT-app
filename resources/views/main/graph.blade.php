@@ -75,12 +75,12 @@
     <script>
         $(document).ready(function(){
             let data =  @json($results);
-            let percentage = @json($percentage);
+            let request = @json($request);
 
             if (Array.isArray(data) && data.length > 0) {
                 console.log(data);
 
-                createGraph(data, percentage);
+                createGraph(data, request);
 
                 createDatasetTable(data);
             } else {

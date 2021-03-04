@@ -8,9 +8,29 @@ use App\Rules\CountryExists;
 use Illuminate\Support\Facades\DB;
 use League;
 
-
 class QueryService
 {
+    private const CHART_TYPE = 'chart_type';
+    private const COUNT = 'count';
+    private const COUNTRY = 'country';
+    private const CATEGORY = 'category';
+    private const LETTER = 'letter';
+    private const LANGUAGE = 'language';
+    private const LIMIT = 'limit';
+    private const PERCENTAGE = 'percentage';
+    private const WORD = 'word';
+    private const OPERATOR = 'operator';
+
+    private const POPULARITY_GRAPH = 'popular';
+    private const TOTAL_AMOUNT_GRAPH = 'total';
+    private const TIME_GRAPH = 'time';
+
+    private const COUNT_ANSWERS = 'answer';
+    private const COUNT_CATEGORIES = 'category';
+
+    private const COUNT_COLUMN_NAME = 'amount';
+
+    private const WORD_TABLE_REST = 'word_rest';
 
     private $request;
 
@@ -64,8 +84,8 @@ class QueryService
 
     private function buildCategoryCountQuery(): string
     {
-        $language = $this->request->input('language');
-        $limit = intval($this->request->input('limit'));
+        $language = $this->request->input(self::LANGUAGE);
+        $limit = intval($this->request->input(self::LIMIT));
 
         $query =
             "SELECT " .
@@ -91,35 +111,9 @@ class QueryService
         return $query;
     }
 
-    private function buildAnswerCountQuery(bool $type_popularity): string
+    private function buildWhereSubQuery(string $word_table, string $language, $country, $category, $letter) :string
     {
-        $this->request->validate([
-            'country' => [new CountryExists]
-        ]);
-
-        $language = $this->request->input('language');
-        $limit = $this->request->input('limit');
-        $country = $this->request->input('country');
-        $category = strtolower($this->request->input('category'));
-        $letter = strtolower($this->request->input('letter'));
-        $percentage = $this->request->input('percentage');
-
-        $word_table = $this->getWordTableName($language);
-
-        $query = "SELECT ";
-
-        if ($type_popularity) {
-            $query.= "LOWER(value) AS word, ";
-        } else {
-            $query.= "LOWER(category_name) AS category_name, ";
-        }
-
-        $query .=
-                "COUNT(*) AS amount " .
-            "FROM " .
-                $word_table . " ";
-
-        if ($country || $category || $letter || $word_table === "word_rest") {
+        if ($country || $category || $letter || $word_table === self::WORD_TABLE_REST) {
             $whereQuery =
                 "WHERE ";
 
@@ -138,7 +132,7 @@ class QueryService
 
             }
 
-            if ($word_table === "word_rest") {
+            if ($word_table === self::WORD_TABLE_REST) {
                 //prevent SQL injection
                 $language = preg_replace("/'/", "''", $language);
                 $whereQuery = $whereQuery .
@@ -156,8 +150,41 @@ class QueryService
             // replace each space between WHERE conditions to "AND"
             $whereQuery = preg_replace("/(?<=')[\s](?!$)/", " AND ", $whereQuery);
 
-            $query .= $whereQuery;
+            return $whereQuery;
         }
+
+        return "";
+    }
+
+
+    private function buildAnswerCountQuery(bool $type_popularity): string
+    {
+        $this->request->validate([
+            'country' => [new CountryExists]
+        ]);
+
+        $language = $this->request->input(self::LANGUAGE);
+        $limit = $this->request->input(self::LIMIT);
+        $country = $this->request->input(self::COUNTRY);
+        $category = strtolower($this->request->input(self::CATEGORY));
+        $letter = strtolower($this->request->input(self::LETTER));
+
+        $word_table = $this->getWordTableName($language);
+
+        $query = "SELECT ";
+
+        if ($type_popularity) {
+            $query.= "LOWER(value) AS word, ";
+        } else {
+            $query.= "LOWER(category_name) AS category_name, ";
+        }
+
+        $query .=
+                "COUNT(*) AS ". self::COUNT_COLUMN_NAME . " ".
+            "FROM " .
+                $word_table . " ";
+
+        $query .= $this->buildWhereSubQuery($word_table, $language, $country, $category, $letter);
 
         if ($type_popularity) {
             $query .=
@@ -177,13 +204,57 @@ class QueryService
         return $query;
     }
 
+
+    private function buildTimeQuery() : string
+    {
+        $this->request->validate([
+            'country' => [new CountryExists]
+        ]);
+
+        $language = $this->request->input(self::LANGUAGE);
+        $country = $this->request->input(self::COUNTRY);
+        $category = strtolower($this->request->input(self::CATEGORY));
+        $letter = strtolower($this->request->input(self::LETTER));
+        $word = strtolower($this->request->input(self::WORD));
+        $operator = $this->request->input(self::OPERATOR);
+
+        $word_table = $this->getWordTableName($language);
+
+        $pattern = $word;
+        if ($operator == 'starts') {
+            $pattern = '%' . $pattern;
+        }
+        else if ($operator == 'both') {
+            $pattern = '%' . $pattern . '%';
+        }
+
+        $query = "
+                SELECT
+                    DATE(date_cr) AS day,
+                    SUM(case when
+                        value ILIKE '". $pattern ."'
+                        then 1 else 0 end) AS occurrences
+                FROM " .
+                    $word_table . " ";
+
+        $query .= $this->buildWhereSubQuery($word_table, $language, $country, $category, $letter);
+
+        $query .= "
+                GROUP BY
+                    day
+                ORDER BY
+                    day ASC;";
+
+        return $query;
+    }
+
     private function buildPopularityQuery(): string
     {
-        $table = $this->request->input('count');
+        $table = $this->request->input(self::COUNT);
 
-        if ($table === "category") {
+        if ($table === self::COUNT_CATEGORIES) {
             return $this->buildCategoryCountQuery();
-        } elseif ($table === "answer") {
+        } elseif ($table === self::COUNT_ANSWERS) {
             return $this->buildAnswerCountQuery(true);
         } else {
             //TODO redirect in service does not work
@@ -191,16 +262,17 @@ class QueryService
         }
     }
 
-
     private function build(): string
     {
         //TODO validation
-        $type = $this->request->input('chart_type');
+        $type = $this->request->input(self::CHART_TYPE);
 
-        if ($type === "popular") {
+        if ($type === self::POPULARITY_GRAPH) {
             return $this->buildPopularityQuery();
-        } else if($type === "total") {
+        } else if($type === self::TOTAL_AMOUNT_GRAPH) {
             return $this->buildAnswerCountQuery(false);
+        } else if($type === self::TIME_GRAPH) {
+            return $this->buildTimeQuery();
         }
 
         return "";
@@ -219,10 +291,10 @@ class QueryService
     private function changeResultToPercentage($result): array
     {
         $total = $this->execute($this->buildAnswerCountQuery(false));
-        $totalAmount = $total[0]["amount"];
+        $totalAmount = $total[0][self::COUNT_COLUMN_NAME];
 
         foreach ($result as $i => $item) {
-            $result[$i]["amount"] /= $totalAmount ;
+            $result[$i][self::COUNT_COLUMN_NAME] /= $totalAmount ;
         }
 
         return $result;
@@ -235,10 +307,10 @@ class QueryService
 
         $result = $this->execute($query);
 
-        if ($this->request->input('chart_type') === "popular"
-            && $this->request->input('count') === "answer"
-            && $this->request->input('percentage')
-            && $this->request->input('category')
+        if ($this->request->input(self::CHART_TYPE) === self::POPULARITY_GRAPH
+            && $this->request->input(self::COUNT) === self::COUNT_ANSWERS
+            && $this->request->input(self::PERCENTAGE)
+            && $this->request->input(self::CATEGORY)
         ) {
             $result = $this->changeResultToPercentage($result);
         }

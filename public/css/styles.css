@@ -34,10 +34,17 @@
     left: 0;
 }
 
-.loader_text {
+.loader-text {
     text-align: center;
-    opacity: 0;
     transition: 0.3s;
+}
+
+#loading_warning {
+    opacity: 0;
+}
+
+#loading_text {
+    opacity: 0;
 }
 
 /* chart blade */
