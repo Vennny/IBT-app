@@ -92,6 +92,19 @@ function insertDefaultAxisLabels(keys){
     $('#x-axis-label').val(keys[1]);
 }
 
+const colors = [
+    'rgba(255, 99, 132,',
+    'rgba(54, 80, 235,',
+    'rgba(255, 206, 86,',
+    'rgba(75, 192, 192,',
+    'rgba(153, 102, 255,',
+    'rgba(255, 50, 50,',
+    'rgba(50, 255, 50,',
+    'rgba(50, 50, 255,',
+    'rgba(100, 102, 100,',
+    'rgba(255, 159, 64,'
+];
+
 function createGraph(data, percentage) {
     const [keys, labels, values] = getKeysLabelsValues(data);
 
@@ -103,6 +116,14 @@ function createGraph(data, percentage) {
         }, values)
     }
 
+    let backgroundColors = [];
+    let borderColors = [];
+
+    values.forEach(function(val, index){
+        backgroundColors.push(colors[index % colors.length]  + '0.4)');
+        borderColors.push(colors[index % colors.length]  + '1)');
+    })
+
     graph = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
@@ -110,30 +131,8 @@ function createGraph(data, percentage) {
             datasets: [{
                 label: 'amount',
                 data: values,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 0, 0, 0.2)',
-                    'rgba(0, 255, 0, 0.2)',
-                    'rgba(0, 0, 255, 0.2)',
-                    'rgba(100, 102, 100, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 0, 0, 1)',
-                    'rgba(0, 255, 0, 1)',
-                    'rgba(0, 0, 255, 1)',
-                    'rgba(100, 102, 100, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
                 borderWidth: 1
             }]
         },
