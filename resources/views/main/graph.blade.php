@@ -25,6 +25,18 @@
             <input type="text" class="form-control" id="y-axis-label">
             <input type="range" class="font-slider" id="y-font-slider" min="1" max="50">
         </div>
+        <div class="col">
+            <label for="title">Day average: </label>
+            <input type="text" class="form-control" id="y-axis-label" value="0">
+        </div>
+        <div class="col">
+            <label for="title">Day range from: </label>
+            <input type="text" class="form-control" id="y-axis-label" value="{{$results[0]['day']}}">
+        </div>
+        <div class="col">
+            <label for="title">Day range to: </label>
+            <input type="text" class="form-control" id="y-axis-label" value="{{$results[count($results)-1]['day']}}">
+        </div>
     </div>
 
     <div class="graph-data">
@@ -53,15 +65,31 @@
         </table>
 
         <table class="request table table-striped table-bordered table-hover">
-            <thead><tr><th colspan="{{count($request)}}">Query Details</th></tr></thead>
+            <thead>
+                <tr>
+                    <th colspan="{{count($request) + count($request['country'])}}">
+                        Query Details
+                    </th>
+                </tr>
+            </thead>
             <tbody>
                 <tr>
                 @foreach($request AS $input)
-                    <td>{{$input}}</td>
+                    @if(is_array($input))
+                        @if(!empty(array_filter($input)))
+                            @foreach($input as $item)
+                                @if(!empty($item))
+                                  <td>{{$item }}</td>
+                                @endif
+                            @endforeach
+                        @endif
+                    @else
+                        <td>{{$input}}</td>
+                    @endif
                 @endforeach
                 </tr>
                 <tr>
-                    <td colspan="{{count($request)}}">{{$query}}</td>
+                    <td colspan="{{count($request) + count($request['country'])}}">{{$query}}</td>
                 </tr>
             </tbody>
         </table>
@@ -76,6 +104,8 @@
         $(document).ready(function(){
             let data =  @json($results);
             let request = @json($request);
+
+            console.log(request);
 
             if (Array.isArray(data) && data.length > 0) {
                 console.log(data);

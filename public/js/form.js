@@ -25,14 +25,30 @@ $(document).on('input', '#category', function() {
     toggleSwitchInput();
 });
 
+$(document).on('change', '#category', function() {
+    trimWhitespaceInInput($(this));
+});
+
+$(document).on('change', '#letter', function() {
+    trimWhitespaceInInput($(this));
+});
+
+$(document).on('change', '#word', function() {
+    trimWhitespaceInInput($(this));
+});
+
 $(document).on('change', '.country-input', function() {
     resolveCountryInputs($(this));
 });
 
-function resolveCountryInputs(input) {
+function trimWhitespaceInInput(input) {
     if (! /\S/.test(input.val())){
         input.val('');
     }
+}
+
+function resolveCountryInputs(input) {
+    trimWhitespaceInInput(input);
 
     let notFilledCount = 0;
     $(".countries > input").each(function (){
@@ -54,9 +70,9 @@ function resolveCountryInputs(input) {
 function toggleSwitchInput() {
     let chartType = $('#chart_type');
     if (
-        chartType.val() === 'popular' &&
-        $('#count').val() === 'answer' &&
-        $('#category').val().length
+        chartType.val() === 'popular'
+        && $('#count').val() === 'answer'
+        && $('#category').val().length
     ) {
         if (!$('.custom-switch').length) {
             $('.percentage-switch').append(createSwitchInput());

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\RequestHandlerService;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
-use App\Services\QueryService;
+use App\Services\QueryBuilderService;
 use League;
 
 
@@ -15,9 +15,9 @@ class MainController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|\Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $countries = (new League\ISO3166\ISO3166);
         $languages = DB::table('lang')->orderBy('date_cr', 'ASC')->get();
@@ -31,25 +31,22 @@ class MainController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|\Illuminate\Http\Response
+     * @param Request $request
+     * @return View
      */
-    public function handleRequest(Request $request)
+    public function handleRequest(Request $request): View
     {
-        $queryService = new queryService($request);
+        $requestHandlerService = (new RequestHandlerService(new QueryBuilderService($request)));
 
-        $results = $queryService->getResult();
-
-        $query = $queryService->getQuery();
-
-        //remove first input and all empty inputs
-        $requestValues = array_filter(array_slice($request->all(),1));
+        $results = $requestHandlerService->handle();
+        $query = $requestHandlerService->getQuery();
+        $filteredRequest = $requestHandlerService->getFilteredRequest();
 
         return view('main.graph', [
             'results' => $results,
-            'request' => $requestValues,
+            'request' => $filteredRequest,
             'query' => $query,
-            'percentage' => array_key_exists('percentage', $requestValues)
+            'percentage' => array_key_exists('percentage', $filteredRequest)
         ]);
     }
 
