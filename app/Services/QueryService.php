@@ -160,7 +160,7 @@ class QueryService
     private function buildAnswerCountQuery(bool $type_popularity): string
     {
         $this->request->validate([
-            'country' => [new CountryExists]
+            'country.*' => [new CountryExists]
         ]);
 
         $language = $this->request->input(self::LANGUAGE);
@@ -169,6 +169,7 @@ class QueryService
         $category = strtolower($this->request->input(self::CATEGORY));
         $letter = strtolower($this->request->input(self::LETTER));
 
+        print_r($country);
         $word_table = $this->getWordTableName($language);
 
         $query = "SELECT ";

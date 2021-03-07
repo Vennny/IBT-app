@@ -59,7 +59,6 @@
                 <div class="percentage-switch"></div>
             </div>
 
-
             <button type="submit" class="btn btn-primary" >Confirm</button>
         </form>
     </div>
@@ -71,13 +70,8 @@
         $(document).ready(function(){
             let countries = @json($countries->all());
 
-            $("#chart_type").change(function (){
-                changeFormType(countries);
-            });
 
-            $(document).on('change', '#count', function() {
-                changeCountForm(countries);
-            });
+            setCountries(countries);
         });
     </script>
 @endpush
