@@ -26,52 +26,7 @@ class QueryBuilderService
         return $this->request;
     }
 
-    private function getGraphTypeInput(): string
-    {
-        return $this->request->input(QueryConstants::GRAPH_TYPE);
-    }
-
-    private function getCountTableInput(): string
-    {
-        return $this->request->input(QueryConstants::COUNT);
-    }
-
-    private function getCountriesInput(): array
-    {
-        return array_filter($this->request->input(QueryConstants::COUNTRY));
-    }
-
-    private function getCategoryInput(): string|null
-    {
-        return strtolower($this->request->input(QueryConstants::CATEGORY));
-    }
-
-    private function getLanguageInput(): string
-    {
-        return $this->request->input(QueryConstants::LANGUAGE);
-    }
-
-    private function getOperatorInput(): string
-    {
-        return $this->request->input(QueryConstants::OPERATOR);
-    }
-
-    private function getWordInput(): string
-    {
-        return strtolower($this->request->input(QueryConstants::WORD));
-    }
-
-    private function getLetterInput(): string|null
-    {
-        return $this->request->input(QueryConstants::LETTER);
-    }
-
-    private function getLimitInput(): int
-    {
-        return intval($this->request->input(QueryConstants::LIMIT));
-    }
-
-    private function getInputValue(string $input): string
+    private function getInputValue(string $input): mixed
     {
         return match ($input) {
             QueryConstants::GRAPH_TYPE => $this->request->input(QueryConstants::GRAPH_TYPE),
@@ -116,8 +71,8 @@ class QueryBuilderService
 
     private function buildCategoryCountQuery(): string
     {
-        $language = $this->getLanguageInput();
-        $limit = $this->getLimitInput();
+        $language = $this->getInputValue(QueryConstants::LANGUAGE);
+        $limit = $this->getInputValue(QueryConstants::LIMIT);
 
         $query =
             "SELECT " .
@@ -212,11 +167,11 @@ class QueryBuilderService
             'country.*' => [new CountryExists]
         ]);
 
-        $countries = $this->getCountriesInput();
-        $category = $this->getCategoryInput();
-        $language = $this->getLanguageInput();
-        $letter = $this->getLetterInput();
-        $limit = $this->getLimitInput();
+        $countries = $this->getInputValue(QueryConstants::COUNTRY);
+        $category = $this->getInputValue(QueryConstants::CATEGORY);
+        $language = $this->getInputValue(QueryConstants::LANGUAGE);
+        $letter = $this->getInputValue(QueryConstants::LETTER);
+        $limit = $this->getInputValue(QueryConstants::LIMIT);
 
         $word_table = $this->getWordTableName($language);
 
@@ -260,12 +215,12 @@ class QueryBuilderService
             'country.*' => [new CountryExists]
         ]);
 
-        $operator = $this->getOperatorInput();
-        $word = $this->getWordInput();
-        $countries = $this->getCountriesInput();
-        $category = $this->getCategoryInput();
-        $letter = $this->getLetterInput();
-        $language = $this->getLanguageInput();
+        $operator = $this->getInputValue(QueryConstants::OPERATOR);
+        $word = $this->getInputValue(QueryConstants::WORD);
+        $countries = $this->getInputValue(QueryConstants::COUNTRY);
+        $category = $this->getInputValue(QueryConstants::CATEGORY);
+        $letter = $this->getInputValue(QueryConstants::LETTER);
+        $language = $this->getInputValue(QueryConstants::LANGUAGE);
 
         $word_table = $this->getWordTableName($language);
 
@@ -299,7 +254,7 @@ class QueryBuilderService
 
     private function buildPopularityQuery(): string
     {
-        $table = $this->getCountTableInput();
+        $table = $this->getInputValue(QueryConstants::COUNT);
 
         if ($table === QueryConstants::COUNT_CATEGORIES) {
             return $this->buildCategoryCountQuery();
@@ -319,7 +274,7 @@ class QueryBuilderService
     public function build(): string
     {
         //TODO validation
-        $type = $this->getGraphTypeInput();
+        $type = $this->getInputValue(QueryConstants::GRAPH_TYPE);
 
         $query = "";
         if ($type === QueryConstants::POPULARITY_GRAPH) {

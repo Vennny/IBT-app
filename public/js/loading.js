@@ -5,7 +5,7 @@ function showLoadingIconAndText() {
 }
 
 function showLoadingWarning(){
-    const seconds = 10;
+    let seconds = 10;
 
     setTimeout(function() {
         $("#loadingWarning").fadeTo("slow", 0.9);
@@ -14,6 +14,5 @@ function showLoadingWarning(){
 
 function sendQuery() {
     showLoadingIconAndText();
-    document.forms["queryBuilder"].submit();
     showLoadingWarning();
 }

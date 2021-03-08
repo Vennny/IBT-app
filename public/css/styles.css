@@ -39,11 +39,11 @@
     transition: 0.3s;
 }
 
-#loading_warning {
+#loadingWarning {
     opacity: 0;
 }
 
-#loading_text {
+#loadingText {
     opacity: 0;
 }
 
