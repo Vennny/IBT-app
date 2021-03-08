@@ -26,9 +26,9 @@ class QueryBuilderService
         return $this->request;
     }
 
-    private function getChartTypeInput(): string
+    private function getGraphTypeInput(): string
     {
-        return $this->request->input(QueryConstants::CHART_TYPE);
+        return $this->request->input(QueryConstants::GRAPH_TYPE);
     }
 
     private function getCountTableInput(): string
@@ -71,11 +71,27 @@ class QueryBuilderService
         return intval($this->request->input(QueryConstants::LIMIT));
     }
 
+    private function getInputValue(string $input): string
+    {
+        return match ($input) {
+            QueryConstants::GRAPH_TYPE => $this->request->input(QueryConstants::GRAPH_TYPE),
+            QueryConstants::COUNT => $this->request->input(QueryConstants::COUNT),
+            QueryConstants::COUNTRY => array_filter($this->request->input(QueryConstants::COUNTRY)),
+            QueryConstants::CATEGORY =>  strtolower($this->request->input(QueryConstants::CATEGORY)),
+            QueryConstants::LANGUAGE => $this->request->input(QueryConstants::LANGUAGE),
+            QueryConstants::OPERATOR => $this->request->input(QueryConstants::OPERATOR),
+            QueryConstants::WORD => strtolower($this->request->input(QueryConstants::WORD)),
+            QueryConstants::LETTER => $this->request->input(QueryConstants::LETTER),
+            QueryConstants::LIMIT => intval($this->request->input(QueryConstants::LIMIT))
+        };
+    }
+
     private function getCountryCode(string $name): string
     {
         $country = (new League\ISO3166\ISO3166)->name($name);
         return $country['alpha2'];
     }
+
 
     private function validate(array $inputs): void
     {
@@ -84,28 +100,18 @@ class QueryBuilderService
 
     private function getWordTableName(string $language): string
     {
-        switch ($language){
-            case "cs":
-                return "word_cs";
-            case "de":
-                return "word_de";
-            case "en":
-                return "word_en";
-            case "es":
-                return "word_es";
-            case "fr":
-                return "word_fr";
-            case "it":
-                return "word_it";
-            case "pl":
-                return "word_pl";
-            case "pt":
-                return "word_pt";
-            case "sk":
-                return "word_sk";
-            default:
-                return "word_rest";
-        }
+        return match ($language) {
+            "cs" => "word_cs",
+            "de" => "word_de",
+            "en" => "word_en",
+            "es" => "word_es",
+            "fr" => "word_fr",
+            "it" => "word_it",
+            "pl" => "word_pl",
+            "pt" => "word_pt",
+            "sk" => "word_sk",
+            default => "word_rest",
+        };
     }
 
     private function buildCategoryCountQuery(): string
@@ -264,10 +270,10 @@ class QueryBuilderService
         $word_table = $this->getWordTableName($language);
 
         $pattern = $word;
-        if ($operator == 'starts') {
+        if ($operator === QueryConstants::OPERATOR_STARTS_WITH) {
             $pattern = '%' . $pattern;
         }
-        else if ($operator == 'both') {
+        else if ($operator === QueryConstants::OPERATOR_CONTAINS) {
             $pattern = '%' . $pattern . '%';
         }
 
@@ -313,7 +319,7 @@ class QueryBuilderService
     public function build(): string
     {
         //TODO validation
-        $type = $this->getChartTypeInput();
+        $type = $this->getGraphTypeInput();
 
         $query = "";
         if ($type === QueryConstants::POPULARITY_GRAPH) {

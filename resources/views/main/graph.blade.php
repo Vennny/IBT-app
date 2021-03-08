@@ -25,18 +25,21 @@
             <input type="text" class="form-control" id="y-axis-label">
             <input type="range" class="font-slider" id="y-font-slider" min="1" max="50">
         </div>
-        <div class="col">
-            <label for="title">Day average: </label>
-            <input type="text" class="form-control" id="y-axis-label" value="0">
-        </div>
-        <div class="col">
-            <label for="title">Day range from: </label>
-            <input type="text" class="form-control" id="y-axis-label" value="{{$results[0]['day']}}">
-        </div>
-        <div class="col">
-            <label for="title">Day range to: </label>
-            <input type="text" class="form-control" id="y-axis-label" value="{{$results[count($results)-1]['day']}}">
-        </div>
+
+        @if($request['graphType'] === 'time')
+            <div class="col">
+                <label for="title">Day moving average: </label>
+                <input type="text" class="form-control" id="movingAverage" value="0">
+            </div>
+            <div class="col">
+                <label for="title">Day range from: </label>
+                <input type="text" class="form-control" id="rangeStart" value="{{$results[0]['day']}}">
+            </div>
+            <div class="col">
+                <label for="title">Day range to: </label>
+                <input type="text" class="form-control" id="rangeEnd" value="{{$results[count($results)-1]['day']}}">
+            </div>
+        @endif
     </div>
 
     <div class="graph-data">
@@ -67,9 +70,13 @@
         <table class="request table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th colspan="{{count($request) + count($request['country'])}}">
-                        Query Details
-                    </th>
+                    @if(array_key_exists('country',$request))
+                        <th colspan="{{count($request) + count($request['country'])}}">
+                    @else
+                        <th colspan="{{count($request)}}">
+                    @endif
+                                Query Details
+                        </th>
                 </tr>
             </thead>
             <tbody>
@@ -89,7 +96,13 @@
                 @endforeach
                 </tr>
                 <tr>
-                    <td colspan="{{count($request) + count($request['country'])}}">{{$query}}</td>
+                    @if(array_key_exists('country',$request))
+                        <td colspan="{{count($request) + count($request['country'])}}">
+                    @else
+                        <td colspan="{{count($request)}}">
+                    @endif
+                            {{$query}}
+                        </td>
                 </tr>
             </tbody>
         </table>
@@ -108,8 +121,6 @@
             console.log(request);
 
             if (Array.isArray(data) && data.length > 0) {
-                console.log(data);
-
                 createGraph(data, request);
 
                 createDatasetTable(data);

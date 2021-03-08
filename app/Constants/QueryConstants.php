@@ -6,7 +6,7 @@ namespace App\Constants;
 
 class QueryConstants
 {
-   const CHART_TYPE = 'chart_type';
+   const GRAPH_TYPE = 'graphType';
    const COUNT = 'count';
    const COUNTRY = 'country';
    const CATEGORY = 'category';
@@ -22,6 +22,10 @@ class QueryConstants
    const POPULARITY_GRAPH = 'popular';
    const TOTAL_AMOUNT_GRAPH = 'total';
    const TIME_GRAPH = 'time';
+
+   const OPERATOR_EQUALS = 'equals';
+   const OPERATOR_STARTS_WITH = 'startsWith';
+   const OPERATOR_CONTAINS = 'contains';
 
    const COUNT_ANSWERS = 'answer';
    const COUNT_CATEGORIES = 'category';

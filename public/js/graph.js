@@ -1,4 +1,5 @@
 let graph;
+let graphDataOptions;
 
 //label customizations
 $("#title").on('input', function (){
@@ -23,6 +24,10 @@ $("#x-font-slider").on('input', function (){
 
 $("#y-font-slider").on('input', function (){
     changeYAxisLabelFontSize(this);
+});
+
+$("#movingAverage").on('change', function (){
+    updateMovingAverage($(this).val())
 });
 
 //button clicks
@@ -129,7 +134,7 @@ function getColours(values) {
 function getGraphType(request) {
     let chartType;
 
-    if (request['chart_type'] === 'time'){
+    if (request['graphType'] === 'time'){
         chartType = 'line';
     } else {
         chartType = 'horizontalBar';
@@ -160,7 +165,7 @@ function resolveGraphDataOptions(data, request) {
 }
 
 function createGraph(data, request) {
-    let graphDataOptions = resolveGraphDataOptions(data, request)
+    graphDataOptions = resolveGraphDataOptions(data, request)
 
     let ctx = document.getElementById('chart').getContext('2d');
     graph = new Chart(ctx, {
@@ -215,6 +220,7 @@ function createGraph(data, request) {
     insertDefaultAxisLabels(graphDataOptions.keys);
 }
 
+//graph update functions
 function changeGraphTitle(element){
     let value = $(element).val()
     if (value) {
@@ -260,6 +266,43 @@ function changeXAxisLabelFontSize(element){
 
 function changeYAxisLabelFontSize(element){
     graph.options.scales.yAxes[0].scaleLabel.fontSize = $(element).val();
+    graph.update();
+}
+
+function updateMovingAverage(daysAmount) {
+    let valuesAmount = graphDataOptions.values.length;
+
+    if (!daysAmount){
+        daysAmount = 1;
+    }
+
+    daysAmount = parseInt(daysAmount);
+
+    if (isNaN(daysAmount)
+        || valuesAmount <= daysAmount
+        || daysAmount <= 0
+    ){
+        return;
+    }
+
+    let newLabels = graphDataOptions.labels.slice();
+
+    let newValues = [];
+    let total;
+
+    for(let i = daysAmount; i < valuesAmount; i++) {
+        total = 0;
+        for(let j = (i - daysAmount); j < i; j++) {
+            total += graphDataOptions.values[j];
+        }
+
+        newValues.push(total / daysAmount);
+    }
+
+    newLabels.splice(0, daysAmount);
+
+    graph.data.datasets[0].data = newValues;
+    graph.data.labels = newLabels;
     graph.update();
 }
 

@@ -1,7 +1,7 @@
 let countries;
 let countriesDatalist;
 
-$('#query_builder').submit(function(event) {
+$('#queryBuilder').submit(function(event) {
     //firefox workaround for executing script before submitting the form
     event.preventDefault();
     sendQuery();
@@ -13,7 +13,7 @@ function setCountries(countriesArray) {
     countriesDatalist = createCountriesDatalist(countriesArray);
 }
 
-$("#chart_type").change(function (){
+$("#graphType").change(function (){
     changeFormType();
 });
 
@@ -68,9 +68,9 @@ function resolveCountryInputs(input) {
 }
 
 function toggleSwitchInput() {
-    let chartType = $('#chart_type');
+    let graphType = $('#graphType');
     if (
-        chartType.val() === 'popular'
+        graphType.val() === 'popular'
         && $('#count').val() === 'answer'
         && $('#category').val().length
     ) {
@@ -84,26 +84,26 @@ function toggleSwitchInput() {
 
     // if (
     //     (
-    //         chartType.val() === 'popular' &&
+    //         graphType.val() === 'popular' &&
     //         $('#count').val() === 'answer' &&
     //         $('#category').val().length
     //     ) ||
-    //     chartType.val() === 'time'
+    //     graphType.val() === 'time'
     // )
 }
 
 function changeFormType() {
-    let element = $("#chart_type");
+    let element = $("#graphType");
 
     if (element.val() === 'popular') {
         switchFormFromTimeChart()
-        if (! $('#count_category').length){
-            $('#count').append('<option id="count_category" value="category">category</option>');
+        if (! $('#countCategory').length){
+            $('#count').append('<option id="countCategory" value="category">category</option>');
         }
     }
     else if (element.val() === 'total') {
         switchFormFromTimeChart()
-        $('#count_category').remove();
+        $('#countCategory').remove();
     }
     else if (element.val() === 'time') {
         switchFormToTimeChart();
@@ -118,15 +118,15 @@ function switchFormToTimeChart() {
     $('.limit').remove();
 
     if (! $('.word').length) {
-        $("#word_div").append(createWordInput())
+        $("#wordDiv").append(createWordInput())
     }
 }
 
 function switchFormFromTimeChart() {
     let wordDiv = $('.word');
     if (wordDiv.length){
-        $('#count_div').append(createCountInput());
-        $("#limit_div").append(createLimitInput());
+        $('#countDiv').append(createCountInput());
+        $("#limitDiv").append(createLimitInput());
     }
     wordDiv.remove();
 }
@@ -136,8 +136,8 @@ function createWordInput() {
         '        <label for="word">Case insensitive word to search in time:</label>\n' +
         '        <select id="operator" name="operator">\n' +
         '            <option value="equals">equals</option>\n' +
-        '            <option value="starts">starts with</option>\n' +
-        '            <option value="both">contains</option>\n' +
+        '            <option value="startsWith">starts with</option>\n' +
+        '            <option value="contains">contains</option>\n' +
         '        </select>\n' +
         '        <input type="text" id="word" name="word" value="" required>\n' +
         '    </div>'
@@ -189,8 +189,8 @@ function createCountInput() {
     return $('<div class="count">\n' +
         '        <label for="count">Count most selected: </label>\n' +
         '        <select id="count" name="count">\n' +
-        '            <option id="count_category" value="category">category</option>\n' +
-        '            <option id="count_answer" value="answer">answers</option>\n' +
+        '            <option id="countCategory" value="category">category</option>\n' +
+        '            <option id="countAnswer" value="answer">answers</option>\n' +
         '        </select><br>\n' +
         '    </div>'
     );

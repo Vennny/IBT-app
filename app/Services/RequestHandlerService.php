@@ -59,7 +59,7 @@ class RequestHandlerService
 
     private function isResultAlternationNeeded(Request $request): bool
     {
-        if ($request->input(QueryConstants::CHART_TYPE) === QueryConstants::POPULARITY_GRAPH
+        if ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
             && $request->input(QueryConstants::COUNT) === QueryConstants::COUNT_ANSWERS
             && $request->input(QueryConstants::CATEGORY)
             && $request->input(QueryConstants::PERCENTAGE)
