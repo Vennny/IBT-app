@@ -49,6 +49,12 @@
                 <button id="show-request" class="btn btn-secondary">Show request</button>
             </div>
 
+
+            <div class="graph-buttons zero-check">
+                <input class="form-check-input" type="checkbox" value="" id="zeroCheck">
+                <label class="form-check-label" for="flexCheckDefault">Start graph values axis at zero</label>
+            </div>
+
             <div class="graph-buttons export-buttons">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Save graph as

@@ -52,12 +52,20 @@
     margin-top: 20px
 }
 
-.graph-buttons {
-    display: inline-block;
+.graph-buttons-container {
+    display: flex;
+    justify-content: space-between;
 }
 
-.export-buttons {
-    float:right;
+.form-check-input {
+    width: 20px;
+    height: 20px;
+}
+
+.form-check-label {
+    /*margin-left: 15px;*/
+    margin: 4px 10px;
+    font-size: 15px;
 }
 
 .table {

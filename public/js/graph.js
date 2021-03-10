@@ -2,39 +2,39 @@ let graph;
 let graphDataOptions;
 
 //label customizations
-$("#title").on('input', function (){
+$("#title").on('input', function() {
     changeGraphTitle(this);
 });
 
-$("#x-axis-label").on('input', function (){
+$("#x-axis-label").on('input', function() {
     changeXAxisLabel(this);
 });
 
-$("#y-axis-label").on('input', function (){
+$("#y-axis-label").on('input', function() {
     changeYAxisLabel(this);
 });
 
-$("#title-font-slider").on('input', function (){
+$("#title-font-slider").on('input', function() {
     changeGraphTitleFontSize(this);
 });
 
-$("#x-font-slider").on('input', function (){
+$("#x-font-slider").on('input', function() {
     changeXAxisLabelFontSize(this);
 });
 
-$("#y-font-slider").on('input', function (){
+$("#y-font-slider").on('input', function() {
     changeYAxisLabelFontSize(this);
 });
 
-$("#movingAverage").on('change', function (){
+$("#movingAverage").on('change', function() {
     updateTimeGraph();
 });
 
-$("#rangeStart").on('change', function (){
+$("#rangeStart").on('change', function() {
     updateTimeGraph();
 });
 
-$("#rangeEnd").on('change', function (){
+$("#rangeEnd").on('change', function() {
     updateTimeGraph();
 });
 
@@ -45,6 +45,10 @@ $("#show-dataset").click(function() {
 
 $("#show-request").click(function() {
     toggleRequest();
+})
+
+$("#zeroCheck").on('change', function () {
+    toggleStartsAtZero(this);
 })
 
 $("#download-graph-pdf").click(function() {
@@ -247,14 +251,26 @@ function createGraph(data, request) {
 }
 
 //graph update functions
+function toggleStartsAtZero(checkbox){
+    if (graphDataOptions.type === 'line'){
+        graph.options.scales.yAxes[0].ticks.beginAtZero = checkbox.checked;
+    } else {
+        graph.options.scales.xAxes[0].ticks.beginAtZero = checkbox.checked;
+    }
+
+    graph.update();
+}
+
 function changeGraphTitle(element){
     let value = $(element).val()
+
     if (value) {
         graph.options.title.text = value;
         graph.options.title.display = true;
     } else {
         graph.options.title.display = false;
     }
+
     graph.update();
 }
 
