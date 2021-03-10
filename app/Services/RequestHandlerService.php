@@ -40,11 +40,11 @@ class RequestHandlerService
         }
     }
 
-    private function changeResultToPercentage(Request $request, array $result): array
+    private function changeResultToPercentage(array $result): array
     {
-        if ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
-            && $request->input(QueryConstants::COUNT) === QueryConstants::COUNT_ANSWERS
-            && $request->input(QueryConstants::CATEGORY)
+        if ($this->queryBuilderService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
+            && $this->queryBuilderService->getInputValue(QueryConstants::COUNT_TABLE) === QueryConstants::COUNT_ANSWERS
+            && $this->queryBuilderService->getInputValue(QueryConstants::CATEGORY)
         ) {
             $total = $this->execute($this->queryBuilderService->buildTotalAnswersQuery());
             $totalAmount = $total[0][QueryConstants::COUNT_COLUMN_NAME] ?? 1;
@@ -53,7 +53,7 @@ class RequestHandlerService
                 $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $totalAmount;
             }
 
-        } elseif ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
+        } elseif ($this->queryBuilderService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
             $words = $this->execute($this->queryBuilderService->buildTotalAnswersInTimeQuery());
 
             foreach ($result as $i => $item) {
@@ -86,8 +86,8 @@ class RequestHandlerService
 
         $result = $this->execute($this->query);
 
-        if ($request->input(QueryConstants::PERCENTAGE)) {
-            $result = $this->changeResultToPercentage($request, $result);
+        if ($this->queryBuilderService->getInputValue(QueryConstants::PERCENTAGE)) {
+            $result = $this->changeResultToPercentage($result);
         }
 
         return $result;

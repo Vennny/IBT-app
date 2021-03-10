@@ -17,16 +17,13 @@ $("#graphType").change(function (){
     changeFormType();
 });
 
-$(document).on('change', '#count', function() {
-    changeCountForm();
+$(document).on('change', '#countTable', function() {
+    changeCountTableForm();
 });
 
-$(document).on('input', '#category', function() {
+$(document).on('change', '.category-input', function() {
+    resolveAddingInputs($(this));
     toggleSwitchInput();
-});
-
-$(document).on('change', '#category', function() {
-    trimWhitespaceInInput($(this));
 });
 
 $(document).on('change', '#letter', function() {
@@ -42,18 +39,12 @@ $(document).on('change', '#language', function() {
 });
 
 $(document).on('change', '.country-input', function() {
-    resolveCountryInputs($(this));
+    resolveAddingInputs($(this));
 });
 
 $(document).on('change', '.word-input', function() {
-    resolveCountryInputs($(this));
+    resolveAddingInputs($(this));
 });
-
-function trimWhitespaceInInput(input) {
-    if (! /\S/.test(input.val())){
-        input.val('');
-    }
-}
 
 function switchWarning(element) {
     if (element.val() === 'all') {
@@ -67,51 +58,12 @@ function switchWarning(element) {
 
 }
 
-function resolveCountryInputs(input) {
-    trimWhitespaceInInput(input);
-
-    let inputParent = input.parent();
-
-    let notFilledCount = 0;
-
-    inputParent.children(':input').each(function (){
-        if (! $(this).val().length) {
-            notFilledCount++;
-        }
-    });
-
-    if (input.val().length && notFilledCount === 0){
-        // if there are zero empty inputs to fill, append new input
-        if (inputParent.hasClass('word')){
-            inputParent.append(createWordInput());
-        } else if (inputParent.hasClass('countries')){
-            inputParent.append(createCountryInput());
-        }
-    }
-    else if(notFilledCount === 2) {
-        // if there are two empty inputs, remove one
-        if (inputParent.hasClass('word')){
-            input.prev($('.operator')).remove();
-        }
-
-        input.remove();
-    }
-
-    //word is required, make sure the first input always has it
-    if (inputParent.hasClass('word')) {
-        console.log(inputParent.children(':input').length);
-        if (inputParent.children(':input').length === 2) {
-            inputParent.children(':input').prop('required', true);
-        }
-    }
-}
-
 function toggleSwitchInput() {
     let graphType = $('#graphType');
 
     if ((graphType.val() === 'popular'
-        && $('#count').val() === 'answer'
-        && $('#category').val().length
+        && $('#countTable').val() === 'answer'
+        && $('.category-input').val().length
         ) ||
         graphType.val() === 'time'
     ) {
@@ -135,7 +87,7 @@ function changeFormType() {
     if (element.val() === 'popular') {
         switchFormFromTimeChart()
         if (! $('#countCategory').length){
-            $('#count').append('<option id="countCategory" value="category">category</option>');
+            $('#countTable').append('<option id="countCategory" value="category">category</option>');
         }
     }
     else if (element.val() === 'total') {
@@ -147,11 +99,11 @@ function changeFormType() {
     }
 
     //removing "category" option makes select switch to "word" option automatically - change of form needed
-    changeCountForm();
+    changeCountTableForm();
 }
 
 function switchFormToTimeChart() {
-    $('.count').remove();
+    $('.count-table').remove();
     $('.limit').remove();
 
     if (! $('.word').length) {
@@ -163,21 +115,68 @@ function switchFormFromTimeChart() {
     let wordDiv = $('.word');
 
     if (wordDiv.length){
-        $('#countDiv').append(createCountInput());
+        $('#countTableDiv').append(createCountTableInput());
         $("#limitDiv").append(createLimitInput());
     }
 
     wordDiv.remove();
 }
 
+function trimWhitespaceInInput(input) {
+    if (! /\S/.test(input.val())){
+        input.val('');
+    }
+}
+
+function resolveAddingInputs(input) {
+    trimWhitespaceInInput(input);
+
+    let inputParent = input.parent();
+
+    let notFilledCount = 0;
+
+    inputParent.children(':input').each(function (){
+        if (! $(this).val().length) {
+            notFilledCount++;
+        }
+    });
+
+    if (input.val().length && notFilledCount === 0){
+        // if there are zero empty inputs to fill, append new input
+        if (inputParent.hasClass('word')){
+            inputParent.append(createWordInput());
+        } else if (inputParent.hasClass('countries')){
+            inputParent.append(createCountryInput());
+        } else if (inputParent.hasClass('categories')){
+            inputParent.append(createCategoryInput());
+        }
+    }
+    else if(notFilledCount === 2) {
+        // if there are two empty inputs, remove one
+        if (inputParent.hasClass('word')){
+            input.prev($('.operator')).remove();
+        }
+
+        input.remove();
+    }
+
+    //word is required, make sure the first input always has it
+    if (inputParent.hasClass('word') ) {
+        console.log(inputParent.children(':input').length);
+        if (inputParent.children(':input').length === 2) {
+            inputParent.children(':input').prop('required', true);
+        }
+    }
+}
+
 function createWordInput() {
-    return $('       <select class="operator" name="operator[]">\n' +
-            '            <option value="equals">equals</option>\n' +
-            '            <option value="startsWith">starts with</option>\n' +
-            '            <option value="endsWith">ends with</option>\n' +
-            '            <option value="contains">contains</option>\n' +
-            '        </select>\n' +
-            '        <input type="text" class="word-input" name="word[]" value="">\n');
+    return $('<select class="operator" name="operator[]">\n' +
+             '    <option value="equals">equals</option>\n' +
+             '    <option value="startsWith">starts with</option>\n' +
+             '    <option value="endsWith">ends with</option>\n' +
+             '    <option value="contains">contains</option>\n' +
+             '</select>\n' +
+             '<input type="text" class="word-input" name="word[]" value="">\n');
 }
 
 function createFirstWordInput() {
@@ -187,6 +186,20 @@ function createFirstWordInput() {
     div.append(label);
     div.append(createWordInput());
     div.children(':input').prop('required', true);
+
+    return div;
+}
+
+function createCategoryInput() {
+    return $('<input type="text" class="category-input" name="category[]" value="">');
+}
+
+function createFirstCategoryInput() {
+    let div= $('<div class="categories"></div>');
+    let label = $('<label for="category">Category name:</label>');
+
+    div.append(label);
+    div.append(createCategoryInput());
 
     return div;
 }
@@ -216,14 +229,6 @@ function createFirstCountryInput() {
     return div;
 }
 
-function createCategoryInput() {
-    return $('<div class="category">\n' +
-        '        <label for="category">Category name:</label>\n' +
-        '        <input type="text" id="category" name="category" value=""><br>\n' +
-        '    </div>'
-    );
-}
-
 function createLetterInput() {
     return $('<div class="letter">\n' +
         '        <label for="letter">Starting letter:</label>\n' +
@@ -232,10 +237,10 @@ function createLetterInput() {
     );
 }
 
-function createCountInput() {
-    return $('<div class="count">\n' +
+function createCountTableInput() {
+    return $('<div class="count-table">\n' +
         '        <label for="count">Count most selected: </label>\n' +
-        '        <select id="count" name="count">\n' +
+        '        <select id="countTable" name="countTable">\n' +
         '            <option id="countCategory" value="category">category</option>\n' +
         '            <option id="countAnswer" value="answer">answers</option>\n' +
         '        </select><br>\n' +
@@ -259,19 +264,19 @@ function createSwitchInput() {
     );
 }
 
-function changeCountForm() {
-    let count = $("#count");
+function changeCountTableForm() {
+    let countTable = $("#countTable");
     let inputsExist = $(".countries").length || $(".category").length || $(".letter").length ;
 
-    if (!count.length || count.val() === 'answer'){
+    if (!countTable.length || countTable.val() === 'answer'){
         if (!inputsExist) {
             let form = $(".form-answer-switch");
             form.append(createFirstCountryInput());
-            form.append(createCategoryInput());
+            form.append(createFirstCategoryInput());
             form.append(createLetterInput);
         }
     }
-    else if (count.val() === 'category') {
+    else if (countTable.val() === 'category') {
         if (inputsExist) {
             $(".countries").remove();
             $(".category").remove();

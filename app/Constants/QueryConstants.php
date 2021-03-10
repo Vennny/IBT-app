@@ -7,7 +7,7 @@ namespace App\Constants;
 class QueryConstants
 {
    const GRAPH_TYPE = 'graphType';
-   const COUNT = 'count';
+   const COUNT_TABLE = 'countTable';
    const COUNTRY = 'country';
    const CATEGORY = 'category';
    const LETTER = 'letter';

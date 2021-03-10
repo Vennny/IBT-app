@@ -30,8 +30,8 @@
 
                 <div id="countTableDiv">
                     <div class="count-table">
-                        <label for="count">Count most selected: </label>
-                        <select id="count" name="count">
+                        <label for="countTable">Count most selected: </label>
+                        <select id="countTable" name="countTable">
                             <option id="countCategory" value="category">category</option>
                             <option id="countAnswer" value="answer">answers</option>
                         </select><br>
