@@ -27,7 +27,15 @@ $("#y-font-slider").on('input', function (){
 });
 
 $("#movingAverage").on('change', function (){
-    updateMovingAverage($(this).val())
+    updateTimeGraph();
+});
+
+$("#rangeStart").on('change', function (){
+    updateTimeGraph();
+});
+
+$("#rangeEnd").on('change', function (){
+    updateTimeGraph();
 });
 
 //button clicks
@@ -148,16 +156,28 @@ function resolveGraphDataOptions(data, request) {
 
     let percentage = 'percentage' in request;
 
+    let label = 'amount';
+
     if (percentage) {
         values.forEach(function(value, index){
             this[index] = (value * 100).toFixed(2);
         }, values)
+
+        keys[1] = 'percentage';
+        label = 'percentage';
+    }
+
+    let graphType = getGraphType(request);
+
+    if (graphType === 'line'){
+        keys.reverse();
     }
 
     return {
-        'type': getGraphType(request),
+        'type': graphType,
         'keys': keys,
         'labels': labels,
+        'label' : label,
         'values': values,
         'percentage': percentage,
         'colors': getColours(values)
@@ -173,7 +193,7 @@ function createGraph(data, request) {
         data: {
             labels: graphDataOptions.labels,
             datasets: [{
-                label: 'amount',
+                label: graphDataOptions.label,
                 data: graphDataOptions.values,
                 backgroundColor: graphDataOptions.colors.backgroundColors,
                 borderColor: graphDataOptions.colors.borderColors,
@@ -195,13 +215,19 @@ function createGraph(data, request) {
                         labelString: graphDataOptions.keys[0]
                     },
                     ticks: {
-                        beginAtZero: true
+                        callback: function (value) {
+                            if (graphDataOptions.percentage && graphDataOptions.type === 'line') {
+                                return value.toFixed(getAmountOfDecimals(value)) + " %"
+                            } else {
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                            }
+                        }
                     }
                 }],
                 xAxes: [{
                     ticks: {
                         callback: function (value) {
-                            if (graphDataOptions.percentage) {
+                            if (graphDataOptions.percentage && graphDataOptions.type !== 'line') {
                                 return value.toFixed(getAmountOfDecimals(value)) + " %"
                             } else {
                                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -269,7 +295,72 @@ function changeYAxisLabelFontSize(element){
     graph.update();
 }
 
-function updateMovingAverage(daysAmount) {
+function updateTimeGraph() {
+    let newData = alterDataRangeStart($("#rangeStart").val());
+    newData = alterDataRangeEnd($("#rangeEnd").val(), newData);
+    newData = alterDataMovingAverage($("#movingAverage").val(), newData);
+
+    graph.data.labels = newData.labels;
+    graph.data.datasets[0].data = newData.values;
+    graph.update();
+}
+
+function alterDataRangeStart(startingDate, data = null) {
+    let labels;
+    let values;
+
+    if (data) {
+        labels = data.labels;
+        values = data.values;
+    } else {
+        values = graphDataOptions.values.slice();
+        labels = graphDataOptions.labels.slice();
+    }
+
+
+    let i;
+    for (i = 0; i < labels.length; i++) {
+        if (labels[i] === startingDate) {
+            break;
+        }
+    }
+
+    if (i !== labels.length) {
+        labels.splice(0, i);
+        values.splice(0, i);
+    }
+
+    return {"labels": labels, "values": values};
+}
+
+function alterDataRangeEnd(endingDate, data = null) {
+    let labels;
+    let values;
+
+    if (data) {
+        labels = data.labels;
+        values = data.values;
+    } else {
+        values = graphDataOptions.values.slice();
+        labels = graphDataOptions.labels.slice();
+    }
+
+    let i;
+    for (i = labels.length; i > 0; i--) {
+        if (labels[i] === endingDate) {
+            break;
+        }
+    }
+
+    if (i !== 0) {
+        labels.splice(i+1, labels.length);
+        values.splice(i+1, values.length);
+    }
+
+    return {"labels": labels, "values": values};
+}
+
+function alterDataMovingAverage(daysAmount, data = null) {
     let valuesAmount = graphDataOptions.values.length;
 
     if (!daysAmount){
@@ -285,25 +376,32 @@ function updateMovingAverage(daysAmount) {
         return;
     }
 
-    let newLabels = graphDataOptions.labels.slice();
+    let labels;
+    let oldValues;
+
+    if (data) {
+        oldValues = data.values;
+        labels = data.labels;
+    } else {
+        oldValues = graphDataOptions.values.slice();
+        labels = graphDataOptions.labels.slice();
+    }
 
     let newValues = [];
     let total;
 
-    for(let i = daysAmount; i < valuesAmount; i++) {
+    for (let i = daysAmount; i < valuesAmount; i++) {
         total = 0;
-        for(let j = (i - daysAmount); j < i; j++) {
-            total += graphDataOptions.values[j];
+        for (let j = (i - daysAmount); j < i; j++) {
+            total += parseFloat(oldValues[j]);
         }
 
         newValues.push(total / daysAmount);
     }
 
-    newLabels.splice(0, daysAmount);
+    labels.splice(0, daysAmount);
 
-    graph.data.datasets[0].data = newValues;
-    graph.data.labels = newLabels;
-    graph.update();
+    return {"labels": labels, "values": newValues};
 }
 
 //table changes

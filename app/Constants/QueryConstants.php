@@ -25,6 +25,7 @@ class QueryConstants
 
    const OPERATOR_EQUALS = 'equals';
    const OPERATOR_STARTS_WITH = 'startsWith';
+   const OPERATOR_ENDS_WITH = 'endsWith';
    const OPERATOR_CONTAINS = 'contains';
 
    const COUNT_ANSWERS = 'answer';
@@ -32,4 +33,5 @@ class QueryConstants
 
    const WORD_TABLE_REST = 'word_rest';
 
+   const ALL_LANGUAGES = 'all';
 }

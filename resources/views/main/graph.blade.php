@@ -29,7 +29,7 @@
         @if($request['graphType'] === 'time')
             <div class="col">
                 <label for="title">Day moving average: </label>
-                <input type="text" class="form-control" id="movingAverage" value="0">
+                <input type="text" class="form-control" id="movingAverage" value="1">
             </div>
             <div class="col">
                 <label for="title">Day range from: </label>
@@ -70,13 +70,7 @@
         <table class="request table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    @if(array_key_exists('country',$request))
-                        <th colspan="{{count($request) + count($request['country'])}}">
-                    @else
-                        <th colspan="{{count($request)}}">
-                    @endif
-                                Query Details
-                        </th>
+                    <th colspan="100%">Query Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,13 +90,7 @@
                 @endforeach
                 </tr>
                 <tr>
-                    @if(array_key_exists('country',$request))
-                        <td colspan="{{count($request) + count($request['country'])}}">
-                    @else
-                        <td colspan="{{count($request)}}">
-                    @endif
-                            {{$query}}
-                        </td>
+                    <td colspan="100%">{{$query}}</td>
                 </tr>
             </tbody>
         </table>
@@ -117,8 +105,6 @@
         $(document).ready(function(){
             let data =  @json($results);
             let request = @json($request);
-
-            console.log(request);
 
             if (Array.isArray(data) && data.length > 0) {
                 createGraph(data, request);

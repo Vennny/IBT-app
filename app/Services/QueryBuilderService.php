@@ -6,20 +6,16 @@ namespace App\Services;
 use App\Constants\QueryConstants;
 use Illuminate\Http\Request;
 use App\Rules\CountryExists;
+use JetBrains\PhpStorm\Pure;
 use League;
 
 class QueryBuilderService
 {
-    private Request $request;
-
     /**
-     * QueryService constructor.
-     * @param Request $request
+     * QueryBuilderService constructor.
+     * @param $request
      */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
+    public function __construct(private Request $request){}
 
     public function getRequest(): Request
     {
@@ -34,8 +30,8 @@ class QueryBuilderService
             QueryConstants::COUNTRY => array_filter($this->request->input(QueryConstants::COUNTRY)),
             QueryConstants::CATEGORY =>  strtolower($this->request->input(QueryConstants::CATEGORY)),
             QueryConstants::LANGUAGE => $this->request->input(QueryConstants::LANGUAGE),
-            QueryConstants::OPERATOR => $this->request->input(QueryConstants::OPERATOR),
-            QueryConstants::WORD => strtolower($this->request->input(QueryConstants::WORD)),
+            QueryConstants::OPERATOR => array_filter($this->request->input(QueryConstants::OPERATOR)),
+            QueryConstants::WORD => array_map('strtolower', array_filter($this->request->input(QueryConstants::WORD))),
             QueryConstants::LETTER => $this->request->input(QueryConstants::LETTER),
             QueryConstants::LIMIT => intval($this->request->input(QueryConstants::LIMIT))
         };
@@ -50,6 +46,23 @@ class QueryBuilderService
 
     private function validate(array $inputs): void
     {
+        foreach ($inputs as $input) {
+            match ($input) {
+                QueryConstants::GRAPH_TYPE => $this->request->validate([QueryConstants::GRAPH_TYPE => 'required|string']),
+                QueryConstants::COUNT => $this->request->validate([QueryConstants::COUNT => 'required']),
+                QueryConstants::CATEGORY => $this->request->validate([QueryConstants::CATEGORY => 'required']),
+                QueryConstants::LANGUAGE => $this->request->validate([QueryConstants::LANGUAGE => 'required']),
+                QueryConstants::OPERATOR => $this->request->validate([QueryConstants::OPERATOR => 'required']),
+                QueryConstants::WORD => $this->request->validate([QueryConstants::WORD => 'required']),
+                QueryConstants::LETTER => $this->request->validate([QueryConstants::LETTER => 'required']),
+                QueryConstants::LIMIT => $this->request->validate([QueryConstants::LIMIT => 'required']),
+
+                QueryConstants::COUNTRY => $this->request->validate([
+                                                    QueryConstants::COUNTRY => 'required|array',
+                                                    QueryConstants::COUNTRY.'.*' => [new CountryExists]
+                                                ]),
+            };
+        }
 
     }
 
@@ -65,8 +78,92 @@ class QueryBuilderService
             "pl" => "word_pl",
             "pt" => "word_pt",
             "sk" => "word_sk",
+            "all" => "all",
             default => "word_rest",
         };
+    }
+
+    private function specifyLanguage($language, $wordTable): bool
+    {
+        if (
+            ($language && $language !== QueryConstants::ALL_LANGUAGES)
+            && (! $wordTable || $wordTable === QueryConstants::WORD_TABLE_REST)
+        ){
+            return true;
+        }
+
+        return false;
+    }
+
+    private function buildWhereSubQuery(
+        string|null $language,
+        array $countries = null,
+        string|null $category = null,
+        string|null $letter = null
+    ) :string {
+        $wordTable = $this->getWordTableName($language);
+
+        if (
+            $this->specifyLanguage($language, $wordTable)
+            || !empty($countries)
+            || $category
+            || $letter
+        ) {
+            $whereQuery = " WHERE ";
+
+            if ($this->specifyLanguage($language, $wordTable)){
+                $whereQuery .= "id_lang = '".$language."' ";
+            }
+
+            if (!empty($countries)) {
+                $countryQuery = "";
+                foreach ($countries as $country){
+                    $countryQuery .=
+                        "country_code = '".$this->getCountryCode($country)."' ";
+                }
+
+                $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $countryQuery);
+            }
+
+            if ($category) {
+                $whereQuery .= "LOWER(category_name) = '".$category."' ";
+            }
+
+            if ($letter) {
+                $whereQuery .= "LOWER(value) LIKE '".strtolower ($letter)."%' ";
+
+            }
+
+            // replace each space between WHERE conditions to "AND" unless "OR" is already there
+            return preg_replace("/(?<=')[\s](?!$|OR)/", " AND ", $whereQuery);
+        }
+
+        return "";
+    }
+
+    private function buildFromSubQuery(string|null $language): string
+    {
+        $language_tables = ["word_cs", "word_pt", "word_de", "word_en", "word_fr", "word_es", "word_it", "word_pl", "word_sk"];
+        $wordTable = $this->getWordTableName($language);
+
+        $fromQuery = " FROM ";
+
+        if ($language === QueryConstants::ALL_LANGUAGES){
+            $fromQuery .= "(";
+
+            foreach ($language_tables as $table) {
+                $fromQuery .= "SELECT * FROM " . $table . "
+                            UNION ALL ";
+            }
+
+            $fromQuery .= "SELECT id, value, date_cr, category_name, id_category, country_code
+                            FROM word_rest
+                        ) AS words_tables ";
+        } else {
+            $fromQuery .= $wordTable . " ";
+        }
+
+        return $fromQuery;
     }
 
     private function buildCategoryCountQuery(): string
@@ -81,13 +178,7 @@ class QueryBuilderService
             "FROM " .
             "category ";
 
-        if ($language) {
-            //prevent SQL injection
-            $language = preg_replace("/'/", "''", $language);
-            $query .=
-                "WHERE " .
-                "id_lang = '" . $language . "' ";
-        }
+        $query .= $this->buildWhereSubQuery($language);
 
         $query .=
             "ORDER BY " .
@@ -98,70 +189,7 @@ class QueryBuilderService
         return $query;
     }
 
-    private function buildWhereSubQuery(
-        string $word_table,
-        string $language,
-        array $countries,
-        string|null $category,
-        string|null $letter
-    ) :string
-    {
-        if (
-            !empty($countries)
-            || $category
-            || $letter
-            || $word_table === QueryConstants::WORD_TABLE_REST
-        ) {
-            $whereQuery =
-                "WHERE ";
-
-            if (!empty($countries)) {
-                $countryQuery = "";
-                foreach ($countries as $country){
-                    //prevent SQL injection
-                    $country = preg_replace("/'/", "''", $country);
-                    $countryQuery .=
-                        "country_code = '".$this->getCountryCode($country)."' ";
-                }
-
-                $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $countryQuery);
-
-            }
-
-            if ($letter) {
-                //prevent SQL injection
-                $letter = preg_replace("/'/", "''", $letter);
-                $whereQuery = $whereQuery .
-                    "LOWER(value) LIKE '".$letter."%' ";
-
-            }
-
-            if ($word_table === QueryConstants::WORD_TABLE_REST) {
-                //prevent SQL injection
-                $language = preg_replace("/'/", "''", $language);
-                $whereQuery = $whereQuery .
-                    "id_lang = '".$language."' ";
-            }
-
-            if ($category) {
-                //categories can contain an apostrophe => needs to be escaped in query, also prevents SQL injection
-                $category = preg_replace("/'/", "''", $category);
-
-                $whereQuery = $whereQuery .
-                    "LOWER(category_name) = '".$category."' ";
-            }
-
-            // replace each space between WHERE conditions to "AND"
-            $whereQuery = preg_replace("/(?<=')[\s](?!$|OR)/", " AND ", $whereQuery);
-
-            return $whereQuery;
-        }
-
-        return "";
-    }
-
-
-    private function buildAnswerCountQuery(bool $type_popularity): string
+    private function buildAnswerCountQuery(bool $totalWords = null): string
     {
         $this->request->validate([
             'country.*' => [new CountryExists]
@@ -173,31 +201,28 @@ class QueryBuilderService
         $letter = $this->getInputValue(QueryConstants::LETTER);
         $limit = $this->getInputValue(QueryConstants::LIMIT);
 
-        $word_table = $this->getWordTableName($language);
-
         $query = "SELECT ";
 
-        if ($type_popularity) {
-            $query.= "LOWER(value) AS word, ";
-        } else {
+        if ($totalWords) {
             $query.= "LOWER(category_name) AS category_name, ";
+        } else {
+            $query.= "LOWER(value) AS word, ";
         }
 
-        $query .=
-            "COUNT(*) AS ". QueryConstants::COUNT_COLUMN_NAME . " ".
-            "FROM " .
-            $word_table . " ";
+        $query .=  "COUNT(*) AS ". QueryConstants::COUNT_COLUMN_NAME . " ";
 
-        $query .= $this->buildWhereSubQuery($word_table, $language, $countries, $category, $letter);
+        $query .= $this->buildFromSubQuery($language);
 
-        if ($type_popularity) {
-            $query .=
-                "GROUP BY ".
-                "word ";
-        } else {
+        $query .= $this->buildWhereSubQuery($language, $countries, $category, $letter);
+
+        if ($totalWords) {
             $query .=
                 "GROUP BY ".
                 "category_name ";
+        } else {
+            $query .=
+                "GROUP BY ".
+                "word ";
         }
 
         $query .=
@@ -208,40 +233,52 @@ class QueryBuilderService
         return $query;
     }
 
+    private function buildWordComparisonSubQuery(array $words, array $operators): string
+    {
+        $wordQuery = "SUM(case when ";
 
-    private function buildTimeQuery() : string
+        foreach ($words as $key => $word) {
+            $pattern = $word;
+
+            if ($operators[$key] === QueryConstants::OPERATOR_STARTS_WITH) {
+                $pattern = $pattern . '%';
+            } elseif ($operators[$key] === QueryConstants::OPERATOR_ENDS_WITH) {
+                $pattern = '%' . $pattern;
+            } elseif ($operators[$key] === QueryConstants::OPERATOR_CONTAINS) {
+                $pattern = '%' . $pattern . '%';
+            }
+
+            $wordQuery .= " LOWER(value) LIKE '" . $pattern ."' ";
+        }
+
+
+        // replace each space conditions to "OR"
+        $wordQuery = preg_replace("/(?<=')[\s](?!$)/", " OR ", $wordQuery);
+
+        return $wordQuery . " then 1 else 0 end) AS amount ";
+    }
+
+    private function buildAnswersInTimeQuery(): string
     {
         $this->request->validate([
             'country.*' => [new CountryExists]
         ]);
 
-        $operator = $this->getInputValue(QueryConstants::OPERATOR);
-        $word = $this->getInputValue(QueryConstants::WORD);
+        $operators = $this->getInputValue(QueryConstants::OPERATOR);
+        $words = $this->getInputValue(QueryConstants::WORD);
         $countries = $this->getInputValue(QueryConstants::COUNTRY);
         $category = $this->getInputValue(QueryConstants::CATEGORY);
         $letter = $this->getInputValue(QueryConstants::LETTER);
         $language = $this->getInputValue(QueryConstants::LANGUAGE);
 
-        $word_table = $this->getWordTableName($language);
+        $query = "SELECT
+                    DATE(date_cr) AS day,";
 
-        $pattern = $word;
-        if ($operator === QueryConstants::OPERATOR_STARTS_WITH) {
-            $pattern = '%' . $pattern;
-        }
-        else if ($operator === QueryConstants::OPERATOR_CONTAINS) {
-            $pattern = '%' . $pattern . '%';
-        }
+        $query .= $this->buildWordComparisonSubQuery($words, $operators);
 
-        $query = "
-                SELECT
-                    DATE(date_cr) AS day,
-                    SUM(case when
-                        value ILIKE '". $pattern ."'
-                        then 1 else 0 end) AS occurrences
-                FROM " .
-            $word_table . " ";
+        $query .= $this->buildFromSubQuery($language);
 
-        $query .= $this->buildWhereSubQuery($word_table, $language, $countries, $category, $letter);
+        $query .= $this->buildWhereSubQuery($language, $countries, $category, $letter);
 
         $query .= "
                 GROUP BY
@@ -259,30 +296,64 @@ class QueryBuilderService
         if ($table === QueryConstants::COUNT_CATEGORIES) {
             return $this->buildCategoryCountQuery();
         } elseif ($table === QueryConstants::COUNT_ANSWERS) {
-            return $this->buildAnswerCountQuery(true);
+            return $this->buildAnswerCountQuery();
         } else {
             //TODO redirect in service does not work
             return redirect()->back()->withErrors(['Query build was not successful.']);
         }
     }
 
+    public function buildTotalAnswersInTimeQuery(): string
+    {
+        $language = $this->getInputValue(QueryConstants::LANGUAGE);
+
+        $wordTable = $this->getWordTableName($language);
+
+        $query = "SELECT
+                        DATE(date_cr) AS day,
+                        COUNT(*) AS amount ";
+
+        $query .= $this->buildFromSubQuery($language);
+
+        $query .= $this->buildWhereSubQuery($language);
+
+        $query .= "GROUP BY
+                        day
+                    ORDER BY
+                        day ASC;";
+
+        return $query;
+    }
+
     public function buildTotalAnswersQuery(): string
     {
-        return $this->buildAnswerCountQuery(false);
+        return $this->buildAnswerCountQuery(true);
+    }
+
+    private function escapeSingleQuotesInInputs(): void
+    {
+        foreach ($this->request as $key => $input) {
+            if (is_string($input)){
+                $this->request[$key] = preg_replace("/'/", "''", $input);
+            }
+        }
     }
 
     public function build(): string
     {
         //TODO validation
+
+        $this->escapeSingleQuotesInInputs();
+
         $type = $this->getInputValue(QueryConstants::GRAPH_TYPE);
 
         $query = "";
         if ($type === QueryConstants::POPULARITY_GRAPH) {
             $query = $this->buildPopularityQuery();
-        } else if($type === QueryConstants::TOTAL_AMOUNT_GRAPH) {
+        } elseif ($type === QueryConstants::TOTAL_AMOUNT_GRAPH) {
             $query = $this->buildTotalAnswersQuery();
-        } else if($type === QueryConstants::TIME_GRAPH) {
-            $query = $this->buildTimeQuery();
+        } elseif ($type === QueryConstants::TIME_GRAPH) {
+            $query = $this->buildAnswersInTimeQuery();
         }
 
         return $query;

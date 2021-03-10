@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class RequestHandlerService
 {
-    private QueryBuilderService $queryBuilderService;
-
     private string $query;
 
     private array $filteredRequest;
@@ -20,10 +18,7 @@ class RequestHandlerService
      * QueryService constructor.
      * @param $queryBuilderService
      */
-    public function __construct($queryBuilderService)
-    {
-        $this->queryBuilderService = $queryBuilderService;
-    }
+    public function __construct(private QueryBuilderService $queryBuilderService){}
 
     public function getQuery(): string
     {
@@ -45,42 +40,42 @@ class RequestHandlerService
         }
     }
 
-    private function changeResultToPercentage($result): array
+    private function changeResultToPercentage(Request $request, array $result): array
     {
-        $total = $this->execute($this->queryBuilderService->buildTotalAnswersQuery());
-        $totalAmount = $total[0][QueryConstants::COUNT_COLUMN_NAME];
+        if ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
+            && $request->input(QueryConstants::COUNT) === QueryConstants::COUNT_ANSWERS
+            && $request->input(QueryConstants::CATEGORY)
+        ) {
+            $total = $this->execute($this->queryBuilderService->buildTotalAnswersQuery());
+            $totalAmount = $total[0][QueryConstants::COUNT_COLUMN_NAME] ?? 1;
 
-        foreach ($result as $i => $item) {
-            $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $totalAmount ;
+            foreach ($result as $i => $item) {
+                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $totalAmount;
+            }
+
+        } elseif ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
+            $words = $this->execute($this->queryBuilderService->buildTotalAnswersInTimeQuery());
+
+            foreach ($result as $i => $item) {
+                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $words[$i][QueryConstants::COUNT_COLUMN_NAME];
+            }
         }
 
         return $result;
     }
 
-    private function isResultAlternationNeeded(Request $request): bool
-    {
-        if ($request->input(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
-            && $request->input(QueryConstants::COUNT) === QueryConstants::COUNT_ANSWERS
-            && $request->input(QueryConstants::CATEGORY)
-            && $request->input(QueryConstants::PERCENTAGE)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
     private function filterRequest(Request $request): array
     {
-        //remove first input and all empty inputs
+        //remove first input(token) and all empty inputs
         $filteredRequest = array_filter(array_slice((array)$request->all(),1));
 
-        if (array_key_exists('country', $filteredRequest)){
-            array_filter($filteredRequest['country']);
+        if (array_key_exists('operator', $filteredRequest)){
+            array_pop($filteredRequest['operator']);
         }
 
         return $filteredRequest;
     }
+
     public function handle(): array
     {
         $this->query = $this->queryBuilderService->build();
@@ -91,8 +86,8 @@ class RequestHandlerService
 
         $result = $this->execute($this->query);
 
-        if ($this->isResultAlternationNeeded($request)){
-            $result = $this->changeResultToPercentage($result);
+        if ($request->input(QueryConstants::PERCENTAGE)) {
+            $result = $this->changeResultToPercentage($request, $result);
         }
 
         return $result;

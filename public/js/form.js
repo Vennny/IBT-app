@@ -37,7 +37,15 @@ $(document).on('change', '#word', function() {
     trimWhitespaceInInput($(this));
 });
 
+$(document).on('change', '#language', function() {
+    switchWarning($(this));
+});
+
 $(document).on('change', '.country-input', function() {
+    resolveCountryInputs($(this));
+});
+
+$(document).on('change', '.word-input', function() {
     resolveCountryInputs($(this));
 });
 
@@ -47,11 +55,26 @@ function trimWhitespaceInInput(input) {
     }
 }
 
+function switchWarning(element) {
+    if (element.val() === 'all') {
+        if (! element.parent().children('warning').length){
+            element.parent().append('<p class="warning">Warning: This query setting may take a long time to execute!</p>')
+        }
+    }
+    else{
+        element.parent().children('.warning').remove();
+    }
+
+}
+
 function resolveCountryInputs(input) {
     trimWhitespaceInInput(input);
 
+    let inputParent = input.parent();
+
     let notFilledCount = 0;
-    $(".countries > input").each(function (){
+
+    inputParent.children(':input').each(function (){
         if (! $(this).val().length) {
             notFilledCount++;
         }
@@ -59,37 +82,51 @@ function resolveCountryInputs(input) {
 
     if (input.val().length && notFilledCount === 0){
         // if there are zero empty inputs to fill, append new input
-        $('.countries').append(createCountryInput());
+        if (inputParent.hasClass('word')){
+            inputParent.append(createWordInput());
+        } else if (inputParent.hasClass('countries')){
+            inputParent.append(createCountryInput());
+        }
     }
     else if(notFilledCount === 2) {
         // if there are two empty inputs, remove one
+        if (inputParent.hasClass('word')){
+            input.prev($('.operator')).remove();
+        }
+
         input.remove();
+    }
+
+    //word is required, make sure the first input always has it
+    if (inputParent.hasClass('word')) {
+        console.log(inputParent.children(':input').length);
+        if (inputParent.children(':input').length === 2) {
+            inputParent.children(':input').prop('required', true);
+        }
     }
 }
 
 function toggleSwitchInput() {
     let graphType = $('#graphType');
-    if (
-        graphType.val() === 'popular'
+
+    if ((graphType.val() === 'popular'
         && $('#count').val() === 'answer'
         && $('#category').val().length
+        ) ||
+        graphType.val() === 'time'
     ) {
         if (!$('.custom-switch').length) {
             $('.percentage-switch').append(createSwitchInput());
+        }
+
+        if (graphType.val() === 'time'){
+            $('label[for="percentage"]').text('Show results in percentage out of all games played in language on day');
         }
     }
     else {
         $(".custom-switch").remove();
     }
 
-    // if (
-    //     (
-    //         graphType.val() === 'popular' &&
-    //         $('#count').val() === 'answer' &&
-    //         $('#category').val().length
-    //     ) ||
-    //     graphType.val() === 'time'
-    // )
 }
 
 function changeFormType() {
@@ -118,30 +155,40 @@ function switchFormToTimeChart() {
     $('.limit').remove();
 
     if (! $('.word').length) {
-        $("#wordDiv").append(createWordInput())
+        $("#wordDiv").append(createFirstWordInput())
     }
 }
 
 function switchFormFromTimeChart() {
     let wordDiv = $('.word');
+
     if (wordDiv.length){
         $('#countDiv').append(createCountInput());
         $("#limitDiv").append(createLimitInput());
     }
+
     wordDiv.remove();
 }
 
 function createWordInput() {
-    return $('<div class="word">\n' +
-        '        <label for="word">Case insensitive word to search in time:</label>\n' +
-        '        <select id="operator" name="operator">\n' +
-        '            <option value="equals">equals</option>\n' +
-        '            <option value="startsWith">starts with</option>\n' +
-        '            <option value="contains">contains</option>\n' +
-        '        </select>\n' +
-        '        <input type="text" id="word" name="word" value="" required>\n' +
-        '    </div>'
-    );
+    return $('       <select class="operator" name="operator[]">\n' +
+            '            <option value="equals">equals</option>\n' +
+            '            <option value="startsWith">starts with</option>\n' +
+            '            <option value="endsWith">ends with</option>\n' +
+            '            <option value="contains">contains</option>\n' +
+            '        </select>\n' +
+            '        <input type="text" class="word-input" name="word[]" value="">\n');
+}
+
+function createFirstWordInput() {
+    let div = $('<div class="word"></div>');
+    let label = $('<label for="word">Case insensitive word to search in time:</label>')
+
+    div.append(label);
+    div.append(createWordInput());
+    div.children(':input').prop('required', true);
+
+    return div;
 }
 
 function createCountriesDatalist(countries) {
@@ -155,13 +202,13 @@ function createCountriesDatalist(countries) {
 }
 
 function createCountryInput() {
-    return $('<input class="country-input" id="country" list="countryList" name="country[]" />');
+    return $('<input class="country-input" list="countryList" name="country[]" />');
 }
 
 function createFirstCountryInput() {
     let div = $('<div class="countries"> </div>');
-
     let label = $('<label for="country">From player from country:</label>');
+
     div.append(label);
     div.append(countriesDatalist);
     div.append(createCountryInput());

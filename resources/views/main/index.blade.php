@@ -23,13 +23,13 @@
                 <select id="graphType" name="graphType">
                     <option value="popular">Answer/category popularity</option>
                     <option value="total">Total amount of answers</option>
-                    <option value="time">Time chart</option>
+                    <option value="time">Time graph</option>
                 </select><br>
 
                 <div id="wordDiv"></div>
 
-                <div id="countDiv">
-                    <div class="count">
+                <div id="countTableDiv">
+                    <div class="count-table">
                         <label for="count">Count most selected: </label>
                         <select id="count" name="count">
                             <option id="countCategory" value="category">category</option>
@@ -42,7 +42,9 @@
 
                 <div class="language">
                     <label for="language">In language:</label>
-                    <select id="language" name="language">
+                    <select id="language" name="language" required>
+                            <option disabled selected value> -- select language -- </option>
+                            <option value="all">all</option>
                         @foreach($languages as $lang)
                             <option value="{{$lang->id}}">{{$lang->show_name}}</option>
                         @endforeach
