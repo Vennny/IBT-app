@@ -30,7 +30,7 @@ class MainController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Pass request and get query results.
      *
      * @param Request $request
      * @return View

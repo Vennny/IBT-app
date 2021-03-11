@@ -9,13 +9,21 @@ class QueryBuilderService
 {
     /**
      * QueryBuilderService constructor.
+     *
      * @param $requestInputService
      */
     public function __construct(private RequestInputService $requestInputService){}
 
-    private function getWordTableName(string $language): string
+    /**
+     * Finds a matching word table name for a language code.
+     *
+     * @param string $languageCode
+     *
+     * @return string
+     */
+    private function getWordTableName(string $languageCode): string
     {
-        return match ($language) {
+        return match ($languageCode) {
             "cs" => "word_cs",
             "de" => "word_de",
             "en" => "word_en",
@@ -30,6 +38,14 @@ class QueryBuilderService
         };
     }
 
+    /**
+     * Checks whether a WHERE subquery should specify a language setting.
+     *
+     * @param $language
+     * @param $wordTable
+     *
+     * @return bool
+     */
     private function specifyLanguage($language, $wordTable): bool
     {
         if (
@@ -42,6 +58,16 @@ class QueryBuilderService
         return false;
     }
 
+    /**
+     * Builds the WHERE part of a query.
+     *
+     * @param string|null $language
+     * @param array|null $countries
+     * @param array|null $categories
+     * @param string|null $letter
+     *
+     * @return string
+     */
     private function buildWhereSubQuery(
         string|null $language,
         array $countries = null,
@@ -59,13 +85,13 @@ class QueryBuilderService
             $whereQuery = " WHERE ";
 
             if ($this->specifyLanguage($language, $wordTable)){
-                $whereQuery .= "id_lang = '".$language."' ";
+                $whereQuery .= "id_lang = '" . $language. "' ";
             }
 
             if (!empty($countries)) {
                 $countryQuery = "(";
                 foreach ($countries as $country){
-                    $countryQuery .=" country_code = '". $this->requestInputService->getCountryCode($country) ."'";
+                    $countryQuery .=" country_code = '" . $this->requestInputService->getCountryCode($country) . "'";
                 }
                 $countryQuery .= ") ";
 
@@ -75,7 +101,7 @@ class QueryBuilderService
             if (!empty($categories)) {
                 $categoryQuery = "(";
                 foreach ($categories as $category){
-                    $categoryQuery .= " LOWER(category_name) = '". $category ."'";
+                    $categoryQuery .= " LOWER(category_name) = '" . $category . "'";
                 }
                 $categoryQuery .= ") ";
 
@@ -83,7 +109,7 @@ class QueryBuilderService
             }
 
             if ($letter) {
-                $whereQuery .= "LOWER(value) LIKE '".strtolower ($letter)."%' ";
+                $whereQuery .= "LOWER(value) LIKE '" . strtolower ($letter). "%' ";
 
             }
 
@@ -94,9 +120,15 @@ class QueryBuilderService
         return "";
     }
 
+    /**
+     * builds the FROM part of the query.
+     *
+     * @param string|null $language
+     * @return string
+     */
     private function buildFromSubQuery(string|null $language): string
     {
-        $language_tables = ["word_cs", "word_pt", "word_de", "word_en", "word_fr", "word_es", "word_it", "word_pl", "word_sk"];
+        $languageTables = ["word_cs", "word_pt", "word_de", "word_en", "word_fr", "word_es", "word_it", "word_pl", "word_sk"];
         $wordTable = $this->getWordTableName($language);
 
         $fromQuery = " FROM ";
@@ -104,7 +136,7 @@ class QueryBuilderService
         if ($language === QueryConstants::ALL_LANGUAGES){
             $fromQuery .= "(";
 
-            foreach ($language_tables as $table) {
+            foreach ($languageTables as $table) {
                 $fromQuery .= "SELECT * FROM " . $table . "
                             UNION ALL ";
             }
@@ -119,6 +151,11 @@ class QueryBuilderService
         return $fromQuery;
     }
 
+    /**
+     * Builds a query that returns the most played categories.
+     *
+     * @return string
+     */
     private function buildCategoryCountQuery(): string
     {
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
@@ -142,6 +179,13 @@ class QueryBuilderService
         return $query;
     }
 
+    /**
+     * Builds a query that returns the most popular answers.
+     *
+     * @param bool|null $totalWords
+     *
+     * @return string
+     */
     private function buildAnswerCountQuery(bool $totalWords = null): string
     {
         $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY);
@@ -153,12 +197,12 @@ class QueryBuilderService
         $query = "SELECT ";
 
         if ($totalWords) {
-            $query.= "LOWER(category_name) AS category_name, ";
+            $query .= "LOWER(category_name) AS category_name, ";
         } else {
-            $query.= "LOWER(value) AS word, ";
+            $query .= "LOWER(value) AS word, ";
         }
 
-        $query .=  "COUNT(*) AS ". QueryConstants::COUNT_COLUMN_NAME . " ";
+        $query .=  "COUNT(*) AS " . QueryConstants::COUNT_COLUMN_NAME . " ";
 
         $query .= $this->buildFromSubQuery($language);
 
@@ -166,22 +210,29 @@ class QueryBuilderService
 
         if ($totalWords) {
             $query .=
-                "GROUP BY ".
+                "GROUP BY " .
                 "category_name ";
         } else {
             $query .=
-                "GROUP BY ".
+                "GROUP BY " .
                 "word ";
         }
 
         $query .=
             "ORDER BY " .
             "amount DESC " .
-            "LIMIT ".$limit;
+            "LIMIT " . $limit;
 
         return $query;
     }
 
+    /**
+     * Builds the SUM part of a time query that counts the amount of specified submitted answers for each day.
+     *
+     * @param array $words
+     * @param array $operators
+     * @return string
+     */
     private function buildWordComparisonSubQuery(array $words, array $operators): string
     {
         $wordQuery = "SUM(case when ";
@@ -197,7 +248,7 @@ class QueryBuilderService
                 $pattern = '%' . $pattern . '%';
             }
 
-            $wordQuery .= " LOWER(value) LIKE '" . $pattern ."' ";
+            $wordQuery .= " LOWER(value) LIKE '" . $pattern . "' ";
         }
 
 
@@ -207,6 +258,11 @@ class QueryBuilderService
         return $wordQuery . " then 1 else 0 end) AS amount ";
     }
 
+    /**
+     * Builds a query that returns the amount of specified answers for each day.
+     *
+     * @return string
+     */
     private function buildAnswersInTimeQuery(): string
     {
         $operators = $this->requestInputService->getInputValue(QueryConstants::OPERATOR);
@@ -234,6 +290,11 @@ class QueryBuilderService
         return $query;
     }
 
+    /**
+     * Builds a category or answer popularity query.
+     *
+     * @return string
+     */
     private function buildPopularityQuery(): string
     {
         $table = $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE);
@@ -243,11 +304,15 @@ class QueryBuilderService
         } elseif ($table === QueryConstants::COUNT_ANSWERS) {
             return $this->buildAnswerCountQuery();
         } else {
-            //TODO redirect in service does not work
-            return redirect()->back()->withErrors(['Query build was not successful.']);
+            return "";
         }
     }
 
+    /**
+     * Builds a query that returns the total amount of answers for each day.
+     *
+     * @return string
+     */
     public function buildTotalAnswersInTimeQuery(): string
     {
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
@@ -271,24 +336,35 @@ class QueryBuilderService
         return $query;
     }
 
+    /**
+     * Builds a query that returns the total amount of answers.
+     *
+     * @return string
+     */
     public function buildTotalAnswersQuery(): string
     {
         return $this->buildAnswerCountQuery(true);
     }
 
+    /**
+     * Builds a query.
+     *
+     * @return string
+     */
     public function build(): string
     {
         $this->requestInputService->escapeSingleQuotesInInputs();
 
         $type = $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE);
 
-        $query = "";
         if ($type === QueryConstants::POPULARITY_GRAPH) {
             $query = $this->buildPopularityQuery();
         } elseif ($type === QueryConstants::TOTAL_AMOUNT_GRAPH) {
             $query = $this->buildTotalAnswersQuery();
         } elseif ($type === QueryConstants::TIME_GRAPH) {
             $query = $this->buildAnswersInTimeQuery();
+        } else {
+            $query = "";
         }
 
         return $query;

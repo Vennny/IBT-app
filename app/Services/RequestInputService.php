@@ -10,14 +10,29 @@ use League;
 
 class RequestInputService
 {
+    /**
+     * RequestInputService constructor.
+     *
+     * @param Request $request
+     */
     public function __construct(private Request $request){}
 
+    /**
+     * @return Request
+     */
     public function getRequest(): Request
     {
         return $this->request;
     }
 
-    public function getInputValue(string $input): mixed
+    /**
+     * Validates input and returns its value.
+     *
+     * @param string $input
+     *
+     * @return string|int|array
+     */
+    public function getInputValue(string $input): string|int|array
     {
         match ($input) {
             QueryConstants::GRAPH_TYPE => $this->request->validate([QueryConstants::GRAPH_TYPE => 'required|string']),
@@ -59,12 +74,22 @@ class RequestInputService
         };
     }
 
+    /**
+     * Finds country code of a country from its name.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
     public function getCountryCode(string $name): string
     {
         $country = (new League\ISO3166\ISO3166)->name($name);
         return $country['alpha2'];
     }
 
+    /**
+     *  Escapes single quote character "'" by doubling it. Prevents SQL injection.
+     */
     public function escapeSingleQuotesInInputs(): void
     {
         foreach ($this->request as $key => $input) {

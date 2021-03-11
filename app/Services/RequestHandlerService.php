@@ -9,12 +9,19 @@ use Illuminate\Support\Facades\DB;
 
 class RequestHandlerService
 {
+    /**
+     * @var string
+     */
     private string $query;
 
+    /**
+     * @var array
+     */
     private array $filteredRequest;
 
     /**
      * QueryService constructor.
+     *
      * @param QueryBuilderService $queryBuilderService
      * @param RequestInputService $requestInputService
      */
@@ -23,26 +30,46 @@ class RequestHandlerService
         private RequestInputService $requestInputService
     ){}
 
+    /**
+     * @return string
+     */
     public function getQuery(): string
     {
         return $this->query;
     }
 
+    /**
+     * @return array
+     */
     public function getFilteredRequest(): array
     {
         return $this->filteredRequest;
     }
 
+    /**
+     * Executes a query.
+     *
+     * @param $query
+     *
+     * @return array
+     */
     private function execute($query): array
     {
         if ($query){
-            $result = DB::select( DB::raw($query));
+            $result = DB::select(DB::raw($query));
             return json_decode(json_encode($result), true);
         } else {
             return array();
         }
     }
 
+    /**
+     * Changes results to percentage out of all related answers.
+     *
+     * @param array $result
+     *
+     * @return array
+     */
     private function changeResultToPercentage(array $result): array
     {
         if (
@@ -68,10 +95,17 @@ class RequestHandlerService
         return $result;
     }
 
+    /**
+     * Filters empty and unnecessary items in request to show.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
     private function filterRequest(Request $request): array
     {
         //remove first input(token) and all empty inputs
-        $filteredRequest = array_filter(array_slice((array)$request->all(),1));
+        $filteredRequest = array_filter(array_slice((array)$request->all(), 1));
 
         if (array_key_exists('operator', $filteredRequest)){
             array_pop($filteredRequest['operator']);
@@ -80,6 +114,11 @@ class RequestHandlerService
         return $filteredRequest;
     }
 
+    /**
+     * Handles request and returns query results.
+     *
+     * @return array
+     */
     public function handle(): array
     {
         $this->query = $this->queryBuilderService->build();
