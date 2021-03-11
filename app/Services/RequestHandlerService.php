@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Constants\QueryConstants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +15,13 @@ class RequestHandlerService
 
     /**
      * QueryService constructor.
-     * @param $queryBuilderService
+     * @param QueryBuilderService $queryBuilderService
+     * @param RequestInputService $requestInputService
      */
-    public function __construct(private QueryBuilderService $queryBuilderService){}
+    public function __construct(
+        private QueryBuilderService $queryBuilderService,
+        private RequestInputService $requestInputService
+    ){}
 
     public function getQuery(): string
     {
@@ -42,9 +45,10 @@ class RequestHandlerService
 
     private function changeResultToPercentage(array $result): array
     {
-        if ($this->queryBuilderService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
-            && $this->queryBuilderService->getInputValue(QueryConstants::COUNT_TABLE) === QueryConstants::COUNT_ANSWERS
-            && $this->queryBuilderService->getInputValue(QueryConstants::CATEGORY)
+        if (
+            $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
+            && $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE) === QueryConstants::COUNT_ANSWERS
+            && $this->requestInputService->getInputValue(QueryConstants::CATEGORY)
         ) {
             $total = $this->execute($this->queryBuilderService->buildTotalAnswersQuery());
             $totalAmount = $total[0][QueryConstants::COUNT_COLUMN_NAME] ?? 1;
@@ -53,7 +57,7 @@ class RequestHandlerService
                 $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $totalAmount;
             }
 
-        } elseif ($this->queryBuilderService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
+        } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
             $words = $this->execute($this->queryBuilderService->buildTotalAnswersInTimeQuery());
 
             foreach ($result as $i => $item) {
@@ -80,13 +84,13 @@ class RequestHandlerService
     {
         $this->query = $this->queryBuilderService->build();
 
-        $request = $this->queryBuilderService->getRequest();
+        $request = $this->requestInputService->getRequest();
 
         $this->filteredRequest = $this->filterRequest($request);
 
         $result = $this->execute($this->query);
 
-        if ($this->queryBuilderService->getInputValue(QueryConstants::PERCENTAGE)) {
+        if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
             $result = $this->changeResultToPercentage($result);
         }
 

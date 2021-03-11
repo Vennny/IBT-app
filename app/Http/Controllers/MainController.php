@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\RequestHandlerService;
+use App\Services\RequestInputService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,9 @@ class MainController extends Controller
      */
     public function handleRequest(Request $request): View
     {
-        $requestHandlerService = (new RequestHandlerService(new QueryBuilderService($request)));
+
+        $requestInputService = new RequestInputService($request);
+        $requestHandlerService = new RequestHandlerService(new QueryBuilderService($requestInputService), $requestInputService);
 
         $results = $requestHandlerService->handle();
         $query = $requestHandlerService->getQuery();
