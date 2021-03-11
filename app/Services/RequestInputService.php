@@ -30,9 +30,9 @@ class RequestInputService
      *
      * @param string $input
      *
-     * @return string|int|array
+     * @return string|int|array|null
      */
-    public function getInputValue(string $input): string|int|array
+    public function getInputValue(string $input): string|int|array|null
     {
         match ($input) {
             QueryConstants::GRAPH_TYPE => $this->request->validate([QueryConstants::GRAPH_TYPE => 'required|string']),
