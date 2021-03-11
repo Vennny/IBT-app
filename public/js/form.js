@@ -1,4 +1,3 @@
-let countries;
 let countriesDatalist;
 
 $('#queryBuilder').submit(function(event) {
@@ -9,12 +8,11 @@ $('#queryBuilder').submit(function(event) {
 })
 
 function setCountries(countriesArray) {
-    countries = countriesArray;
     countriesDatalist = createCountriesDatalist(countriesArray);
 }
 
 $("#graphType").change(function (){
-    changeFormType();
+    changeFormType($(this));
 });
 
 $(document).on('change', '#countTable', function() {
@@ -70,10 +68,6 @@ function toggleSwitchInput() {
         if (!$('.custom-switch').length) {
             $('.percentage-switch').append(createSwitchInput());
         }
-
-        if (graphType.val() === 'time'){
-            $('label[for="percentage"]').text('Show results in percentage out of all games played in language on day');
-        }
     }
     else {
         $(".custom-switch").remove();
@@ -81,9 +75,7 @@ function toggleSwitchInput() {
 
 }
 
-function changeFormType() {
-    let element = $("#graphType");
-
+function changeFormType(element) {
     if (element.val() === 'popular') {
         switchFormFromTimeChart()
         if (! $('#countCategory').length){
@@ -266,7 +258,7 @@ function createSwitchInput() {
 
 function changeCountTableForm() {
     let countTable = $("#countTable");
-    let inputsExist = $(".countries").length || $(".category").length || $(".letter").length ;
+    let inputsExist = $(".countries").length || $(".categories").length || $(".letter").length ;
 
     if (!countTable.length || countTable.val() === 'answer'){
         if (!inputsExist) {
@@ -279,7 +271,7 @@ function changeCountTableForm() {
     else if (countTable.val() === 'category') {
         if (inputsExist) {
             $(".countries").remove();
-            $(".category").remove();
+            $(".categories").remove();
             $(".letter").remove();
         }
     }

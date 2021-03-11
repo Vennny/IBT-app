@@ -317,6 +317,9 @@ class QueryBuilderService
     public function buildTotalAnswersInTimeQuery(): string
     {
         $language = $this->getInputValue(QueryConstants::LANGUAGE);
+        $countries = $this->getInputValue(QueryConstants::COUNTRY);
+        $categories = $this->getInputValue(QueryConstants::CATEGORY);
+        $letter = $this->getInputValue(QueryConstants::LETTER);
 
         $query = "SELECT
                         DATE(date_cr) AS day,
@@ -324,7 +327,7 @@ class QueryBuilderService
 
         $query .= $this->buildFromSubQuery($language);
 
-        $query .= $this->buildWhereSubQuery($language);
+        $query .= $this->buildWhereSubQuery($language, $countries, $categories, $letter);
 
         $query .= "GROUP BY
                         day
