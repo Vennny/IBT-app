@@ -88,13 +88,13 @@ class RequestHandlerService
 
         $this->filteredRequest = $this->filterRequest($request);
 
-        $result = $this->execute($this->query);
+        $queryResult = $this->execute($this->query);
 
         if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
-            $result = $this->changeResultToPercentage($result);
+            $queryResult = $this->changeResultToPercentage($queryResult);
         }
 
-        return $result;
+        return $queryResult;
     }
 
 }

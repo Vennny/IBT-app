@@ -37,20 +37,18 @@ class MainController extends Controller
      */
     public function handleRequest(Request $request): View
     {
-
         $requestInputService = new RequestInputService($request);
         $requestHandlerService = new RequestHandlerService(new QueryBuilderService($requestInputService), $requestInputService);
 
-        $results = $requestHandlerService->handle();
+        $queryResult = $requestHandlerService->handle();
         $query = $requestHandlerService->getQuery();
         $filteredRequest = $requestHandlerService->getFilteredRequest();
 
         return view('main.graph', [
-            'results' => $results,
+            'data' => $queryResult,
             'request' => $filteredRequest,
             'query' => $query,
             'percentage' => array_key_exists('percentage', $filteredRequest)
         ]);
     }
-
 }

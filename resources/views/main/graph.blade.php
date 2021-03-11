@@ -33,11 +33,11 @@
             </div>
             <div class="col">
                 <label for="title">Day range from: </label>
-                <input type="text" class="form-control" id="rangeStart" value="{{$results[0]['day']}}">
+                <input type="text" class="form-control" id="rangeStart" value="{{$data[0]['day']}}">
             </div>
             <div class="col">
                 <label for="title">Day range to: </label>
-                <input type="text" class="form-control" id="rangeEnd" value="{{$results[count($results)-1]['day']}}">
+                <input type="text" class="form-control" id="rangeEnd" value="{{$data[count($data)-1]['day']}}">
             </div>
         @endif
     </div>
@@ -109,7 +109,7 @@
     <script src="{{ asset('js/graph.js') }}"></script>
     <script>
         $(document).ready(function(){
-            let data =  @json($results);
+            let data =  @json($data);
             let request = @json($request);
 
             if (Array.isArray(data) && data.length > 0) {
