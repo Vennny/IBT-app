@@ -61,7 +61,7 @@
                 <div class="percentage-switch"></div>
             </div>
 
-            <button type="submit" class="btn btn-primary" >Confirm</button>
+            <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
     </div>
 @endsection

@@ -10,7 +10,7 @@ class QueryBuilderService
     /**
      * QueryBuilderService constructor.
      *
-     * @param $requestInputService
+     * @param RequestInputService $requestInputService
      */
     public function __construct(private RequestInputService $requestInputService){}
 
@@ -41,12 +41,12 @@ class QueryBuilderService
     /**
      * Checks whether a WHERE subquery should specify a language setting.
      *
-     * @param $language
-     * @param $wordTable
+     * @param string|null $language
+     * @param string $wordTable
      *
      * @return bool
      */
-    private function specifyLanguage($language, $wordTable): bool
+    private function specifyLanguage(string|null $language, string $wordTable): bool
     {
         if (
             ($language && $language !== QueryConstants::ALL_LANGUAGES)
@@ -61,15 +61,15 @@ class QueryBuilderService
     /**
      * Builds the WHERE part of a query.
      *
-     * @param string|null $language
-     * @param array|null $countries
-     * @param array|null $categories
+     * @param string $language
+     * @param array<int, string>|null $countries
+     * @param array<int, string>|null $categories
      * @param string|null $letter
      *
      * @return string
      */
     private function buildWhereSubQuery(
-        string|null $language,
+        string $language,
         array $countries = null,
         array $categories = null,
         string|null $letter = null
@@ -114,7 +114,9 @@ class QueryBuilderService
             }
 
             // replace each space between WHERE conditions to "AND" unless "OR" is already there
-            return preg_replace("/(?<='|'\))[\s](?!$|OR)/", " AND ", $whereQuery);
+            $whereQuery = preg_replace("/(?<='|'\))[\s](?!$|OR)/", " AND ", $whereQuery);
+
+            return $whereQuery ?? "";
         }
 
         return "";
@@ -123,10 +125,11 @@ class QueryBuilderService
     /**
      * builds the FROM part of the query.
      *
-     * @param string|null $language
+     * @param string $language
+     *
      * @return string
      */
-    private function buildFromSubQuery(string|null $language): string
+    private function buildFromSubQuery(string $language): string
     {
         $languageTables = ["word_cs", "word_pt", "word_de", "word_en", "word_fr", "word_es", "word_it", "word_pl", "word_sk"];
         $wordTable = $this->getWordTableName($language);
@@ -229,8 +232,8 @@ class QueryBuilderService
     /**
      * Builds the SUM part of a time query that counts the amount of specified submitted answers for each day.
      *
-     * @param array $words
-     * @param array $operators
+     * @param array<int, string> $words
+     * @param array<int, string> $operators
      * @return string
      */
     private function buildWordComparisonSubQuery(array $words, array $operators): string

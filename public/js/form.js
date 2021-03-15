@@ -1,10 +1,7 @@
 let countriesDatalist;
 
 $('#queryBuilder').submit(function(event) {
-    //firefox workaround for executing script before submitting the form
-    event.preventDefault();
     sendQuery();
-    $(this).unbind('submit').submit();
 })
 
 function setCountries(countriesArray) {

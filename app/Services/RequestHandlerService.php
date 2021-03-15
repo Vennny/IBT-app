@@ -15,7 +15,7 @@ class RequestHandlerService
     private string $query;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private array $filteredRequest;
 
@@ -39,7 +39,7 @@ class RequestHandlerService
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getFilteredRequest(): array
     {
@@ -49,26 +49,28 @@ class RequestHandlerService
     /**
      * Executes a query.
      *
-     * @param $query
+     * @param string $query
      *
-     * @return array
+     * @return array<int, array>
      */
-    private function execute($query): array
+    private function execute(string $query): array
     {
         if ($query){
             $result = DB::select(DB::raw($query));
-            return json_decode(json_encode($result), true);
-        } else {
-            return array();
+
+            $json = json_encode($result);
+            return $json ? json_decode($json, true) : array();
         }
+
+        return array();
     }
 
     /**
      * Changes results to percentage out of all related answers.
      *
-     * @param array $result
+     * @param array<int, array> $result
      *
-     * @return array
+     * @return array<int, array>
      */
     private function changeResultToPercentage(array $result): array
     {
@@ -100,7 +102,7 @@ class RequestHandlerService
      *
      * @param Request $request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function filterRequest(Request $request): array
     {
@@ -117,7 +119,7 @@ class RequestHandlerService
     /**
      * Handles request and returns query results.
      *
-     * @return array
+     * @return array<int, array>
      */
     public function handle(): array
     {

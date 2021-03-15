@@ -33,7 +33,7 @@ class MainController extends Controller
      * Pass request and get query results.
      *
      * @param Request $request
-     * @return View
+     * @return  View
      */
     public function handleRequest(Request $request): View
     {

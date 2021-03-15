@@ -30,9 +30,9 @@ class RequestInputService
      *
      * @param string $input
      *
-     * @return string|int|array|null
+     * @return mixed
      */
-    public function getInputValue(string $input): string|int|array|null
+    public function getInputValue(string $input): mixed
     {
         match ($input) {
             QueryConstants::GRAPH_TYPE => $this->request->validate([QueryConstants::GRAPH_TYPE => 'required|string']),
@@ -92,11 +92,17 @@ class RequestInputService
      */
     public function escapeSingleQuotesInInputs(): void
     {
-        foreach ($this->request as $key => $input) {
-            if (is_string($input)){
-                $this->request[$key] = preg_replace("/'/", "''", $input);
+        foreach ($this->request->all() as $inputKey => $input) {
+
+            if ($inputKey === QueryConstants::COUNTRY){
+                //countries are validated separately, escaping would break that validation
+                continue;
+            }
+
+            if (is_string($input) || is_array($input)) {
+                //modify request with new input
+                $this->request->merge([$inputKey => preg_replace("/'/", "''", $input)]);
             }
         }
     }
-
 }
