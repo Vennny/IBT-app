@@ -136,7 +136,7 @@ class RequestHandlerService
 
         if ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) !== QueryConstants::TIME_GRAPH) {
             $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
-            return array_splice($result, $limit);
+            array_splice($result, $limit);
         }
 
         return $result;
