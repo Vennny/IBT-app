@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Constants\QueryConstants;
+use Illuminate\Support\Facades\DB;
 
 class QueryBuilderService
 {
@@ -101,7 +102,19 @@ class QueryBuilderService
             if (!empty($categories)) {
                 $categoryQuery = "(";
                 foreach ($categories as $category){
-                    $categoryQuery .= " LOWER(category_name) = '" . $category . "'";
+
+                    //get all ids of this category name
+                    $subQuery = "SELECT id FROM category WHERE lower(name) LIKE '". $category ."' ";
+
+                    if ($language !== QueryConstants::ALL_LANGUAGES) {
+                        $subQuery .= "AND id_lang = '" . $language. "' ";
+                    }
+
+                    $categoryIds = DB::select(DB::raw($subQuery));
+
+                    foreach (array_column($categoryIds, 'id') as $categoryId) {
+                        $categoryQuery .= " id_category = '" . $categoryId . "'";
+                    }
                 }
                 $categoryQuery .= ") ";
 

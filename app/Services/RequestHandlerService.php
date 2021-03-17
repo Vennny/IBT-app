@@ -69,11 +69,10 @@ class RequestHandlerService
      * Changes results to percentage out of all related answers.
      *
      * @param array<int, array> $result
-     * @param int $limit
      *
      * @return array<int, array>
      */
-    private function changeResultToPercentage(array $result, int $limit): array
+    private function changeResultToPercentage(array $result): array
     {
         if (
             $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
@@ -83,6 +82,8 @@ class RequestHandlerService
             array_walk_recursive($result, function($value) use (&$sum) {
                 if (is_numeric($value)) $sum += $value;
             });
+
+            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
 
             array_splice($result, $limit);
 
@@ -121,6 +122,27 @@ class RequestHandlerService
     }
 
     /**
+     * shortens the array by input limit and changes to percentage if necessary
+     *
+     * @param array<int, array> $result
+     *
+     * @return array<int, array>
+     */
+    private function prepareResult(array $result): array
+    {
+        if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
+            return $this->changeResultToPercentage($result);
+        }
+
+        if ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) !== QueryConstants::TIME_GRAPH) {
+            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
+            return array_splice($result, $limit);
+        }
+
+        return $result;
+    }
+
+    /**
      * Handles request and returns query results.
      *
      * @return array<int, array>
@@ -135,14 +157,6 @@ class RequestHandlerService
 
         $queryResult = $this->execute($this->query);
 
-        $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
-        if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
-            $queryResult = $this->changeResultToPercentage($queryResult, $limit);
-        } else {
-            array_splice($queryResult, $limit);
-        }
-
-        return $queryResult;
+        return $this->prepareResult($queryResult);
     }
-
 }
