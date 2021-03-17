@@ -1,6 +1,10 @@
 let countriesDatalist;
 
-$('#queryBuilder').submit(function(event) {
+$(document).ready(function() {
+    changeFormType($("#graphType"));
+});
+
+$('#queryBuilder').submit(function() {
     sendQuery();
 })
 
