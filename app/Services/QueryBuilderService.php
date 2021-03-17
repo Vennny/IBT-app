@@ -185,7 +185,7 @@ class QueryBuilderService
     /**
      * Builds a query that returns the most popular answers.
      *
-     * @param bool|null $totalWords
+     * @param bool $totalWords
      *
      * @return string
      */
