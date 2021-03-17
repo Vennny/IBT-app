@@ -219,6 +219,7 @@ function createGraph(data, request) {
                         labelString: graphDataOptions.keys[0]
                     },
                     ticks: {
+                        beginAtZero: true,
                         callback: function (value) {
                             if (graphDataOptions.percentage && graphDataOptions.type === 'line') {
                                 return value.toFixed(getAmountOfDecimals(value)) + " %"
@@ -230,6 +231,7 @@ function createGraph(data, request) {
                 }],
                 xAxes: [{
                     ticks: {
+                        beginAtZero: true,
                         callback: function (value) {
                             if (graphDataOptions.percentage && graphDataOptions.type !== 'line') {
                                 return value.toFixed(getAmountOfDecimals(value)) + " %"

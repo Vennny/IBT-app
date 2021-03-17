@@ -51,7 +51,7 @@
 
 
             <div class="graph-buttons zero-check">
-                <input class="form-check-input" type="checkbox" value="" id="zeroCheck">
+                <input class="form-check-input" type="checkbox" value="" id="zeroCheck" checked>
                 <label class="form-check-label" for="flexCheckDefault">Start graph values axis at zero</label>
             </div>
 
