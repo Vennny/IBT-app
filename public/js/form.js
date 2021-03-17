@@ -1,7 +1,7 @@
 let countriesDatalist;
 
 $(document).ready(function() {
-    changeFormType($("#graphType"));
+    changeFormType();
 });
 
 $('#queryBuilder').submit(function() {
@@ -13,7 +13,7 @@ function setCountries(countriesArray) {
 }
 
 $("#graphType").change(function (){
-    changeFormType($(this));
+    changeFormType();
 });
 
 $(document).on('change', '#countTable', function() {
@@ -76,16 +76,18 @@ function toggleSwitchInput() {
 
 }
 
-function changeFormType(element) {
+function changeFormType() {
+    let element = $("#graphType");
+
     if (element.val() === 'popular') {
         switchFormFromTimeChart()
-        if (! $('#countCategory').length){
-            $('#countTable').append('<option id="countCategory" value="category">category</option>');
+        if (! $('.count-table').length){
+            $('#countTableDiv').append(createCountTableInput());
         }
     }
     else if (element.val() === 'total') {
         switchFormFromTimeChart()
-        $('#countCategory').remove();
+        $('.count-table').remove();
     }
     else if (element.val() === 'time') {
         switchFormToTimeChart();
@@ -108,7 +110,6 @@ function switchFormFromTimeChart() {
     let wordDiv = $('.word');
 
     if (wordDiv.length){
-        $('#countTableDiv').append(createCountTableInput());
         $("#limitDiv").append(createLimitInput());
     }
 
@@ -234,8 +235,8 @@ function createCountTableInput() {
     return $('<div class="count-table">\n' +
         '        <label for="count">Count most selected: </label>\n' +
         '        <select id="countTable" name="countTable">\n' +
-        '            <option id="countCategory" value="category">category</option>\n' +
         '            <option id="countAnswer" value="answer">answers</option>\n' +
+        '            <option id="countCategory" value="category">categories</option>\n' +
         '        </select><br>\n' +
         '    </div>'
     );
