@@ -69,21 +69,25 @@ class RequestHandlerService
      * Changes results to percentage out of all related answers.
      *
      * @param array<int, array> $result
+     * @param int $limit
      *
      * @return array<int, array>
      */
-    private function changeResultToPercentage(array $result): array
+    private function changeResultToPercentage(array $result, int $limit): array
     {
         if (
             $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
             && $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE) === QueryConstants::COUNT_ANSWERS
-            && $this->requestInputService->getInputValue(QueryConstants::CATEGORY)
         ) {
-            $total = $this->execute($this->queryBuilderService->buildTotalAnswersQuery());
-            $totalAmount = $total[0][QueryConstants::COUNT_COLUMN_NAME] ?? 1;
+            $sum = 0;
+            array_walk_recursive($result, function($value) use (&$sum) {
+                if (is_numeric($value)) $sum += $value;
+            });
+
+            array_splice($result, $limit);
 
             foreach ($result as $i => $item) {
-                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $totalAmount;
+                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $sum;
             }
 
         } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
@@ -131,8 +135,11 @@ class RequestHandlerService
 
         $queryResult = $this->execute($this->query);
 
+        $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
         if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
-            $queryResult = $this->changeResultToPercentage($queryResult);
+            $queryResult = $this->changeResultToPercentage($queryResult, $limit);
+        } else {
+            array_splice($queryResult, $limit);
         }
 
         return $queryResult;

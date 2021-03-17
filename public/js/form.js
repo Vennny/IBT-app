@@ -22,7 +22,6 @@ $(document).on('change', '#countTable', function() {
 
 $(document).on('change', '.category-input', function() {
     resolveAddingInputs($(this));
-    toggleSwitchInput();
 });
 
 $(document).on('change', '#letter', function() {
@@ -62,7 +61,6 @@ function toggleSwitchInput() {
 
     if ((graphType.val() === 'popular'
         && $('#countTable').val() === 'answer'
-        && $('.category-input').val().length
         ) ||
         graphType.val() === 'time'
     ) {

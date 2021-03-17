@@ -162,7 +162,6 @@ class QueryBuilderService
     private function buildCategoryCountQuery(): string
     {
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
-        $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
 
         $query =
             "SELECT " .
@@ -175,9 +174,7 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC " .
-            "LIMIT " .
-            $limit;
+            "amount DESC ";
 
         return $query;
     }
@@ -195,7 +192,6 @@ class QueryBuilderService
         $category = $this->requestInputService->getInputValue(QueryConstants::CATEGORY);
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
         $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER);
-        $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
 
         $query = "SELECT ";
 
@@ -223,8 +219,7 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC " .
-            "LIMIT " . $limit;
+            "amount DESC ";
 
         return $query;
     }
