@@ -92,10 +92,10 @@ class RequestHandlerService
             }
 
         } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
-            $words = $this->execute($this->queryBuilderService->buildTotalAnswersInTimeQuery());
 
             foreach ($result as $i => $item) {
-                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $words[$i][QueryConstants::COUNT_COLUMN_NAME];
+                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $result[$i]['total'];
+                unset($result[$i]['total']);
             }
         }
 

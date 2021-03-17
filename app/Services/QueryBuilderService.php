@@ -153,13 +153,13 @@ class QueryBuilderService
             $fromQuery .= "(";
 
             foreach ($languageTables as $table) {
-                $fromQuery .= "SELECT * FROM " . $table . "
+                $fromQuery .= "SELECT value, date_cr, id_category, country_code FROM " . $table . "
                             UNION ALL ";
             }
 
-            $fromQuery .= "SELECT id, value, date_cr, category_name, id_category, country_code
+            $fromQuery .= "SELECT value, date_cr, id_category, country_code
                             FROM word_rest
-                        ) AS words_tables ";
+                        ) AS word_tables ";
         } else {
             $fromQuery .= $wordTable . " ";
         }
@@ -284,7 +284,8 @@ class QueryBuilderService
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
 
         $query = "SELECT
-                    DATE(date_cr) AS day,";
+                    DATE(date_cr) AS day,
+                    COUNT(*) AS total, ";
 
         $query .= $this->buildWordComparisonSubQuery($words, $operators);
 
