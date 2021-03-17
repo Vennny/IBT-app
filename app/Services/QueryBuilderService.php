@@ -189,7 +189,7 @@ class QueryBuilderService
      *
      * @return string
      */
-    private function buildAnswerCountQuery(bool $totalWords = null): string
+    private function buildAnswerCountQuery(bool $totalWords = false): string
     {
         $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY);
         $category = $this->requestInputService->getInputValue(QueryConstants::CATEGORY);
