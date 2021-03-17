@@ -333,15 +333,14 @@ function alterDataRangeStart(startingDate, data = null) {
         labels = graphDataOptions.labels.slice();
     }
 
-
     let i;
-    for (i = 0; i < labels.length; i++) {
+    for (i = 0; i < labels.length-1; i++) {
         if (labels[i] === startingDate) {
             break;
         }
     }
 
-    if (i !== labels.length) {
+    if (i !== labels.length-1) {
         labels.splice(0, i);
         values.splice(0, i);
     }
@@ -361,14 +360,14 @@ function alterDataRangeEnd(endingDate, data = null) {
         labels = graphDataOptions.labels.slice();
     }
 
-    let i;
-    for (i = labels.length; i > 0; i--) {
+    let i = labels.length-1;
+    for (i; i > 0; i--) {
         if (labels[i] === endingDate) {
             break;
         }
     }
 
-    if (i !== 0) {
+    if (i !== 0 && i !== labels.length-1) {
         labels.splice(i+1, labels.length);
         values.splice(i+1, values.length);
     }
@@ -415,7 +414,7 @@ function alterDataMovingAverage(daysAmount, data = null) {
         newValues.push(total / daysAmount);
     }
 
-    labels.splice(0, daysAmount);
+    labels.splice(0, daysAmount-1);
 
     return {"labels": labels, "values": newValues};
 }

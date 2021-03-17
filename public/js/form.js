@@ -214,7 +214,7 @@ function createCountryInput() {
 
 function createFirstCountryInput() {
     let div = $('<div class="countries"> </div>');
-    let label = $('<label for="country">From player from country:</label>');
+    let label = $('<label for="country">From players from country:</label>');
 
     div.append(label);
     div.append(countriesDatalist);
