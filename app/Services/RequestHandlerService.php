@@ -75,15 +75,15 @@ class RequestHandlerService
     private function changeResultToPercentage(array $result): array
     {
         if (
-            $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::POPULARITY_GRAPH
-            && $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE) === QueryConstants::COUNT_ANSWERS
+            $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) === QueryConstants::POPULARITY_GRAPH
+            && $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE_KEY) === QueryConstants::COUNT_ANSWERS
         ) {
             $sum = 0;
             array_walk_recursive($result, function($value) use (&$sum) {
                 if (is_numeric($value)) $sum += $value;
             });
 
-            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
+            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT_KEY);
 
             array_splice($result, $limit);
 
@@ -91,11 +91,11 @@ class RequestHandlerService
                 $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $sum;
             }
 
-        } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) === QueryConstants::TIME_GRAPH) {
+        } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) === QueryConstants::TIME_GRAPH) {
 
             foreach ($result as $i => $item) {
-                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $result[$i]['total'];
-                unset($result[$i]['total']);
+                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME];
+                unset($result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME]);
             }
         }
 
@@ -114,8 +114,8 @@ class RequestHandlerService
         //remove first input(token) and all empty inputs
         $filteredRequest = array_filter(array_slice((array)$request->all(), 1));
 
-        if (array_key_exists('operator', $filteredRequest)){
-            array_pop($filteredRequest['operator']);
+        if (array_key_exists(QueryConstants::OPERATOR_KEY, $filteredRequest)){
+            array_pop($filteredRequest[QueryConstants::OPERATOR_KEY]);
         }
 
         return $filteredRequest;
@@ -130,12 +130,12 @@ class RequestHandlerService
      */
     private function prepareResult(array $result): array
     {
-        if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE)) {
+        if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE_KEY)) {
             return $this->changeResultToPercentage($result);
         }
 
-        if ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE) !== QueryConstants::TIME_GRAPH) {
-            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT);
+        if ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) !== QueryConstants::TIME_GRAPH) {
+            $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT_KEY);
             array_splice($result, $limit);
         }
 

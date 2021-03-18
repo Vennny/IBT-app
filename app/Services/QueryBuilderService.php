@@ -43,11 +43,11 @@ class QueryBuilderService
      * Checks whether a WHERE subquery should specify a language setting.
      *
      * @param string|null $language
-     * @param string $wordTable
+     * @param string|null $wordTable
      *
      * @return bool
      */
-    private function specifyLanguage(string|null $language, string $wordTable): bool
+    private function specifyLanguage(string|null $language, string|null $wordTable): bool
     {
         if (
             ($language && $language !== QueryConstants::ALL_LANGUAGES)
@@ -63,6 +63,7 @@ class QueryBuilderService
      * Builds the WHERE part of a query.
      *
      * @param string $language
+     * @param string|null $wordTable
      * @param array<int, string>|null $countries
      * @param array<int, string>|null $categories
      * @param string|null $letter
@@ -71,12 +72,11 @@ class QueryBuilderService
      */
     private function buildWhereSubQuery(
         string $language,
+        string $wordTable = null,
         array $countries = null,
         array $categories = null,
         string|null $letter = null
     ) :string {
-        $wordTable = $this->getWordTableName($language);
-
         if (
             $this->specifyLanguage($language, $wordTable)
             || !empty($countries)
@@ -174,7 +174,7 @@ class QueryBuilderService
      */
     private function buildCategoryCountQuery(): string
     {
-        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
+        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE_KEY);
 
         $query =
             "SELECT " .
@@ -187,7 +187,8 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC ";
+            "amount DESC " .
+            "LIMIT " . QueryConstants::LIMIT_NUMBER;
 
         return $query;
     }
@@ -201,10 +202,10 @@ class QueryBuilderService
      */
     private function buildAnswerCountQuery(bool $totalWords = false): string
     {
-        $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY);
-        $category = $this->requestInputService->getInputValue(QueryConstants::CATEGORY);
-        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
-        $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER);
+        $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY_KEY);
+        $categories = $this->requestInputService->getInputValue(QueryConstants::CATEGORY_KEY);
+        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE_KEY);
+        $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER_KEY);
 
         $query = "SELECT ";
 
@@ -218,7 +219,13 @@ class QueryBuilderService
 
         $query .= $this->buildFromSubQuery($language);
 
-        $query .= $this->buildWhereSubQuery($language, $countries, $category, $letter);
+        $query .= $this->buildWhereSubQuery(
+            $language,
+            $this->getWordTableName($language),
+            $countries,
+            $categories,
+            $letter
+        );
 
         if ($totalWords) {
             $query .=
@@ -232,7 +239,8 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC ";
+            "amount DESC " .
+            "LIMIT " . QueryConstants::LIMIT_NUMBER;
 
         return $query;
     }
@@ -276,12 +284,12 @@ class QueryBuilderService
      */
     private function buildAnswersInTimeQuery(): string
     {
-        $operators = $this->requestInputService->getInputValue(QueryConstants::OPERATOR);
-        $words = $this->requestInputService->getInputValue(QueryConstants::WORD);
-        $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY);
-        $category = $this->requestInputService->getInputValue(QueryConstants::CATEGORY);
-        $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER);
-        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
+        $operators = $this->requestInputService->getInputValue(QueryConstants::OPERATOR_KEY);
+        $words = $this->requestInputService->getInputValue(QueryConstants::WORD_KEY);
+        $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY_KEY);
+        $categories = $this->requestInputService->getInputValue(QueryConstants::CATEGORY_KEY);
+        $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER_KEY);
+        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE_KEY);
 
         $query = "SELECT
                     DATE(date_cr) AS day,
@@ -291,7 +299,13 @@ class QueryBuilderService
 
         $query .= $this->buildFromSubQuery($language);
 
-        $query .= $this->buildWhereSubQuery($language, $countries, $category, $letter);
+        $query .= $this->buildWhereSubQuery(
+            $language,
+            $this->getWordTableName($language),
+            $countries,
+            $categories,
+            $letter
+        );
 
         $query .= "
                 GROUP BY
@@ -309,7 +323,7 @@ class QueryBuilderService
      */
     private function buildPopularityQuery(): string
     {
-        $table = $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE);
+        $table = $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE_KEY);
 
         if ($table === QueryConstants::COUNT_CATEGORIES) {
             return $this->buildCategoryCountQuery();
@@ -318,34 +332,6 @@ class QueryBuilderService
         } else {
             return "";
         }
-    }
-
-    /**
-     * Builds a query that returns the total amount of answers for each day.
-     *
-     * @return string
-     */
-    public function buildTotalAnswersInTimeQuery(): string
-    {
-        $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE);
-        $countries = $this->requestInputService->getInputValue(QueryConstants::COUNTRY);
-        $categories = $this->requestInputService->getInputValue(QueryConstants::CATEGORY);
-        $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER);
-
-        $query = "SELECT
-                        DATE(date_cr) AS day,
-                        COUNT(*) AS amount ";
-
-        $query .= $this->buildFromSubQuery($language);
-
-        $query .= $this->buildWhereSubQuery($language, $countries, $categories, $letter);
-
-        $query .= "GROUP BY
-                        day
-                    ORDER BY
-                        day ASC;";
-
-        return $query;
     }
 
     /**
@@ -367,7 +353,7 @@ class QueryBuilderService
     {
         $this->requestInputService->escapeSingleQuotesInInputs();
 
-        $type = $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE);
+        $type = $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY);
 
         if ($type === QueryConstants::POPULARITY_GRAPH) {
             $query = $this->buildPopularityQuery();

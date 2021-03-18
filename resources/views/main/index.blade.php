@@ -54,7 +54,7 @@
                 <div id="limitDiv">
                     <div class="limit">
                         <label for="limit">Select number of entries</label>
-                        <input type="number" id="limit" name="limit" min="1" value="5" required><br>
+                        <input type="number" id="limit" name="limit" min="1" max="100" value="5" required><br>
                     </div>
                 </div>
 

@@ -35,42 +35,42 @@ class RequestInputService
     public function getInputValue(string $input): mixed
     {
         match ($input) {
-            QueryConstants::GRAPH_TYPE => $this->request->validate([QueryConstants::GRAPH_TYPE => 'required|string']),
-            QueryConstants::COUNT_TABLE => $this->request->validate([QueryConstants::COUNT_TABLE => 'required|string']),
-            QueryConstants::LANGUAGE => $this->request->validate([QueryConstants::LANGUAGE => 'required|string']),
-            QueryConstants::LETTER => $this->request->validate([QueryConstants::LETTER => 'nullable|string|max:1']),
-            QueryConstants::LIMIT => $this->request->validate([QueryConstants::LIMIT => 'required|integer|min:1']),
-            QueryConstants::PERCENTAGE => $this->request->validate([QueryConstants::PERCENTAGE => 'nullable']),
-            QueryConstants::WORD => $this->request->validate([
-                QueryConstants::WORD => 'required|array',
-                QueryConstants::WORD.'.0' => 'required|string',
-                QueryConstants::WORD.'.*' => 'nullable|string'
+            QueryConstants::GRAPH_TYPE_KEY => $this->request->validate([QueryConstants::GRAPH_TYPE_KEY => 'required|string']),
+            QueryConstants::COUNT_TABLE_KEY => $this->request->validate([QueryConstants::COUNT_TABLE_KEY => 'required|string']),
+            QueryConstants::LANGUAGE_KEY => $this->request->validate([QueryConstants::LANGUAGE_KEY => 'required|string']),
+            QueryConstants::LETTER_KEY => $this->request->validate([QueryConstants::LETTER_KEY => 'nullable|string|max:1']),
+            QueryConstants::LIMIT_KEY => $this->request->validate([QueryConstants::LIMIT_KEY => 'required|integer|min:1|max:' . QueryConstants::LIMIT_NUMBER]),
+            QueryConstants::PERCENTAGE_KEY => $this->request->validate([QueryConstants::PERCENTAGE_KEY => 'nullable']),
+            QueryConstants::WORD_KEY => $this->request->validate([
+                QueryConstants::WORD_KEY => 'required|array',
+                QueryConstants::WORD_KEY.'.0' => 'required|string',
+                QueryConstants::WORD_KEY.'.*' => 'nullable|string'
             ]),
-            QueryConstants::OPERATOR => $this->request->validate([
-                QueryConstants::OPERATOR => 'required|array',
-                QueryConstants::OPERATOR.'.*' => 'required|string'
+            QueryConstants::OPERATOR_KEY => $this->request->validate([
+                QueryConstants::OPERATOR_KEY => 'required|array',
+                QueryConstants::OPERATOR_KEY.'.*' => 'required|string'
             ]),
-            QueryConstants::CATEGORY => $this->request->validate([
-                QueryConstants::CATEGORY => 'array',
-                QueryConstants::CATEGORY.'.*' => 'nullable|string'
+            QueryConstants::CATEGORY_KEY => $this->request->validate([
+                QueryConstants::CATEGORY_KEY => 'array',
+                QueryConstants::CATEGORY_KEY.'.*' => 'nullable|string'
             ]),
-            QueryConstants::COUNTRY => $this->request->validate([
-                QueryConstants::COUNTRY => 'array',
-                QueryConstants::COUNTRY.'.*' => ['nullable', 'string', new CountryExists]
+            QueryConstants::COUNTRY_KEY => $this->request->validate([
+                QueryConstants::COUNTRY_KEY => 'array',
+                QueryConstants::COUNTRY_KEY.'.*' => ['nullable', 'string', new CountryExists]
             ]),
         };
 
         return match ($input) {
-            QueryConstants::GRAPH_TYPE => $this->request->input(QueryConstants::GRAPH_TYPE),
-            QueryConstants::COUNT_TABLE => $this->request->input(QueryConstants::COUNT_TABLE),
-            QueryConstants::LANGUAGE => $this->request->input(QueryConstants::LANGUAGE),
-            QueryConstants::LETTER => $this->request->input(QueryConstants::LETTER),
-            QueryConstants::LIMIT => intval($this->request->input(QueryConstants::LIMIT)),
-            QueryConstants::PERCENTAGE => $this->request->input(QueryConstants::PERCENTAGE),
-            QueryConstants::COUNTRY => array_filter($this->request->input(QueryConstants::COUNTRY)),
-            QueryConstants::CATEGORY =>  array_map('strtolower', array_filter($this->request->input(QueryConstants::CATEGORY))),
-            QueryConstants::OPERATOR => array_filter($this->request->input(QueryConstants::OPERATOR)),
-            QueryConstants::WORD => array_map('strtolower', array_filter($this->request->input(QueryConstants::WORD))),
+            QueryConstants::GRAPH_TYPE_KEY => $this->request->input(QueryConstants::GRAPH_TYPE_KEY),
+            QueryConstants::COUNT_TABLE_KEY => $this->request->input(QueryConstants::COUNT_TABLE_KEY),
+            QueryConstants::LANGUAGE_KEY => $this->request->input(QueryConstants::LANGUAGE_KEY),
+            QueryConstants::LETTER_KEY => $this->request->input(QueryConstants::LETTER_KEY),
+            QueryConstants::LIMIT_KEY => intval($this->request->input(QueryConstants::LIMIT_KEY)),
+            QueryConstants::PERCENTAGE_KEY => $this->request->input(QueryConstants::PERCENTAGE_KEY),
+            QueryConstants::COUNTRY_KEY => array_filter($this->request->input(QueryConstants::COUNTRY_KEY)),
+            QueryConstants::CATEGORY_KEY =>  array_map('strtolower', array_filter($this->request->input(QueryConstants::CATEGORY_KEY))),
+            QueryConstants::OPERATOR_KEY => array_filter($this->request->input(QueryConstants::OPERATOR_KEY)),
+            QueryConstants::WORD_KEY => array_map('strtolower', array_filter($this->request->input(QueryConstants::WORD_KEY))),
         };
     }
 
@@ -94,7 +94,7 @@ class RequestInputService
     {
         foreach ($this->request->all() as $inputKey => $input) {
 
-            if ($inputKey === QueryConstants::COUNTRY){
+            if ($inputKey === QueryConstants::COUNTRY_KEY){
                 //countries are validated separately, escaping would break that validation
                 continue;
             }
