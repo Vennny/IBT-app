@@ -60,6 +60,41 @@ class QueryBuilderService
     }
 
     /**
+     * Finds identificators of inputted category names
+     *
+     * @param array<int, string> $categories
+     * @param string|null $language
+     *
+     * @return array<int>
+     */
+    private function findCategoryIds(array $categories, string|null $language): array
+    {
+        $subQuery = "SELECT id FROM category WHERE (";
+
+        foreach ($categories as $category) {
+            $subQuery .= " lower(name) LIKE '". $category ."'";
+        }
+
+        $subQuery .= ")";
+
+        // replace each space conditions to "OR"
+        $subQuery = preg_replace("/(?<=')[\s](?!$)/", " OR ", $subQuery);
+
+        if ($language !== QueryConstants::ALL_LANGUAGES) {
+            $subQuery .= " AND id_lang = '" . $language. "' ";
+        }
+
+
+        $categoryIds = DB::select(DB::raw($subQuery));
+
+        //get only Id fields from array
+        $categoryIds = array_column($categoryIds, QueryConstants::ID_COLUMN_NAME);
+
+        return empty($categoryIds) ? [0] : $categoryIds;
+    }
+
+
+    /**
      * Builds the WHERE part of a query.
      *
      * @param string $language
@@ -77,10 +112,17 @@ class QueryBuilderService
         array $categories = null,
         string|null $letter = null
     ) :string {
+
+
+        $categoryIds = null;
+        if (! empty($categories)) {
+            $categoryIds = $this->findCategoryIds($categories, $language);
+        }
+
         if (
             $this->specifyLanguage($language, $wordTable)
             || !empty($countries)
-            || $categories
+            || $categoryIds
             || $letter
         ) {
             $whereQuery = " WHERE ";
@@ -99,22 +141,10 @@ class QueryBuilderService
                 $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $countryQuery);
             }
 
-            if (!empty($categories)) {
+            if ($categoryIds) {
                 $categoryQuery = "(";
-                foreach ($categories as $category){
-
-                    //get all ids of this category name
-                    $subQuery = "SELECT id FROM category WHERE lower(name) LIKE '". $category ."' ";
-
-                    if ($language !== QueryConstants::ALL_LANGUAGES) {
-                        $subQuery .= "AND id_lang = '" . $language. "' ";
-                    }
-
-                    $categoryIds = DB::select(DB::raw($subQuery));
-
-                    foreach (array_column($categoryIds, 'id') as $categoryId) {
-                        $categoryQuery .= " id_category = '" . $categoryId . "'";
-                    }
+                foreach ($categoryIds as $categoryId){
+                    $categoryQuery .= " id_category = '" . $categoryId . "'";
                 }
                 $categoryQuery .= ") ";
 
@@ -157,9 +187,9 @@ class QueryBuilderService
                             UNION ALL ";
             }
 
-            $fromQuery .= "SELECT value, date_cr, id_category, country_code
-                            FROM word_rest
-                        ) AS word_tables ";
+            $fromQuery .= "SELECT value, date_cr, id_category, country_code FROM word_rest
+                    ) AS word_tables
+                    ";
         } else {
             $fromQuery .= $wordTable . " ";
         }
@@ -239,7 +269,7 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC ";
+            "amount DESC";
 
         return $query;
     }

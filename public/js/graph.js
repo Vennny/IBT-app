@@ -467,7 +467,7 @@ function toggleDataset() {
 }
 
 function noDataContentSwitch(){
-    $(".error").append("<h1>No matching data found</h1>");
+    $(".error").append("<h1>No matching results found</h1>");
 
     $('#chart').remove();
     $('.form-row').remove();

@@ -19,6 +19,7 @@ class QueryConstants
 
     const COUNT_COLUMN_NAME = 'amount';
     const TOTAL_ANSWERS_COLUMN_NAME = 'total';
+    const ID_COLUMN_NAME = 'id';
 
     const POPULARITY_GRAPH = 'popular';
     const TOTAL_AMOUNT_GRAPH = 'total';
