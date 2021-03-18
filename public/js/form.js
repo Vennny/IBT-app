@@ -41,7 +41,7 @@ $(document).on('change', '.word-input', function() {
 });
 
 function setCountriesDataset(countriesArray) {
-    $('.countries').append(createCountriesDatalist(countriesArray));
+    $('#countryDatalist').append(createCountriesDatalist(countriesArray));
 }
 
 function switchWarning(element) {
@@ -134,10 +134,6 @@ function resolveAddingInputs(input) {
         });
     })
 
-
-
-    console.log(notFilledCount);
-
     if (input.val().length && notFilledCount === 0){
         // if there are zero empty inputs to fill, append new input
         if (mainDiv.hasClass('word')){
@@ -167,38 +163,44 @@ function resolveAddingInputs(input) {
 }
 
 function createWordInput() {
-    return $('<select class="operator" name="operator[]">\n' +
-             '    <option value="equals">equals</option>\n' +
-             '    <option value="startsWith">starts with</option>\n' +
-             '    <option value="endsWith">ends with</option>\n' +
-             '    <option value="contains">contains</option>\n' +
-             '</select>\n' +
-             '<input type="text" class="word-input" name="word[]" value="">\n');
+    return $('<div class="col">' +
+             '    <label class="label" for="word">word:</label>' +
+             '    <select class="operator custom-select" name="operator[]">\n' +
+             '        <option value="equals">equals</option>\n' +
+             '        <option value="startsWith">starts with</option>\n' +
+             '        <option value="endsWith">ends with</option>\n' +
+             '        <option value="contains">contains</option>\n' +
+             '    </select>\n' +
+             '    <input type="text" class="word-input form-control" name="word[]" value="">\n' +
+             '</div>');
 }
 
 function createFirstWordInput() {
-    let div = $('<div class="word"></div>');
-    let label = $('<label for="word">Case insensitive word to search in time:</label>')
+    let div = $('<div class="form-row word"></div>');
+    let label = $('<label for="word">Word to search:</label>')
+    let input = createWordInput();
 
-    div.append(label);
-    div.append(createWordInput());
-    div.children(':input').prop('required', true);
+    input.children('.label').remove();
+    input.children(':input').prop('required', true);
+
+    div.append(input);
+    div.children('.col').prepend(label);
 
     return div;
 }
 
 function createCategoryInput() {
-    return $('<input type="text" class="category-input" name="category[]" value="">');
+    return $('<div class="col"><label class="label" for="category">category:</label><input type="text" class="category-input form-control" name="category[]" value=""></div>');
 }
 
 function createFirstCategoryInput() {
-    let div= $('<div class="categories"></div>');
+    let div= $('<div class="form-row categories"></div>');
     let label = $('<label for="category">Category name:</label>');
+    let input = createCategoryInput();
 
-    div.append(label);
-    div.append(createCategoryInput());
+    input.children('.label').remove();
 
-    return div;
+    return div.append(input.prepend(label));
 }
 
 function createCountriesDatalist(countries) {
@@ -216,21 +218,20 @@ function createCountryInput() {
 }
 
 function createFirstCountryInput() {
-    let div = $('<div class="form-row countries"></div>');
+    let div = $('<div class="form-row countries"> </div>');
     let label = $('<label for="country">From players from country:</label>');
     let input = createCountryInput();
 
     input.children('.label').remove();
 
-    div.append(input.prepend(label));
-
-    return div;
+    return div.append(input.prepend(label));
 }
 
 function createLetterInput() {
-    return $('<div class="letter">\n' +
+    return $(
+        '    <div class="col letter">\n' +
         '        <label for="letter">Starting letter:</label>\n' +
-        '        <input type="text" id="letter" name="letter" maxlength="1" value=""><br>\n' +
+        '        <input class="form-control" type="text" id="letter" name="letter" maxlength="1" value=""><br>\n' +
         '    </div>'
     );
 }
@@ -247,9 +248,9 @@ function createCountTableInput() {
 }
 
 function createLimitInput() {
-    return $('<div class="limit">\n' +
+    return $('<div class="col limit">\n' +
         '        <label for="limit">Select number of entries</label>\n' +
-        '        <input type="number" id="limit" name="limit" min="1" value="5" required><br>\n' +
+        '        <input type="number" id="limit" class="form-control" name="limit" min="1" value="5" required><br>\n' +
         '    </div>'
     );
 }
@@ -268,10 +269,9 @@ function changeCountTableForm() {
 
     if (!countTable.length || countTable.val() === 'answer'){
         if (!inputsExist) {
-            let form = $(".form-answer-switch");
-            form.append(createFirstCountryInput());
-            form.append(createFirstCategoryInput());
-            form.append(createLetterInput);
+            $('#countriesDiv').append(createFirstCountryInput());
+            $('#categoriesDiv').append(createFirstCategoryInput());
+            $('#letterDiv').append(createLetterInput);
         }
     }
     else if (countTable.val() === 'category') {

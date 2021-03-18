@@ -90,3 +90,8 @@
     font-weight: bold;
     color: red;
 }
+
+.form-row {
+    margin-bottom: 5px;
+    margin-left: 0;
+}

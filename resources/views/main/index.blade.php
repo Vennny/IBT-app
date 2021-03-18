@@ -36,22 +36,38 @@
                 <div id="wordDiv"></div>
             </div>
 
-            <div class="form-answer-switch"></div>
-
-            <div class="language">
-                <label for="language">In language:</label>
-                <select id="language" name="language" required>
-                        <option disabled selected value> -- select language -- </option>
-                        <option value="all">all</option>
-                    @foreach($languages as $lang)
-                        <option value="{{$lang->id}}">{{$lang->show_name}}</option>
-                    @endforeach
-                </select><br>
+            <div class="form-row">
+                <div id="countriesDiv"></div>
             </div>
 
-            <div id="limitDiv"></div>
+            <div class="form-row">
+                <div id="categoriesDiv"></div>
+            </div>
 
-            <div class="percentage-switch"></div>
+            <div class="form-row">
+                <div class="col language">
+                    <label for="language">In language:</label>
+                    <select id="language" class="custom-select" name="language" required>
+                        <option disabled selected value> -- select language -- </option>
+                        <option value="all">all</option>
+                        @foreach($languages as $lang)
+                            <option value="{{$lang->id}}">{{$lang->show_name}}</option>
+                        @endforeach
+                    </select><br>
+                </div>
+
+                <div id="letterDiv"></div>
+
+                <div id="limitDiv"></div>
+            </div>
+
+
+
+            <div class="form-row">
+                <div class="percentage-switch"></div>
+            </div><br>
+
+            <div id="countryDatalist"></div>
 
             <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
