@@ -17,49 +17,41 @@
 
         <form id="queryBuilder" action="/" method="POST">
             @csrf
-
-            <div class="form-group">
-                <label for="graphType">Chart type: </label>
-                <select id="graphType" name="graphType">
-                    <option value="popular">Answer/category popularity</option>
-                    <option value="total">Total amount of answers</option>
-                    <option value="time">Time graph</option>
-                </select><br>
-
-                <div id="wordDiv"></div>
-
-                <div id="countTableDiv">
-                    <div class="count-table">
-                        <label for="countTable">Count most selected: </label>
-                        <select id="countTable" name="countTable">
-                            <option id="countAnswer" value="answer">answers</option>
-                            <option id="countCategory" value="category">categories</option>
-                        </select><br>
-                    </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="graphType">Chart type: </label>
+                    <select id="graphType" class="custom-select" name="graphType">
+                        <option value="popular">Answer/category popularity</option>
+                        <option value="total">Total amount of answers</option>
+                        <option value="time">Time graph</option>
+                    </select>
                 </div>
 
-                <div class="form-answer-switch"></div>
-
-                <div class="language">
-                    <label for="language">In language:</label>
-                    <select id="language" name="language" required>
-                            <option disabled selected value> -- select language -- </option>
-                            <option value="all">all</option>
-                        @foreach($languages as $lang)
-                            <option value="{{$lang->id}}">{{$lang->show_name}}</option>
-                        @endforeach
-                    </select><br>
+                <div class="form-group col-md-6">
+                    <div id="countTableDiv"></div>
                 </div>
-
-                <div id="limitDiv">
-                    <div class="limit">
-                        <label for="limit">Select number of entries</label>
-                        <input type="number" id="limit" name="limit" min="1" max="100" value="5" required><br>
-                    </div>
-                </div>
-
-                <div class="percentage-switch"></div>
             </div>
+
+            <div class="form-row">
+                <div id="wordDiv"></div>
+            </div>
+
+            <div class="form-answer-switch"></div>
+
+            <div class="language">
+                <label for="language">In language:</label>
+                <select id="language" name="language" required>
+                        <option disabled selected value> -- select language -- </option>
+                        <option value="all">all</option>
+                    @foreach($languages as $lang)
+                        <option value="{{$lang->id}}">{{$lang->show_name}}</option>
+                    @endforeach
+                </select><br>
+            </div>
+
+            <div id="limitDiv"></div>
+
+            <div class="percentage-switch"></div>
 
             <button type="submit" class="btn btn-primary">Confirm</button>
         </form>
@@ -73,7 +65,7 @@
             let countries = @json($countries->all());
 
 
-            setCountries(countries);
+            setCountriesDataset(countries);
         });
     </script>
 @endpush

@@ -8,10 +8,6 @@ $('#queryBuilder').submit(function() {
     sendQuery();
 })
 
-function setCountries(countriesArray) {
-    countriesDatalist = createCountriesDatalist(countriesArray);
-}
-
 $("#graphType").change(function (){
     changeFormType();
 });
@@ -44,6 +40,10 @@ $(document).on('change', '.word-input', function() {
     resolveAddingInputs($(this));
 });
 
+function setCountriesDataset(countriesArray) {
+    $('.countries').append(createCountriesDatalist(countriesArray));
+}
+
 function switchWarning(element) {
     if (element.val() === 'all') {
         if (! element.parent().children('warning').length){
@@ -53,7 +53,6 @@ function switchWarning(element) {
     else{
         element.parent().children('.warning').remove();
     }
-
 }
 
 function toggleSwitchInput() {
@@ -71,7 +70,6 @@ function toggleSwitchInput() {
     else {
         $(".custom-switch").remove();
     }
-
 }
 
 function changeFormType() {
@@ -107,7 +105,7 @@ function switchFormToTimeChart() {
 function switchFormFromTimeChart() {
     let wordDiv = $('.word');
 
-    if (wordDiv.length){
+    if (! $(".limit").length){
         $("#limitDiv").append(createLimitInput());
     }
 
@@ -123,40 +121,47 @@ function trimWhitespaceInInput(input) {
 function resolveAddingInputs(input) {
     trimWhitespaceInInput(input);
 
-    let inputParent = input.parent();
+    let mainDiv = input.parent().parent();
 
     let notFilledCount = 0;
 
-    inputParent.children(':input').each(function (){
-        if (! $(this).val().length) {
-            notFilledCount++;
-        }
-    });
+    mainDiv.children().each(function (){
+        $(this).children(':input').each(function (){
+            console.log($(this));
+            if (! $(this).val().length) {
+                notFilledCount++;
+            }
+        });
+    })
+
+
+
+    console.log(notFilledCount);
 
     if (input.val().length && notFilledCount === 0){
         // if there are zero empty inputs to fill, append new input
-        if (inputParent.hasClass('word')){
-            inputParent.append(createWordInput());
-        } else if (inputParent.hasClass('countries')){
-            inputParent.append(createCountryInput());
-        } else if (inputParent.hasClass('categories')){
-            inputParent.append(createCategoryInput());
+        if (mainDiv.hasClass('word')){
+            mainDiv.append(createWordInput());
+        } else if (mainDiv.hasClass('countries')){
+            mainDiv.append(createCountryInput());
+        } else if (mainDiv.hasClass('categories')){
+            mainDiv.append(createCategoryInput());
         }
     }
     else if(notFilledCount === 2) {
         // if there are two empty inputs, remove one
-        if (inputParent.hasClass('word')){
+        if (mainDiv.hasClass('word')){
             input.prev($('.operator')).remove();
         }
 
-        input.remove();
+        input.parent().remove();
     }
 
     //word is required, make sure the first input always has it
-    if (inputParent.hasClass('word') ) {
-        console.log(inputParent.children(':input').length);
-        if (inputParent.children(':input').length === 2) {
-            inputParent.children(':input').prop('required', true);
+    if (mainDiv.hasClass('word') ) {
+        console.log(mainDiv.children(':input').length);
+        if (mainDiv.children(':input').length === 2) {
+            mainDiv.children(':input').prop('required', true);
         }
     }
 }
@@ -207,16 +212,17 @@ function createCountriesDatalist(countries) {
 }
 
 function createCountryInput() {
-    return $('<input class="country-input" list="countryList" name="country[]" />');
+    return $('<div class="col"><label class="label" for="country">country:</label><input class="country-input form-control"  list="countryList" name="country[]" /></div>');
 }
 
 function createFirstCountryInput() {
-    let div = $('<div class="countries"> </div>');
+    let div = $('<div class="form-row countries"></div>');
     let label = $('<label for="country">From players from country:</label>');
+    let input = createCountryInput();
 
-    div.append(label);
-    div.append(countriesDatalist);
-    div.append(createCountryInput());
+    input.children('.label').remove();
+
+    div.append(input.prepend(label));
 
     return div;
 }
@@ -232,7 +238,7 @@ function createLetterInput() {
 function createCountTableInput() {
     return $('<div class="count-table">\n' +
         '        <label for="count">Count most selected: </label>\n' +
-        '        <select id="countTable" name="countTable">\n' +
+        '        <select id="countTable"  class="custom-select"  name="countTable">\n' +
         '            <option id="countAnswer" value="answer">answers</option>\n' +
         '            <option id="countCategory" value="category">categories</option>\n' +
         '        </select><br>\n' +
