@@ -66,8 +66,14 @@ $("#download-csv").click(function() {
 //download functions
 function saveCSV() {
     let table = $('#dataset-table');
+
+    let options = {
+        "separator": ";",
+        "trimContent": true
+    }
+
     table.css("display", "table");
-    table.table2csv();
+    table.table2csv(options);
     table.css("display", "none");
 }
 
