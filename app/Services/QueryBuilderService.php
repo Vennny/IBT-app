@@ -239,8 +239,7 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC " .
-            "LIMIT " . QueryConstants::LIMIT_NUMBER;
+            "amount DESC ";
 
         return $query;
     }
