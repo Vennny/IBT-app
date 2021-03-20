@@ -153,11 +153,16 @@ function resolveAddingInputs(input) {
         input.parent().remove();
     }
 
-    //word is required, make sure the first input always has it
-    if (mainDiv.hasClass('word') ) {
-        console.log(mainDiv.children(':input').length);
-        if (mainDiv.children(':input').length === 2) {
-            mainDiv.children(':input').prop('required', true);
+    if (notFilledCount === 2) {
+        //change label of first input
+        if (mainDiv.hasClass('word') ) {
+            //word is required, make sure the first input always has it
+            mainDiv.children().first().children(':input').prop('required', true);
+            mainDiv.children().first().children('label').html("Word to search:");
+        } else if (mainDiv.hasClass('countries') ) {
+            mainDiv.children().first().children('label').html("From players from country:");
+        } else if (mainDiv.hasClass('categories') ) {
+            mainDiv.children().first().children('label').html("Category name:");
         }
     }
 }
@@ -176,7 +181,7 @@ function createWordInput() {
 }
 
 function createFirstWordInput() {
-    let div = $('<div class="form-row word"></div>');
+    let div = $('<div class="form-row word main-div"></div>');
     let label = $('<label for="word">Word to search:</label>')
     let input = createWordInput();
 
@@ -194,7 +199,7 @@ function createCategoryInput() {
 }
 
 function createFirstCategoryInput() {
-    let div= $('<div class="form-row categories"></div>');
+    let div= $('<div class="form-row categories main-div"></div>');
     let label = $('<label for="category">Category name:</label>');
     let input = createCategoryInput();
 
@@ -218,7 +223,7 @@ function createCountryInput() {
 }
 
 function createFirstCountryInput() {
-    let div = $('<div class="form-row countries"> </div>');
+    let div = $('<div class="form-row countries main-div"> </div>');
     let label = $('<label for="country">From players from country:</label>');
     let input = createCountryInput();
 

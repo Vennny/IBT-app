@@ -17,7 +17,7 @@
 
         <form id="queryBuilder" action="/" method="POST">
             @csrf
-            <div class="form-row">
+            <div class="form-row main-div">
                 <div class="form-group col-md-6">
                     <label for="graphType">Chart type: </label>
                     <select id="graphType" class="custom-select" name="graphType">
@@ -44,7 +44,7 @@
                 <div id="categoriesDiv"></div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row main-div">
                 <div class="col language">
                     <label for="language">In language:</label>
                     <select id="language" class="custom-select" name="language" required>
@@ -60,8 +60,6 @@
 
                 <div id="limitDiv"></div>
             </div>
-
-
 
             <div class="form-row">
                 <div class="percentage-switch"></div>
