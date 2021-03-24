@@ -255,7 +255,7 @@ function createCountTableInput() {
 function createLimitInput() {
     return $('<div class="col limit">\n' +
         '        <label for="limit">Select number of entries</label>\n' +
-        '        <input type="number" id="limit" class="form-control" name="limit" min="1" value="5" required><br>\n' +
+        '        <input type="number" id="limit" class="form-control" name="limit" min="1" value="5" max="200" required><br>\n' +
         '    </div>'
     );
 }

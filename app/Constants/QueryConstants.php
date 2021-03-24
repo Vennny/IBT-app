@@ -37,5 +37,5 @@ class QueryConstants
 
     const ALL_LANGUAGES = 'all';
 
-    const LIMIT_NUMBER = 100;
+    const LIMIT_NUMBER = 200;
 }
