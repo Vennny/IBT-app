@@ -18,7 +18,6 @@ use App\Http\Controllers\MainController;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [MainController::class, 'index']);
     Route::post('/', [MainController::class, 'handleRequest']);
-    Route::resource('main', MainController::class);
 });
 
 Auth::routes();
