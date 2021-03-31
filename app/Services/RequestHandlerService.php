@@ -51,7 +51,7 @@ class RequestHandlerService
      *
      * @param string $query
      *
-     * @return array<int, array>
+     * @return array<int, array<string, int>>
      */
     private function execute(string $query): array
     {
