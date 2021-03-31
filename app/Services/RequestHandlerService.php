@@ -3,9 +3,9 @@
 
 namespace App\Services;
 
+use App\Actions\ExecuteSqlCommandAction;
 use App\Constants\QueryConstants;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class RequestHandlerService
 {
@@ -56,7 +56,7 @@ class RequestHandlerService
     private function execute(string $query): array
     {
         if ($query){
-            $result = DB::select(DB::raw($query));
+            $result = ExecuteSqlCommandAction::run($query);
 
             $json = json_encode($result);
             return $json ? json_decode($json, true) : array();
@@ -145,7 +145,7 @@ class RequestHandlerService
     /**
      * Handles request and returns query results.
      *
-     * @return array<int, array>
+     * @return array<int, array<string, int>>
      */
     public function handle(): array
     {

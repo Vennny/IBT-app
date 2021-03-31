@@ -47,9 +47,12 @@
 }
 
 .form-check-label {
-    /*margin-left: 15px;*/
     margin: 4px 10px;
     font-size: 15px;
+}
+
+.btn {
+    margin-bottom: 5px;
 }
 
 .table {

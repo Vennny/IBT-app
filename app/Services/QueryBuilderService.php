@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
+use App\Actions\ExecuteSqlCommandAction;
 use App\Constants\QueryConstants;
-use Illuminate\Support\Facades\DB;
 
 class QueryBuilderService
 {
@@ -84,8 +84,7 @@ class QueryBuilderService
             $subQuery .= " AND id_lang = '" . $language. "' ";
         }
 
-
-        $categoryIds = DB::select(DB::raw($subQuery));
+        $categoryIds = ExecuteSqlCommandAction::run($subQuery);
 
         //get only Id fields from array
         $categoryIds = array_column($categoryIds, QueryConstants::ID_COLUMN_NAME);
@@ -110,7 +109,7 @@ class QueryBuilderService
         string $wordTable = null,
         array $countries = null,
         array $categories = null,
-        string|null $letter = null
+        ?string $letter = null
     ) :string {
 
 

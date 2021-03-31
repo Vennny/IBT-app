@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FindGameLanguagesAction;
 use App\Services\RequestHandlerService;
 use App\Services\RequestInputService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\DB;
 use App\Services\QueryBuilderService;
 use League;
 
@@ -21,7 +21,7 @@ class MainController extends Controller
     public function index(): View
     {
         $countries = (new League\ISO3166\ISO3166);
-        $languages = DB::table('lang')->orderBy('date_cr', 'ASC')->get();
+        $languages = FindGameLanguagesAction::run();
 
         return view('main.index', [
             'countries' => $countries,
