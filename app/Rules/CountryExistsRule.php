@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use League;
 
-class CountryExists implements Rule
+class CountryExistsRule implements Rule
 {
     /**
      * Create a new rule instance.

@@ -4,7 +4,7 @@
 namespace App\Services;
 
 use App\Constants\QueryConstants;
-use App\Rules\CountryExists;
+use App\Rules\CountryExistsRule;
 use Illuminate\Http\Request;
 use League;
 
@@ -56,7 +56,7 @@ class RequestInputService
             ]),
             QueryConstants::COUNTRY_KEY => $this->request->validate([
                 QueryConstants::COUNTRY_KEY => 'array',
-                QueryConstants::COUNTRY_KEY.'.*' => ['nullable', 'string', new CountryExists]
+                QueryConstants::COUNTRY_KEY.'.*' => ['nullable', 'string', new CountryExistsRule]
             ]),
         };
 

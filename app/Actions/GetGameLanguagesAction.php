@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class FindGameLanguagesAction
+class GetGameLanguagesAction
 {
     use AsAction;
 
