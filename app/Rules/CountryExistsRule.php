@@ -10,12 +10,9 @@ class CountryExistsRule implements Rule
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param League\ISO3166\ISO3166 $countries
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(private League\ISO3166\ISO3166 $countries){}
 
     /**
      * Determine if the validation rule passes.
@@ -27,8 +24,8 @@ class CountryExistsRule implements Rule
     public function passes($attribute, $value)
     {
         try{
-            if ($value != "All" && $value != null)
-                (new League\ISO3166\ISO3166)->name($value);
+            if ($value != null)
+                $this->countries->name($value);
         }
         catch(\Exception $e){
             return false;

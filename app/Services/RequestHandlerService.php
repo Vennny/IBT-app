@@ -49,14 +49,12 @@ class RequestHandlerService
     /**
      * Executes a query.
      *
-     * @param string $query
-     *
      * @return array<int, array<string, int>>
      */
-    private function execute(string $query): array
+    private function executeQuery(): array
     {
-        if ($query){
-            $result = ExecuteSqlCommandAction::run($query);
+        if ($this->query){
+            $result = ExecuteSqlCommandAction::run($this->query);
 
             $json = json_encode($result);
             return $json ? json_decode($json, true) : array();
@@ -147,13 +145,11 @@ class RequestHandlerService
      */
     public function handle(): array
     {
-        $this->query = $this->queryBuilderService->build();
-
         $request = $this->requestInputService->getRequest();
-
         $this->filteredRequest = $this->filterRequest($request);
 
-        $queryResult = $this->execute($this->query);
+        $this->query = $this->queryBuilderService->build();
+        $queryResult = $this->executeQuery();
 
         return $this->prepareResult($queryResult);
     }

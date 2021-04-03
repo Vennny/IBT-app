@@ -11,11 +11,18 @@ use League;
 class RequestInputService
 {
     /**
+     * @var League\ISO3166\ISO3166
+     */
+    private League\ISO3166\ISO3166 $isoCountries;
+
+    /**
      * RequestInputService constructor.
      *
      * @param Request $request
      */
-    public function __construct(private Request $request){}
+    public function __construct(private Request $request){
+        $this->isoCountries = (new League\ISO3166\ISO3166);
+    }
 
     /**
      * @return Request
@@ -56,7 +63,7 @@ class RequestInputService
             ]),
             QueryConstants::COUNTRY_KEY => $this->request->validate([
                 QueryConstants::COUNTRY_KEY => 'array',
-                QueryConstants::COUNTRY_KEY.'.*' => ['nullable', 'string', new CountryExistsRule]
+                QueryConstants::COUNTRY_KEY.'.*' => ['nullable', 'string', new CountryExistsRule($this->isoCountries)]
             ]),
         };
 
@@ -83,7 +90,7 @@ class RequestInputService
      */
     public function getCountryCode(string $name): string
     {
-        $country = (new League\ISO3166\ISO3166)->name($name);
+        $country = $this->isoCountries->name($name);
         return $country['alpha2'];
     }
 
