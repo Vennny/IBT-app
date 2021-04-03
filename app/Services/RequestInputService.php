@@ -93,7 +93,6 @@ class RequestInputService
     public function escapeSingleQuotesInInputs(): void
     {
         foreach ($this->request->all() as $inputKey => $input) {
-
             if ($inputKey === QueryConstants::COUNTRY_KEY){
                 //countries are validated separately, escaping would break that validation
                 continue;

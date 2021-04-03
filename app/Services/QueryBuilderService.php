@@ -47,7 +47,7 @@ class QueryBuilderService
      *
      * @return bool
      */
-    private function specifyLanguage(string|null $language, string|null $wordTable): bool
+    private function specifyLanguage(?string $language, ?string $wordTable): bool
     {
         if (
             ($language && $language !== QueryConstants::ALL_LANGUAGES)
@@ -67,7 +67,7 @@ class QueryBuilderService
      *
      * @return array<int>
      */
-    private function findCategoryIds(array $categories, string|null $language): array
+    private function findCategoryIds(array $categories, ?string $language): array
     {
         $subQuery = "SELECT id FROM category WHERE (";
 
@@ -318,10 +318,14 @@ class QueryBuilderService
         $categories = $this->requestInputService->getInputValue(QueryConstants::CATEGORY_KEY);
         $letter = $this->requestInputService->getInputValue(QueryConstants::LETTER_KEY);
         $language = $this->requestInputService->getInputValue(QueryConstants::LANGUAGE_KEY);
+        $percentage = $this->requestInputService->getInputValue(QueryConstants::PERCENTAGE_KEY);
 
         $query = "SELECT
-                    DATE(date_cr) AS day,
-                    COUNT(*) AS total, ";
+                    DATE(date_cr) AS day, ";
+
+        if ($percentage) {
+            $query .= "COUNT(*) AS total, ";
+        }
 
         $query .= $this->buildWordComparisonSubQuery($words, $operators);
 

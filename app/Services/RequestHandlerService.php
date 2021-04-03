@@ -90,9 +90,7 @@ class RequestHandlerService
             foreach ($result as $i => $item) {
                 $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $sum;
             }
-
         } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) === QueryConstants::TIME_GRAPH) {
-
             foreach ($result as $i => $item) {
                 $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME];
                 unset($result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME]);
