@@ -3,8 +3,12 @@
 @section('title', 'Query Builder')
 
 @section('content')
+
     <div id="loader">
-        <div class="icon"></div>
+        <div class="loadingio-spinner-wedges-9kknzh8e3lm"><div class="ldio-wz3d0j16e7i">
+                <div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
+            </div>
+        </div>
         <div class="loader-text">
             <h1 id="loadingText">Executing query, do not close this page!</h1><br>
             <h2 id="loadingWarning">This might take a few minutes...</h2>
