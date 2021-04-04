@@ -17,21 +17,21 @@ class QueryConstants
     const WORD_KEY = 'word';
     const OPERATOR_KEY = 'operator';
 
-    const COUNT_COLUMN_NAME = 'amount';
-    const TOTAL_ANSWERS_COLUMN_NAME = 'total';
-    const ID_COLUMN_NAME = 'id';
-
     const POPULARITY_GRAPH = 'popular';
     const TOTAL_AMOUNT_GRAPH = 'total';
     const TIME_GRAPH = 'time';
+
+    const COUNT_ANSWERS = 'answer';
+    const COUNT_CATEGORIES = 'category';
 
     const OPERATOR_EQUALS = 'equals';
     const OPERATOR_STARTS_WITH = 'startsWith';
     const OPERATOR_ENDS_WITH = 'endsWith';
     const OPERATOR_CONTAINS = 'contains';
 
-    const COUNT_ANSWERS = 'answer';
-    const COUNT_CATEGORIES = 'category';
+    const AMOUNT_COLUMN_NAME = 'amount';
+    const TOTAL_ANSWERS_COLUMN_NAME = 'total';
+    const ID_COLUMN_NAME = 'id';
 
     const WORD_TABLE_REST = 'word_rest';
 

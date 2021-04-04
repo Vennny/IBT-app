@@ -63,11 +63,11 @@ class QueryBuilderService
      * Finds identificators of inputted category names
      *
      * @param array<int, string> $categories
-     * @param string|null $language
+     * @param string $language
      *
      * @return array<int>
      */
-    private function findCategoryIds(array $categories, ?string $language): array
+    private function findCategoryIds(array $categories, string $language): array
     {
         $subQuery = "SELECT id FROM category WHERE (";
 
@@ -77,7 +77,7 @@ class QueryBuilderService
 
         $subQuery .= ")";
 
-        // replace each space conditions to "OR"
+        // replace each space between conditions to "OR"
         $subQuery = preg_replace("/(?<=')[\s](?!$)/", " OR ", $subQuery);
 
         if ($language !== QueryConstants::ALL_LANGUAGES) {
@@ -89,7 +89,7 @@ class QueryBuilderService
         //get only Id fields from array
         $categoryIds = array_column($categoryIds, QueryConstants::ID_COLUMN_NAME);
 
-        return empty($categoryIds) ? [0] : $categoryIds;
+        return empty($categoryIds) ? [-1] : $categoryIds;
     }
 
 
@@ -111,8 +111,6 @@ class QueryBuilderService
         array $categories = null,
         ?string $letter = null
     ) :string {
-
-
         $categoryIds = null;
         if (! empty($categories)) {
             $categoryIds = $this->findCategoryIds($categories, $language);
@@ -182,13 +180,16 @@ class QueryBuilderService
             $fromQuery .= "(";
 
             foreach ($languageTables as $table) {
-                $fromQuery .= "SELECT value, date_cr, id_category, country_code FROM " . $table . "
-                            UNION ALL ";
+                $fromQuery .= "SELECT value, date_cr, id_category, country_code " .
+                    "FROM " . $table . " " .
+                    "UNION ALL "
+                    ;
             }
 
-            $fromQuery .= "SELECT value, date_cr, id_category, country_code FROM word_rest
-                    ) AS word_tables
-                    ";
+            $fromQuery .= "SELECT value, date_cr, id_category, country_code " .
+                            "FROM word_rest " .
+                ") AS word_tables"
+            ;
         } else {
             $fromQuery .= $wordTable . " ";
         }
@@ -208,7 +209,7 @@ class QueryBuilderService
         $query =
             "SELECT " .
             "name, " .
-            "games_played AS amount " .
+            "games_played AS " . QueryConstants::AMOUNT_COLUMN_NAME . " " .
             "FROM " .
             "category ";
 
@@ -244,7 +245,7 @@ class QueryBuilderService
             $query .= "LOWER(value) AS word, ";
         }
 
-        $query .=  "COUNT(*) AS " . QueryConstants::COUNT_COLUMN_NAME . " ";
+        $query .=  "COUNT(*) AS " . QueryConstants::AMOUNT_COLUMN_NAME . " ";
 
         $query .= $this->buildFromSubQuery($language);
 
@@ -268,7 +269,7 @@ class QueryBuilderService
 
         $query .=
             "ORDER BY " .
-            "amount DESC";
+            QueryConstants::AMOUNT_COLUMN_NAME . " DESC";
 
         return $query;
     }
@@ -302,7 +303,7 @@ class QueryBuilderService
         // replace each space conditions to "OR"
         $wordQuery = preg_replace("/(?<=')[\s](?!$)/", " OR ", $wordQuery);
 
-        return $wordQuery . " then 1 else 0 end) AS amount ";
+        return $wordQuery . " then 1 else 0 end) AS " . QueryConstants::AMOUNT_COLUMN_NAME . " ";
     }
 
     /**
@@ -324,7 +325,7 @@ class QueryBuilderService
                     DATE(date_cr) AS day, ";
 
         if ($percentage) {
-            $query .= "COUNT(*) AS total, ";
+            $query .= "COUNT(*) AS" . QueryConstants::TOTAL_ANSWERS_COLUMN_NAME . ", ";
         }
 
         $query .= $this->buildWordComparisonSubQuery($words, $operators);
@@ -371,7 +372,7 @@ class QueryBuilderService
      *
      * @return string
      */
-    public function buildTotalAnswersQuery(): string
+    private function buildTotalAnswersQuery(): string
     {
         return $this->buildAnswerCountQuery(true);
     }

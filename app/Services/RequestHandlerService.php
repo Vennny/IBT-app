@@ -66,9 +66,9 @@ class RequestHandlerService
     /**
      * Changes results to percentage out of all related answers.
      *
-     * @param array<int, array> $result
+     * @param array<int, array<string, mixed>> $result
      *
-     * @return array<int, array>
+     * @return array<int, array<string, mixed>>
      */
     private function changeResultToPercentage(array $result): array
     {
@@ -78,7 +78,9 @@ class RequestHandlerService
         ) {
             $sum = 0;
             array_walk_recursive($result, function($value) use (&$sum) {
-                if (is_numeric($value)) $sum += $value;
+                if (is_numeric($value)){
+                    $sum += $value;
+                }
             });
 
             $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT_KEY);
@@ -86,11 +88,11 @@ class RequestHandlerService
             array_splice($result, $limit);
 
             foreach ($result as $i => $item) {
-                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $sum;
+                $result[$i][QueryConstants::AMOUNT_COLUMN_NAME] /= $sum;
             }
         } elseif ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) === QueryConstants::TIME_GRAPH) {
             foreach ($result as $i => $item) {
-                $result[$i][QueryConstants::COUNT_COLUMN_NAME] /= $result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME];
+                $result[$i][QueryConstants::AMOUNT_COLUMN_NAME] /= $result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME];
                 unset($result[$i][QueryConstants::TOTAL_ANSWERS_COLUMN_NAME]);
             }
         }
@@ -103,9 +105,8 @@ class RequestHandlerService
      *
      * @param Request $request
      *
-     * @return array<string, mixed>
      */
-    private function filterRequest(Request $request): array
+    private function filterRequest(Request $request)
     {
         //remove first input(token) and all empty inputs
         $filteredRequest = array_filter(array_slice((array)$request->all(), 1));
@@ -114,17 +115,17 @@ class RequestHandlerService
             array_pop($filteredRequest[QueryConstants::OPERATOR_KEY]);
         }
 
-        return $filteredRequest;
+        $this->filteredRequest = $filteredRequest;
     }
 
     /**
-     * shortens the array by input limit and changes to percentage if necessary
+     * shortens the array by inputted limit and changes to percentage if necessary
      *
-     * @param array<int, array> $result
+     * @param array<int, array<string, mixed>> $result
      *
-     * @return array<int, array>
+     * @return array<int, array<string, mixed>>
      */
-    private function prepareResult(array $result): array
+    private function prepareResults(array $result): array
     {
         if ($this->requestInputService->getInputValue(QueryConstants::PERCENTAGE_KEY)) {
             return $this->changeResultToPercentage($result);
@@ -146,11 +147,11 @@ class RequestHandlerService
     public function handle(): array
     {
         $request = $this->requestInputService->getRequest();
-        $this->filteredRequest = $this->filterRequest($request);
+        $this->filterRequest($request);
 
         $this->query = $this->queryBuilderService->build();
         $queryResult = $this->executeQuery();
 
-        return $this->prepareResult($queryResult);
+        return $this->prepareResults($queryResult);
     }
 }
