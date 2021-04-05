@@ -7,6 +7,7 @@ use League;
 
 class CountryExistsRule implements Rule
 {
+    private $value;
     /**
      * Create a new rule instance.
      *
@@ -28,6 +29,7 @@ class CountryExistsRule implements Rule
                 $this->countries->name($value);
         }
         catch(\Exception $e){
+            $this->value = $value;
             return false;
         }
         return true;
@@ -40,6 +42,6 @@ class CountryExistsRule implements Rule
      */
     public function message()
     {
-        return 'Country not found';
+        return 'Country '. $this->value . ' not found';
     }
 }
