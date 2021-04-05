@@ -7,7 +7,7 @@ use League;
 
 class CountryExistsRule implements Rule
 {
-    private $value;
+    private string $value;
     /**
      * Create a new rule instance.
      *
