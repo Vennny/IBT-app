@@ -43,35 +43,6 @@ $(document).on('change', '.word-input', function() {
 function setCountriesDataset(countriesArray) {
     $('#countryDatalist').append(createCountriesDatalist(countriesArray));
 }
-
-function switchWarning(element) {
-    if (element.val() === 'all') {
-        if (! element.parent().children('warning').length){
-            element.parent().append('<p class="warning">Warning: This query setting may take a long time to execute!</p>')
-        }
-    }
-    else{
-        element.parent().children('.warning').remove();
-    }
-}
-
-function toggleSwitchInput() {
-    let graphType = $('#graphType');
-
-    if ((graphType.val() === 'popular'
-        && $('#countTable').val() === 'answer'
-        ) ||
-        graphType.val() === 'time'
-    ) {
-        if (!$('.custom-switch').length) {
-            $('.percentage-switch').append(createSwitchInput());
-        }
-    }
-    else {
-        $(".custom-switch").remove();
-    }
-}
-
 function changeFormType() {
     let element = $("#graphType");
 
@@ -80,12 +51,10 @@ function changeFormType() {
         if (! $('.count-table').length){
             $('#countTableDiv').append(createCountTableInput());
         }
-    }
-    else if (element.val() === 'total') {
+    } else if (element.val() === 'total') {
         switchFormFromTimeChart()
         $('.count-table').remove();
-    }
-    else if (element.val() === 'time') {
+    } else if (element.val() === 'time') {
         switchFormToTimeChart();
     }
 
@@ -112,9 +81,56 @@ function switchFormFromTimeChart() {
     wordDiv.remove();
 }
 
+function changeCountTableForm() {
+    let countTable = $("#countTable");
+    let inputsExist = $(".countries").length || $(".categories").length || $(".letter").length ;
+
+    if (!countTable.length || countTable.val() === 'answer'){
+        if (!inputsExist) {
+            $('#countriesDiv').append(createFirstCountryInput());
+            $('#categoriesDiv').append(createFirstCategoryInput());
+            $('#letterDiv').append(createLetterInput);
+        }
+    } else if (countTable.val() === 'category') {
+        if (inputsExist) {
+            $(".countries").remove();
+            $(".categories").remove();
+            $(".letter").remove();
+        }
+    }
+
+    toggleSwitchInput();
+}
+
+function toggleSwitchInput() {
+    let graphType = $('#graphType');
+
+    if ((graphType.val() === 'popular'
+            && $('#countTable').val() === 'answer'
+        ) ||
+        graphType.val() === 'time'
+    ) {
+        if (!$('.custom-switch').length) {
+            $('.percentage-switch').append(createSwitchInput());
+        }
+    } else {
+        $(".custom-switch").remove();
+    }
+}
+
 function trimWhitespaceInInput(input) {
     if (! /\S/.test(input.val())){
         input.val('');
+    }
+}
+
+function switchWarning(element) {
+    if (element.val() === 'all') {
+        if (! element.parent().children('warning').length){
+            element.parent().append('<p class="warning">Warning: This query setting may take a long time to execute!</p>')
+        }
+    } else {
+        element.parent().children('.warning').remove();
     }
 }
 
@@ -143,8 +159,7 @@ function resolveAddingInputs(input) {
         } else if (mainDiv.hasClass('categories')){
             mainDiv.append(createCategoryInput());
         }
-    }
-    else if(notFilledCount === 2) {
+    } else if(notFilledCount === 2) {
         // if there are two empty inputs, remove one
         if (mainDiv.hasClass('word')){
             input.prev($('.operator')).remove();
@@ -266,26 +281,4 @@ function createSwitchInput() {
         '        <label class="custom-control-label" for="percentage">Show results in percentage out of all related answers</label>\n' +
         '    </div>'
     );
-}
-
-function changeCountTableForm() {
-    let countTable = $("#countTable");
-    let inputsExist = $(".countries").length || $(".categories").length || $(".letter").length ;
-
-    if (!countTable.length || countTable.val() === 'answer'){
-        if (!inputsExist) {
-            $('#countriesDiv').append(createFirstCountryInput());
-            $('#categoriesDiv').append(createFirstCategoryInput());
-            $('#letterDiv').append(createLetterInput);
-        }
-    }
-    else if (countTable.val() === 'category') {
-        if (inputsExist) {
-            $(".countries").remove();
-            $(".categories").remove();
-            $(".letter").remove();
-        }
-    }
-
-    toggleSwitchInput();
 }
