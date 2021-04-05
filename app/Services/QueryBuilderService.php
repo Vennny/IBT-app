@@ -325,7 +325,7 @@ class QueryBuilderService
                     DATE(date_cr) AS day, ";
 
         if ($percentage) {
-            $query .= "COUNT(*) AS" . QueryConstants::TOTAL_ANSWERS_COLUMN_NAME . ", ";
+            $query .= "COUNT(*) AS " . QueryConstants::TOTAL_ANSWERS_COLUMN_NAME . ", ";
         }
 
         $query .= $this->buildWordComparisonSubQuery($words, $operators);
