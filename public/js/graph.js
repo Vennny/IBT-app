@@ -26,6 +26,7 @@ $("#y-font-slider").on('input', function() {
     changeYAxisLabelFontSize(this);
 });
 
+//time graph customizations
 $("#movingAverage").on('change', function() {
     updateTimeGraph();
 });
@@ -187,6 +188,7 @@ function resolveGraphDataOptions(data, request) {
     let label = 'amount';
 
     if (percentage) {
+        //change results to value out of 100 %
         values.forEach(function(value, index){
             this[index] = (value * 100).toFixed(2);
         }, values)
@@ -198,6 +200,7 @@ function resolveGraphDataOptions(data, request) {
     let graphType = getGraphType(request);
 
     if (graphType === 'line'){
+        //switch labels
         keys.reverse();
     }
 
@@ -338,6 +341,7 @@ function changeYAxisLabelFontSize(element){
 }
 
 function updateTimeGraph() {
+    //apply all modifiers
     let newData = alterDataRangeStart($("#rangeStart").val());
     newData = alterDataRangeEnd($("#rangeEnd").val(), newData);
     newData = alterDataMovingAverage($("#movingAverage").val(), newData);
@@ -484,6 +488,7 @@ function toggleDataset() {
     }
 }
 
+//no data page
 function noDataContentSwitch(){
     $(".error").append("<h1>No matching results found</h1>");
 
