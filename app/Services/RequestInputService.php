@@ -74,10 +74,19 @@ class RequestInputService
             QueryConstants::LETTER_KEY => $this->request->input(QueryConstants::LETTER_KEY),
             QueryConstants::LIMIT_KEY => intval($this->request->input(QueryConstants::LIMIT_KEY)),
             QueryConstants::PERCENTAGE_KEY => $this->request->input(QueryConstants::PERCENTAGE_KEY),
-            QueryConstants::COUNTRY_KEY => array_filter($this->request->input(QueryConstants::COUNTRY_KEY)),
-            QueryConstants::CATEGORY_KEY =>  array_map('strtolower', array_filter($this->request->input(QueryConstants::CATEGORY_KEY))),
+            QueryConstants::COUNTRY_KEY => array_map(
+                array($this, 'getCountryCode'),
+                array_filter($this->request->input(QueryConstants::COUNTRY_KEY))
+            ),
+            QueryConstants::CATEGORY_KEY =>  array_map(
+                'strtolower',
+                array_filter($this->request->input(QueryConstants::CATEGORY_KEY))
+            ),
             QueryConstants::OPERATOR_KEY => array_filter($this->request->input(QueryConstants::OPERATOR_KEY)),
-            QueryConstants::WORD_KEY => array_map('strtolower', array_filter($this->request->input(QueryConstants::WORD_KEY))),
+            QueryConstants::WORD_KEY => array_map(
+                'strtolower',
+                array_filter($this->request->input(QueryConstants::WORD_KEY))
+            ),
         };
     }
 
@@ -88,7 +97,7 @@ class RequestInputService
      *
      * @return string
      */
-    public function getCountryCode(string $name): string
+    private function getCountryCode(string $name): string
     {
         $country = $this->isoCountries->name($name);
         return $country['alpha2'];

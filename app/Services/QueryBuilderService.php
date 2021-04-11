@@ -131,7 +131,7 @@ class QueryBuilderService
             if (!empty($countries)) {
                 $countryQuery = "(";
                 foreach ($countries as $country){
-                    $countryQuery .=" country_code = '" . $this->requestInputService->getCountryCode($country) . "'";
+                    $countryQuery .=" country_code = '" . $country . "'";
                 }
                 $countryQuery .= ") ";
 
