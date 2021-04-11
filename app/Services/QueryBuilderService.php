@@ -359,12 +359,12 @@ class QueryBuilderService
         $table = $this->requestInputService->getInputValue(QueryConstants::COUNT_TABLE_KEY);
 
         if ($table === QueryConstants::COUNT_CATEGORIES) {
-            return $this->buildCategoryCountQuery();
+            $query = $this->buildCategoryCountQuery();
         } elseif ($table === QueryConstants::COUNT_ANSWERS) {
-            return $this->buildAnswerCountQuery();
-        } else {
-            return "";
+            $query = $this->buildAnswerCountQuery();
         }
+
+        return $query ?? "";
     }
 
     /**
@@ -394,10 +394,8 @@ class QueryBuilderService
             $query = $this->buildTotalAnswersQuery();
         } elseif ($type === QueryConstants::TIME_GRAPH) {
             $query = $this->buildAnswersInTimeQuery();
-        } else {
-            $query = "";
         }
 
-        return $query;
+        return $query ?? "";
     }
 }
