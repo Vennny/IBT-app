@@ -149,8 +149,7 @@ class QueryBuilderService
             }
 
             if ($letter) {
-                $whereQuery .= "LOWER(value) LIKE '" . strtolower ($letter). "%' ";
-
+                $whereQuery .= "LOWER(value) LIKE '" . $letter . "%' ";
             }
 
             // replace each space between WHERE conditions to "AND" unless "OR" is already there
