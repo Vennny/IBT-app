@@ -2,65 +2,65 @@ let graph;
 let graphDataOptions;
 
 //label customizations
-$("#title").on('input', function() {
+$('#title').on('input', function() {
     changeGraphTitle(this);
 });
 
-$("#x-axis-label").on('input', function() {
+$('#x-axis-label').on('input', function() {
     changeXAxisLabel(this);
 });
 
-$("#y-axis-label").on('input', function() {
+$('#y-axis-label').on('input', function() {
     changeYAxisLabel(this);
 });
 
-$("#title-font-slider").on('input', function() {
+$('#title-font-slider').on('input', function() {
     changeGraphTitleFontSize(this);
 });
 
-$("#x-font-slider").on('input', function() {
+$('#x-font-slider').on('input', function() {
     changeXAxisLabelFontSize(this);
 });
 
-$("#y-font-slider").on('input', function() {
+$('#y-font-slider').on('input', function() {
     changeYAxisLabelFontSize(this);
 });
 
 //time graph customizations
-$("#movingAverage").on('change', function() {
+$('#movingAverage').on('change', function() {
     updateTimeGraph();
 });
 
-$("#rangeStart").on('change', function() {
+$('#rangeStart').on('change', function() {
     updateTimeGraph();
 });
 
-$("#rangeEnd").on('change', function() {
+$('#rangeEnd').on('change', function() {
     updateTimeGraph();
 });
 
 //button clicks
-$("#show-dataset").click(function() {
+$('#show-dataset').click(function() {
     toggleDataset();
 })
 
-$("#show-request").click(function() {
+$('#show-request').click(function() {
     toggleRequest();
 })
 
-$("#zeroCheck").on('change', function () {
+$('#zeroCheck').on('change', function () {
     toggleStartsAtZero(this);
 })
 
-$("#download-graph-pdf").click(function() {
+$('#download-graph-pdf').click(function() {
     saveAsPDF();
 })
 
-$("#download-graph-png").click(function() {
+$('#download-graph-png').click(function() {
     saveAsPNG();
 })
 
-$("#download-csv").click(function() {
+$('#download-csv').click(function() {
     saveCSV();
 })
 
@@ -69,17 +69,17 @@ function saveCSV() {
     let table = $('#dataset-table');
 
     let options = {
-        "separator": ";",
-        "trimContent": true
+        'separator': ';',
+        'trimContent': true
     }
 
-    table.css("display", "table");
+    table.css('display', 'table');
     table.table2csv(options);
-    table.css("display", "none");
+    table.css('display', 'none');
 }
 
 function saveAsPNG() {
-    html2canvas($("#graph-container")).then(canvas => {
+    html2canvas($('#graph-container')).then(canvas => {
         let link = document.createElement('a');
         link.href = canvas.toDataURL();
         link.download = 'graph.png';
@@ -91,9 +91,9 @@ function saveAsPNG() {
 }
 
 function saveAsPDF() {
-    html2canvas($("#graph-container")).then(canvas => {
+    html2canvas($('#graph-container')).then(canvas => {
         let img = canvas.toDataURL(); //image data of canvas
-        let pdf =  new jsPDF("p", "mm", "a4");
+        let pdf =  new jsPDF('p', 'mm', 'a4');
         const width = pdf.internal.pageSize.width;
         const height = (canvas.height * width) / canvas.width;
 
@@ -118,7 +118,7 @@ function insertDefaultAxisLabels(keys) {
 
 function getAmountOfDecimals(value) {
     if ((value % 1) !== 0){
-        return value.toString().split(".")[1].length;
+        return value.toString().split('.')[1].length;
     }
 }
 
@@ -249,7 +249,7 @@ function createGraph(data, request) {
                         beginAtZero: true,
                         callback: function (value) {
                             if (graphDataOptions.percentage && graphDataOptions.type === 'line') {
-                                return value.toFixed(getAmountOfDecimals(value)) + " %"
+                                return value.toFixed(getAmountOfDecimals(value)) + ' %'
                             } else {
                                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                             }
@@ -261,7 +261,7 @@ function createGraph(data, request) {
                         beginAtZero: true,
                         callback: function (value) {
                             if (graphDataOptions.percentage && graphDataOptions.type !== 'line') {
-                                return value.toFixed(getAmountOfDecimals(value)) + " %"
+                                return value.toFixed(getAmountOfDecimals(value)) + ' %'
                             } else {
                                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                             }
@@ -342,9 +342,9 @@ function changeYAxisLabelFontSize(element){
 
 function updateTimeGraph() {
     //apply all modifiers
-    let newData = alterDataRangeStart($("#rangeStart").val());
-    newData = alterDataRangeEnd($("#rangeEnd").val(), newData);
-    newData = alterDataMovingAverage($("#movingAverage").val(), newData);
+    let newData = alterDataRangeStart($('#rangeStart').val());
+    newData = alterDataRangeEnd($('#rangeEnd').val(), newData);
+    newData = alterDataMovingAverage($('#movingAverage').val(), newData);
 
     graph.data.labels = newData.labels;
     graph.data.datasets[0].data = newData.values;
@@ -375,7 +375,7 @@ function alterDataRangeStart(startingDate, data = null) {
         values.splice(0, i);
     }
 
-    return {"labels": labels, "values": values};
+    return {'labels': labels, 'values': values};
 }
 
 function alterDataRangeEnd(endingDate, data = null) {
@@ -402,23 +402,19 @@ function alterDataRangeEnd(endingDate, data = null) {
         values.splice(i+1, values.length);
     }
 
-    return {"labels": labels, "values": values};
+    return {'labels': labels, 'values': values};
 }
 
 function alterDataMovingAverage(daysAmount, data = null) {
     let valuesAmount = graphDataOptions.values.length;
-
-    if (!daysAmount){
-        daysAmount = 1;
-    }
-
     daysAmount = parseInt(daysAmount);
 
     if (isNaN(daysAmount)
         || valuesAmount <= daysAmount
         || daysAmount <= 0
-    ){
-        return;
+    ) {
+        daysAmount = 1;
+        $('#movingAverage').val('1');
     }
 
     let labels;
@@ -446,7 +442,7 @@ function alterDataMovingAverage(daysAmount, data = null) {
 
     labels.splice(0, daysAmount-1);
 
-    return {"labels": labels, "values": newValues};
+    return {'labels': labels, 'values': newValues};
 }
 
 //table changes
@@ -469,10 +465,10 @@ function toggleRequest() {
     let dataset = $('.dataset');
 
     if (request.is(':visible')) {
-        request.css("display", "none");
+        request.css('display', 'none');
     } else {
-        dataset.css("display", "none");
-        request.css("display", "table");
+        dataset.css('display', 'none');
+        request.css('display', 'table');
     }
 }
 
@@ -481,16 +477,16 @@ function toggleDataset() {
     let request = $('.request');
 
     if (dataset.is(':visible')) {
-        dataset.css("display", "none");
+        dataset.css('display', 'none');
     } else {
-        request.css("display", "none");
-        dataset.css("display", "table");
+        request.css('display', 'none');
+        dataset.css('display', 'table');
     }
 }
 
 //no data page
 function noDataContentSwitch(){
-    $(".error").append("<h1>No matching results found</h1>");
+    $('.error').append('<h1>No matching results found</h1>');
 
     $('#chart').remove();
     $('.form-row').remove();
