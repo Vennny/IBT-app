@@ -1,3 +1,9 @@
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * author: Václav Trampeška
+ */
+
 let graph;
 let graphDataOptions;
 

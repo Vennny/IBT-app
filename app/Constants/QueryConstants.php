@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * @author Václav Trampeška
+ */
 
 namespace App\Constants;
-
 
 class QueryConstants
 {

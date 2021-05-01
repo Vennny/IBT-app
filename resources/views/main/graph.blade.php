@@ -1,3 +1,7 @@
+{{--Jméno, Město Analyzer--}}
+{{--Bachelor's Thesis--}}
+{{--author: Václav Trampeška--}}
+
 @extends('layouts.app')
 
 @section('title', 'Graph')

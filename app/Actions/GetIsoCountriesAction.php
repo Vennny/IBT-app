@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * @author Václav Trampeška
+ */
+
 namespace App\Actions;
 
 use Lorisleiva\Actions\Concerns\AsAction;

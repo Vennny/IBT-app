@@ -1,3 +1,7 @@
+{{--Jméno, Město Analyzer--}}
+{{--Bachelor's Thesis--}}
+{{--author: Václav Trampeška--}}
+
 <!DOCTYPE html>
 <html lang="cs-CZ">
 <head>

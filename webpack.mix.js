@@ -1,3 +1,9 @@
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * author: Václav Trampeška
+ */
+
 const mix = require('laravel-mix');
 
 /*

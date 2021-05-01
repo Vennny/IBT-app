@@ -2,6 +2,12 @@
 
 namespace App\Rules;
 
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * @author Václav Trampeška
+ */
+
 use Illuminate\Contracts\Validation\Rule;
 use League;
 

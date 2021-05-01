@@ -1,3 +1,9 @@
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * author: Václav Trampeška
+ */
+
 function showLoadingIconAndText() {
     $("#errors").hide();
     $("#loader").css("display", "flex").hide().fadeTo("slow", 0.9);

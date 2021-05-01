@@ -1,3 +1,9 @@
+/**
+ * Jméno, Město Analyzer
+ * Bachelor's Thesis
+ * author: Václav Trampeška
+ */
+
 import table2csv from 'table2csv'
 window.table2csv = table2csv
 
