@@ -257,7 +257,7 @@ function createLetterInput() {
     return $(
         '    <div class="col letter">\n' +
         '        <label for="letter">Starting letter:</label>\n' +
-        '        <input class="form-control" type="text" id="letter" name="letter" maxlength="1" value=""><br>\n' +
+        '        <input class="form-control" type="text" id="letter" name="letter" maxlength="2" value=""><br>\n' +
         '    </div>'
     );
 }

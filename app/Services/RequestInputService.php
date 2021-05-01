@@ -50,7 +50,7 @@ class RequestInputService
             QueryConstants::GRAPH_TYPE_KEY => $this->request->validate([QueryConstants::GRAPH_TYPE_KEY => 'required|string']),
             QueryConstants::COUNT_TABLE_KEY => $this->request->validate([QueryConstants::COUNT_TABLE_KEY => 'required|string']),
             QueryConstants::LANGUAGE_KEY => $this->request->validate([QueryConstants::LANGUAGE_KEY => 'required|string']),
-            QueryConstants::LETTER_KEY => $this->request->validate([QueryConstants::LETTER_KEY => 'nullable|string|max:1']),
+            QueryConstants::LETTER_KEY => $this->request->validate([QueryConstants::LETTER_KEY => 'nullable|string|max:2']),
             QueryConstants::LIMIT_KEY => $this->request->validate([QueryConstants::LIMIT_KEY => 'required|integer|min:1|max:' . QueryConstants::LIMIT_NUMBER]),
             QueryConstants::PERCENTAGE_KEY => $this->request->validate([QueryConstants::PERCENTAGE_KEY => 'nullable']),
             QueryConstants::WORD_KEY => $this->request->validate([
