@@ -154,7 +154,7 @@ class QueryBuilderService
             }
 
             if ($letter) {
-                $whereQuery .= "LOWER(value) LIKE '" . $letter . "%' ";
+                $whereQuery .= "letter = '" . $letter . "' ";
             }
 
             // replace each space between WHERE conditions to "AND" unless "OR" is already there
@@ -184,13 +184,13 @@ class QueryBuilderService
             $fromQuery .= "(";
 
             foreach ($languageTables as $table) {
-                $fromQuery .= "SELECT value, date_cr, id_category, country_code " .
+                $fromQuery .= "SELECT value, date_cr, id_category, letter, country_code " .
                     "FROM " . $table . " " .
                     "UNION ALL "
                     ;
             }
 
-            $fromQuery .= "SELECT value, date_cr, id_category, country_code " .
+            $fromQuery .= "SELECT value, date_cr, id_category, letter, country_code " .
                             "FROM word_rest " .
                 ") AS word_tables"
             ;

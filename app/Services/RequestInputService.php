@@ -76,7 +76,7 @@ class RequestInputService
             QueryConstants::GRAPH_TYPE_KEY => $this->request->input(QueryConstants::GRAPH_TYPE_KEY),
             QueryConstants::COUNT_TABLE_KEY => $this->request->input(QueryConstants::COUNT_TABLE_KEY),
             QueryConstants::LANGUAGE_KEY => $this->request->input(QueryConstants::LANGUAGE_KEY),
-            QueryConstants::LETTER_KEY => mb_strtolower($this->request->input(QueryConstants::LETTER_KEY), 'UTF-8'),
+            QueryConstants::LETTER_KEY => mb_strtoupper($this->request->input(QueryConstants::LETTER_KEY), 'UTF-8'),
             QueryConstants::LIMIT_KEY => intval($this->request->input(QueryConstants::LIMIT_KEY)),
             QueryConstants::PERCENTAGE_KEY => $this->request->input(QueryConstants::PERCENTAGE_KEY),
             QueryConstants::COUNTRY_KEY => array_map(
