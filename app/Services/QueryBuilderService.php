@@ -326,7 +326,7 @@ class QueryBuilderService
         $percentage = $this->requestInputService->getInputValue(QueryConstants::PERCENTAGE_KEY);
 
         $query = "SELECT
-                    DATE(date_cr) AS day, ";
+                    date_cr AS day, ";
 
         if ($percentage) {
             $query .= "COUNT(*) AS " . QueryConstants::TOTAL_ANSWERS_COLUMN_NAME . ", ";
