@@ -68,6 +68,17 @@ class RequestHandlerService
         return array();
     }
 
+    private function changeCategoryIdsToNames(array $results): array
+    {
+        foreach ($results as $key => $result) {
+            $query = "SELECT name FROM category WHERE id='" . $result[QueryConstants::CATEGORY_COLUMN_NAME] . "'";
+            $queryResult = ExecuteSqlCommandAction::run($query);
+            $results[$key][QueryConstants::CATEGORY_COLUMN_NAME] = $queryResult[0]->name;
+        }
+
+        return $results;
+    }
+
     /**
      * Changes results to percentage out of all related answers.
      *
@@ -136,9 +147,14 @@ class RequestHandlerService
             return $this->changeResultToPercentage($result);
         }
 
-        if ($this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY) !== QueryConstants::TIME_GRAPH) {
+        $graphType = $this->requestInputService->getInputValue(QueryConstants::GRAPH_TYPE_KEY);
+        if ($graphType !== QueryConstants::TIME_GRAPH) {
             $limit = $this->requestInputService->getInputValue(QueryConstants::LIMIT_KEY);
             array_splice($result, $limit);
+
+            if ($graphType === QueryConstants::TOTAL_AMOUNT_GRAPH) {
+                $result = $this->changeCategoryIdsToNames($result);
+            }
         }
 
         return $result;

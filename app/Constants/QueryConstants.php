@@ -36,6 +36,8 @@ class QueryConstants
     const AMOUNT_COLUMN_NAME = 'amount';
     const TOTAL_ANSWERS_COLUMN_NAME = 'total';
     const ID_COLUMN_NAME = 'id';
+    const CATEGORY_COLUMN_NAME = 'category';
+    const ANSWER_COLUMN_NAME = 'answer';
 
     const WORD_TABLE_REST = 'word_rest';
 

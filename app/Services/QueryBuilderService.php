@@ -52,7 +52,7 @@ class QueryBuilderService
      *
      * @return bool
      */
-    private function specifyLanguage(?string $language, ?string $wordTable): bool
+    private function shouldSpecifyLanguage(?string $language, ?string $wordTable): bool
     {
         if (
             ($language && $language !== QueryConstants::ALL_LANGUAGES)
@@ -192,7 +192,7 @@ class QueryBuilderService
 
             $fromQuery .= "SELECT value, date_cr, id_category, letter, country_code " .
                             "FROM word_rest " .
-                ") AS word_tables"
+                ") AS word_tables "
             ;
         } else {
             $fromQuery .= $wordTable . " ";
@@ -244,9 +244,9 @@ class QueryBuilderService
         $query = "SELECT ";
 
         if ($totalWords) {
-            $query .= "LOWER(category_name) AS category_name, ";
+            $query .= "id_category AS " . QueryConstants::CATEGORY_COLUMN_NAME . ", ";
         } else {
-            $query .= "LOWER(value) AS word, ";
+            $query .= "LOWER(value) AS " . QueryConstants::ANSWER_COLUMN_NAME . ", ";
         }
 
         $query .=  "COUNT(*) AS " . QueryConstants::AMOUNT_COLUMN_NAME . " ";
@@ -264,11 +264,11 @@ class QueryBuilderService
         if ($totalWords) {
             $query .=
                 "GROUP BY " .
-                "category_name ";
+                QueryConstants::CATEGORY_COLUMN_NAME . " ";
         } else {
             $query .=
                 "GROUP BY " .
-                "word ";
+                QueryConstants::ANSWER_COLUMN_NAME . " ";
         }
 
         $query .=
