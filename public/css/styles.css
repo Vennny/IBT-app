@@ -94,6 +94,10 @@
 
 
 /* main and graph views */
+label {
+    white-space: nowrap;
+}
+
 .graph-data {
     margin-top: 20px
 }
