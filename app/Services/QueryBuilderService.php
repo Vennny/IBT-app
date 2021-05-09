@@ -122,48 +122,50 @@ class QueryBuilderService
         }
 
         if (
-            $this->specifyLanguage($language, $wordTable)
-            || !empty($countries)
-            || $categoryIds
-            || $letter
+            !$this->shouldSpecifyLanguage($language, $wordTable)
+            && empty($countries)
+            && !$categoryIds
+            && !$letter
         ) {
-            $whereQuery = " WHERE ";
-
-            if ($this->specifyLanguage($language, $wordTable)){
-                $whereQuery .= "id_lang = '" . $language. "' ";
-            }
-
-            if (!empty($countries)) {
-                $countryQuery = "(";
-                foreach ($countries as $country){
-                    $countryQuery .=" country_code = '" . $country . "'";
-                }
-                $countryQuery .= ") ";
-
-                $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $countryQuery);
-            }
-
-            if ($categoryIds) {
-                $categoryQuery = "(";
-                foreach ($categoryIds as $categoryId){
-                    $categoryQuery .= " id_category = '" . $categoryId . "'";
-                }
-                $categoryQuery .= ") ";
-
-                $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $categoryQuery);
-            }
-
-            if ($letter) {
-                $whereQuery .= "letter = '" . $letter . "' ";
-            }
-
-            // replace each space between WHERE conditions to "AND" unless "OR" is already there
-            $whereQuery = preg_replace("/(?<='|'\))[\s](?!$|OR)/", " AND ", $whereQuery);
-
-            return $whereQuery ?? "";
+            return "";
         }
 
-        return "";
+        $whereQuery = " WHERE ";
+
+        if ($this->shouldSpecifyLanguage($language, $wordTable)) {
+            $whereQuery .= "id_lang = '" . $language . "' ";
+        }
+
+        if (!empty($countries)) {
+            $countryQuery = "(";
+            foreach ($countries as $country) {
+                $countryQuery .= " country_code = '" . $country . "'";
+            }
+            $countryQuery .= ") ";
+
+            $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $countryQuery);
+        }
+
+        if ($categoryIds) {
+            $categoryQuery = "(";
+            foreach ($categoryIds as $categoryId) {
+                $categoryQuery .= " id_category = '" . $categoryId . "'";
+            }
+            $categoryQuery .= ") ";
+
+            $whereQuery .= preg_replace("/(?<=')[\s](?!$)/", " OR ", $categoryQuery);
+        }
+
+        if ($letter) {
+            $whereQuery .= "letter = '" . $letter . "' ";
+        }
+
+        // replace each space between WHERE conditions to "AND" unless "OR" is already there
+        $whereQuery = preg_replace("/(?<='|'\))[\s](?!$|OR)/", " AND ", $whereQuery);
+
+        return $whereQuery ?? "";
+
+
     }
 
     /**
