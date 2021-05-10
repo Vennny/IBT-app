@@ -371,7 +371,7 @@ function alterDataRangeStart(startingDate, data = null) {
 
     let i;
     for (i = 0; i < labels.length-1; i++) {
-        if (labels[i] === startingDate) {
+        if (labels[i] >= startingDate) {
             break;
         }
     }
@@ -398,7 +398,7 @@ function alterDataRangeEnd(endingDate, data = null) {
 
     let i = labels.length-1;
     for (i; i > 0; i--) {
-        if (labels[i] === endingDate) {
+        if (labels[i] >= endingDate) {
             break;
         }
     }
